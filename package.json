@@ -1,0 +1,18 @@
+{
+  "name": "airswap-maker-kit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:airswap/airswap-maker-kit.git",
+  "author": "Don Mosites <don.mosites@fluidity.io>",
+  "license": "MIT",
+  "scripts": {
+    "createWallet": "node scripts/createWallet.js",
+    "setIntent": "node scripts/setIntent.js"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "ethers": "^4.0.38",
+    "prompt": "^1.0.0"
+  }
+}
