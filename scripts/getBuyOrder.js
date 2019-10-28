@@ -8,7 +8,7 @@ const fields = {
   locator: {
     description: chalk.white.bold('Locator to query'),
     type: 'URL',
-    default: 'http://localhost:8000',
+    default: 'http://localhost:8080',
   },
   amount: {
     description: `${chalk.white.bold('Amount')} to buy`,

@@ -4,13 +4,11 @@ The AirSwap Maker Kit is a set of tools and examples to help you get started on 
 
 ## Concepts
 
-### Token Values
-
-Everything is in wei.
-
-### Approvals
-
-### Staking and Trading
+- **Token Approvals** - The Swap contract must be approved to transfer your tokens.
+- **Token Values** - All token values are in the indivisible units of a token (wei).
+- **Staking** - You can stake tokens to improve your position on the indexer.
+- **Trading** - Your trading account can be different than the staking account.
+- **Nonces** - Each order is identified by a unique nonce.
 
 ## Setup
 
@@ -27,107 +25,59 @@ There is an example `.env-example` that you can rename to `.env` to start with. 
 
 Let's set up a maker on the Rinkeby testnet to trade WETH/DAI.
 
-### Setup an Ethereum Account
+### Ethereum Account
 
-If you have an existing Ethereum account you'd like to use, set the `PRIVATE_KEY` in your `.env` file. Otherwise you can create a random account using the `createAccount` script.
+If you have an existing Ethereum account you'd like to use, set the `PRIVATE_KEY` in your `.env` file. Otherwise you can create a random account using the `yarn createAccount` script. Paste the generated private key into your `.env` file.
 
-```
-yarn createAccount
-```
-
-Paste the generated private key into your `.env` file.
-
-### Setup an Ethereum Node
+### Ethereum Node
 
 If you have an existing Ethereum node to use, set the `ETHEREUM_NODE` in your `.env` file. Otherwise you can create a free account with INFURA. Navigate to https://infura.io/ to create an account and generate an API key. Your URL will look like this: `https://rinkeby.infura.io/v3/...`
 
-### Approve Tokens for Trade
+### Token Approvals
 
-Rinkeby WETH and DAI tokens can be found at:
+Tokens must be approved for trading on the Swap contract. This is a one-time requirement for each otken. Rinkeby WETH and DAI tokens can be found the following addresses.
 
-```
-WETH 0xc778417e063141139fce010982780140aa0cd5ab
-DAI  0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
-```
+- Rinkeby **WETH** - `0xc778417e063141139fce010982780140aa0cd5ab`
+- Rinkeby **DAI** - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea`
 
-To approve the Swap contract to transfer your tokens, use the `approveToken` script for both WETH and DAI. The Swap contract address is loaded from your `.env` file.
+To approve the Swap contract to transfer your tokens, use the `yarn approveToken` script for both of the above token addresses. The Swap contract address is loaded from your `.env` file. You can check the approval status of any token with the `yarn checkApproval` script.
 
-```
-yarn approveToken
-```
-
-You can check the approval status of any token with the `checkApproval` script.
-
-```
-yarn checkApproval
-```
-
-### Configure Your Maker
+### Run the Maker
 
 The reference Node.js maker is configured to trade WETH/DAI at price 0.1.
 
 ```
-yarn start
+$ yarn start
+info: Server now listening. (0.0.0.0:8080)
 ```
 
-Runs your server on port `8080` by default. You'll use this value for the port of your **locator**.
-
-### Announce Your Intent to Trade
-
-Get the local network address with the `getNetworkAddress` command. You'll use this value for the address your **locator**. If there is more than one address, you can use any of them.
+In another shell, run the `getBuyQuote` script to test it out.
 
 ```
-yarn getNetworkAddress
+$ yarn getBuyQuote
+
+AirSwap: Get a Quote
+
+Locator to query:  (http://localhost:8080)
+Amount of token to buy:  (100)
+Address of token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
+Address of token to spend:  (0xc778417e063141139fce010982780140aa0cd5ab)
+
+Got a Quote
+
+Buying 100 0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
+Cost   10 0xc778417e063141139fce010982780140aa0cd5ab
+Price  0.1
 ```
 
-Now that you have the two components of your **locator** (address and port) we'll set an "intent to trade" on the indexer. It should look something like `10.0.0.169:8080`.
+### Enable Staking
 
-```
-yarn setIntent
-```
+Run the `yarn enableStaking` script to enable staking on the Rinkeby indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. Head over to the Rinkeby AST faucet to pick up some AST for staking.
 
-## Reference Makers
+### Set Intent to Trade
 
-See the `makers` directory. There is one example for [Node.js](./makers/nodejs) currently available.
-
-## Scripts
-
-### Create a Wallet
-
-Generates a new random Ethereum account:
-
-```
-yarn createAccount
-```
-
-### Approve a Token
-
-**`TODO`** A guide to approve a token for trading on the Swap contract:
-
-```
-yarn approve
-```
-
-### Set an Intent to Trade
-
-**`INCOMPLETE`** A guide to set an intent to trade on the Indexer contract:
+First try on your local area network. Use the `yarn getNetworkAddress` script to determine what your IP address is. If there is more than one address pick one. Now we'll set an "intent to trade" on the indexer. It should look something like `http://10.0.0.169:8080`.
 
 ```
 yarn setIntent
-```
-
-### Unset an Intent to Trade
-
-**`TODO`** A guide to unset an intent to trade on the Indexer contract:
-
-```
-yarn unsetIntent
-```
-
-### Get All Intents
-
-**`TODO`** A guide to get all intents to trade on the Indexer contract:
-
-```
-yarn getIntents
 ```

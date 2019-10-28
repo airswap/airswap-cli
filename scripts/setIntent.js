@@ -18,7 +18,7 @@ const fields = {
     type: 'Address',
   },
   locator: {
-    description: `Web address of ${chalk.white.bold('your server')} (hostname:port)`,
+    description: `Web address of ${chalk.white.bold('your server')} (URL)`,
     type: 'URL',
   },
   stakeAmount: {

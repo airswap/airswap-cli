@@ -201,8 +201,9 @@ exports.start = function(_port, _address, _signerPrivateKey, _signerWallet, _swa
   })
 
   // Start server
-  server = app.listen(_port, _address, () => {
-    logger.info(`Server now listening. (${_address}:${_port})`)
+  const port = _port || 8080
+  server = app.listen(port, _address, () => {
+    logger.info(`Server now listening. (${_address}:${port})`)
   })
 }
 

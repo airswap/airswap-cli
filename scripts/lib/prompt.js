@@ -8,7 +8,7 @@ prompt.start()
 
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
-  URL: 'Must be a Web address (hostname:port)',
+  URL: 'Must be a Web address (URL)',
   Number: 'Must be a number',
 }
 const patterns = {
