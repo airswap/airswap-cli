@@ -13,8 +13,8 @@ const { orders, signatures } = require('@airswap/order-utils')
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
 
-// Only issue unique nonces every minute
-const DEFAULT_NONCE_WINDOW = 60
+// Only issue unique nonces every ten seconds
+const DEFAULT_NONCE_WINDOW = 10
 
 // Server instance to start and stop
 let server
@@ -33,11 +33,11 @@ let maxSignerParam = 1000
 
 // The token pairs we are serving quotes for and their trade prices
 let tokenPairs = {
-  '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8': {
+  '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
     '0xc778417e063141139fce010982780140aa0cd5ab': 0.1,
   },
   '0xc778417e063141139fce010982780140aa0cd5ab': {
-    '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8': 0.1,
+    '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': 0.1,
   },
 }
 
@@ -183,7 +183,7 @@ app.post(
 )
 
 // Starts the server instance
-exports.start = function(_port, _signerPrivateKey, _signerWallet, _swapContract, _logLevel) {
+exports.start = function(_port, _address, _signerPrivateKey, _signerWallet, _swapContract, _logLevel) {
   signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
   signerWallet = new ethers.Wallet(signerPrivateKey).address
   swapContract = _swapContract
@@ -201,8 +201,8 @@ exports.start = function(_port, _signerPrivateKey, _signerWallet, _swapContract,
   })
 
   // Start server
-  server = app.listen(_port, () => {
-    logger.info(`Server now listening on port ${_port}`)
+  server = app.listen(_port, _address, () => {
+    logger.info(`Server now listening. (${_address}:${_port})`)
   })
 }
 

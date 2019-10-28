@@ -6,13 +6,24 @@
   "author": "Don Mosites <don.mosites@fluidity.io>",
   "license": "MIT",
   "scripts": {
-    "createWallet": "node scripts/createWallet.js",
+    "approveToken": "node scripts/approveToken.js",
+    "checkApproval": "node scripts/checkApproval.js",
+    "createAccount": "node scripts/util/createAccount.js",
+    "enableStaking": "node scripts/enableStaking.js",
+    "getAllQuotes": "node scripts/getAllQuotes.js",
+    "getLocators": "node scripts/getLocators.js",
+    "getNetworkAddress": "node scripts/util/getNetworkAddress.js",
+    "getBuyQuote": "node scripts/getBuyQuote.js",
+    "getBuyOrder": "node scripts/getBuyOrder.js",
     "setIntent": "node scripts/setIntent.js"
   },
   "dependencies": {
-    "colors": "^1.4.0",
+    "@airswap/order-utils": "^0.3.3",
+    "chalk": "^2.4.2",
     "dotenv": "^8.2.0",
     "ethers": "^4.0.38",
+    "jayson": "^3.1.1",
+    "ora": "^4.0.2",
     "prompt": "^1.0.0"
   }
 }
