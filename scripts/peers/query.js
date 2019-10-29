@@ -1,7 +1,7 @@
 const dotenv = require('dotenv')
-const prompt = require('./lib/prompt')
+const network = require('../lib/network.js')
+const prompt = require('../lib/prompt')
 const chalk = require('chalk')
-const network = require('./lib/network.js')
 
 const {
   getBuyQuote,
@@ -12,7 +12,7 @@ const {
   getBuyOrderAll,
   getSellOrder,
   getSellOrderAll,
-} = require('./lib/queryHandlers')
+} = require('./handlers')
 
 dotenv.config()
 

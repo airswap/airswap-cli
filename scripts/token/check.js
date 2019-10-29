@@ -1,10 +1,9 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
-const ora = require('ora')
 
-const ERC20 = require('../contracts/ERC20.json')
-const network = require('./lib/network.js')
-const prompt = require('./lib/prompt.js')
+const ERC20 = require('../../contracts/ERC20.json')
+const network = require('../lib/network.js')
+const prompt = require('../lib/prompt.js')
 
 const fields = {
   token: {

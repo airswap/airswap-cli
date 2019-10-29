@@ -18,7 +18,7 @@ const fields = {
 
 network.select('Create an Index', wallet => {
   prompt.get(fields, values => {
-    prompt.confirm('This will create a token pair Index on the Indexer.', values, 'send transaction', () => {
+    prompt.confirm('This will create a new Index for a token pair.', values, 'send transaction', () => {
       new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
         .createIndex(values.signerToken, values.senderToken)
         .then(prompt.handleTransaction)

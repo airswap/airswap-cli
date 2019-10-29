@@ -1,6 +1,6 @@
 const assert = require('assert')
 const dotenv = require('dotenv')
-const server = require('./maker.js')
+const server = require('./maker')
 const jayson = require('jayson')
 
 const { orders } = require('@airswap/order-utils')
@@ -9,10 +9,10 @@ const { orders } = require('@airswap/order-utils')
 dotenv.config()
 
 // JSON-RPC client instance
-const client = jayson.client.http(`http://localhost:${process.env.PORT}`)
+const client = jayson.client.http(`http://${process.env.BIND_ADDRESS}:${process.env.BIND_PORT}`)
 
 // Dummy values for tokens and wallets
-const signerToken = '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8'
+const signerToken = '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea'
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
 const senderToken = '0xc778417e063141139fce010982780140aa0cd5ab'
 const unusedToken = '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea'
@@ -21,7 +21,8 @@ describe('Maker', function() {
   // Start the server before any tests
   before(function() {
     server.start(
-      process.env.PORT,
+      process.env.BIND_PORT,
+      process.env.BIND_ADDRESS,
       process.env.PRIVATE_KEY,
       process.env.WALLET_ADDRESS,
       process.env.SWAP_ADDRESS,

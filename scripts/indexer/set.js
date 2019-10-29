@@ -1,12 +1,12 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
 
-const ERC20 = require('../contracts/ERC20.json')
-const Indexer = require('../contracts/Indexer.json')
+const ERC20 = require('../../contracts/ERC20.json')
+const Indexer = require('../../contracts/Indexer.json')
 
-const network = require('./lib/network.js')
-const prompt = require('./lib/prompt.js')
-const constants = require('./lib/constants.js')
+const network = require('../lib/network.js')
+const prompt = require('../lib/prompt.js')
+const constants = require('../constants.js')
 
 const fields = {
   signerToken: {
@@ -35,7 +35,7 @@ network.select('Set Intent to Trade', wallet => {
       .then(balance => {
         if (balance.toNumber() < atomicAmount) {
           console.log(
-            colors.red('\n\nError ') +
+            chalk.red('\n\nError ') +
               `The selected account cannot stake ${values.stakeAmount} AST. Its balance is ${balance.toNumber() /
                 10 ** constants.AST_DECIMALS}.\n`
           )

@@ -1,15 +1,17 @@
+const dotenv = require('dotenv')
 const ethers = require('ethers')
 const jayson = require('jayson')
 const chalk = require('chalk')
-const network = require('./network.js')
-const prompt = require('./prompt.js')
-const ora = require('ora')
-const { orders } = require('@airswap/order-utils')
-const constants = require('./constants.js')
 const cliSpinners = require('cli-spinners')
 const Spinnies = require('spinnies')
+
+const { orders } = require('@airswap/order-utils')
+
+const constants = require('../constants.js')
+const network = require('../lib/network.js')
+const prompt = require('../lib/prompt.js')
 const Indexer = require('../../contracts/Indexer.json')
-const dotenv = require('dotenv')
+
 dotenv.config()
 
 const allFields = {
@@ -59,15 +61,15 @@ function peerCall(locator, method, values, callback) {
   const client = jayson.client.http(locator)
   client.request(method, values, function(err, error, quote) {
     if (err) {
-      console.log(`\n${chalk.yellow('HTTP Error')}: ${err.message}\n`)
+      callback(`Connection error to ${locator}`)
     } else {
       if (error) {
-        console.log(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
+        callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
       } else if (!orders.isValidQuote(quote)) {
         console.log(`\n${chalk.yellow('Got a Malformed Quote')}`)
         console.log(quote)
       } else {
-        callback(quote)
+        callback(null, quote)
       }
     }
   })
@@ -76,7 +78,7 @@ function peerCall(locator, method, values, callback) {
 module.exports = {
   getBuyQuote: (wallet, locator) => {
     prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'sell', 'buy'), values => {
-      peerCall(locator, 'getSenderSideQuote', values, result => {
+      peerCall(locator, 'getSenderSideQuote', values, (error, result) => {
         console.log(`\nQuote from ${chalk.white(locator)} ${result.sender.param}`)
       })
     })
@@ -90,8 +92,12 @@ module.exports = {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
             spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
-            peerCall(locators[i], 'getSenderSideQuote', Object.assign(values, values2), result => {
-              spinnies.succeed(locators[i], { text: `Quote from ${chalk.white(locators[i])} ${result.sender.param}` })
+            peerCall(locators[i], 'getSenderSideQuote', Object.assign(values, values2), (error, result) => {
+              if (error) {
+                spinnies.fail(locators[i], { text: error })
+              } else {
+                spinnies.succeed(locators[i], { text: `Quote from ${chalk.white(locators[i])} ${result.sender.param}` })
+              }
             })
           }
         }
