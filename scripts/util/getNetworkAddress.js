@@ -3,7 +3,7 @@ const chalk = require('chalk')
 
 const interfaces = os.networkInterfaces()
 
-console.log(chalk.white.bold.underline('\r\nLocal Network Addresses\r\n'))
+console.log(chalk.white.bold.underline('\nLocal Network Addresses\n'))
 
 for (let id in interfaces) {
   for (let i = 0; i < interfaces[id].length; i++) {

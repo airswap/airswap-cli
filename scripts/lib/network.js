@@ -38,15 +38,15 @@ module.exports = {
           provider.getBalance(publicAddress).then(balance => {
             if (balance.eq(0)) {
               console.log(
-                colors.red('\r\n\r\nError ') +
-                  `The selected account (From .env: ${publicAddress}) must have some (${selectedNetwork}) ether to execute transactions.\r\n`
+                colors.red('\n\nError ') +
+                  `The selected account (From .env: ${publicAddress}) must have some (${selectedNetwork}) ether to execute transactions.\n`
               )
               return
             }
             callback(wallet)
           })
         } catch (error) {
-          console.log(`\r\n${chalk.yellow('Error')}: ${error.reason}`)
+          console.log(`\n${chalk.yellow('Error')}: ${error.reason}`)
         }
       }
     })

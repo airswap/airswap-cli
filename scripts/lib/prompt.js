@@ -27,7 +27,7 @@ function generateSchema(fields) {
       pattern: patterns[fields[field].type],
       message: messages[fields[field].type],
       default: fields[field].default,
-      required: true,
+      required: fields[field].optional ? false : true,
     }
   }
   return schema
@@ -37,42 +37,44 @@ module.exports = {
   get: function(fields, callback) {
     prompt.get(generateSchema(fields), function(err, result) {
       if (err) {
-        console.log('\r\n\r\nCancelled\r\n')
+        console.log('\n\nCancelled\n')
         return
       }
       callback(result)
     })
   },
-  confirm: function(title, action, values, callback) {
-    console.log(chalk.underline(`\r\n${chalk.white.bold(title)}\r\n`))
+  confirm: function(title, values, action, callback) {
+    console.log(chalk.underline(`\n${chalk.white.bold(title)}\n`))
 
     for (let value in values) {
       console.log(`${value}: ${values[value]}`)
     }
-
     console.log()
-    prompt.get(
-      {
-        properties: {
-          confirm: {
-            description: `Type ${chalk.green('yes')} to ${action}`,
+
+    if (typeof callback === 'function') {
+      prompt.get(
+        {
+          properties: {
+            confirm: {
+              description: `Type ${chalk.green('yes')} to ${action}`,
+            },
           },
         },
-      },
-      function(err, result) {
-        if (err || result.confirm !== 'yes') {
-          console.log('\r\n\r\nCancelled.\r\n')
-          return
+        function(err, result) {
+          if (err || result.confirm !== 'yes') {
+            console.log('\n\nCancelled.\n')
+            return
+          }
+          console.log()
+          callback()
         }
-        console.log()
-        callback()
-      }
-    )
+      )
+    }
   },
   handleTransaction: function(tx) {
     console.log(chalk.underline(`https://${constants.etherscanDomains[selectedNetwork]}/tx/${tx.hash}`))
     console.log()
-    const spinner = ora(`Mining ${chalk.white.bold('approve')} transaction (${selectedNetwork})...`).start()
+    const spinner = ora(`Mining transaction (${selectedNetwork})...`).start()
     tx.wait(constants.DEFAULT_CONFIRMATIONS).then(() => {
       spinner.succeed(`Transaction complete (${constants.DEFAULT_CONFIRMATIONS} confirmations)`)
       console.log()
@@ -80,7 +82,7 @@ module.exports = {
     })
   },
   handleError: function(error) {
-    console.log(`\r\n${chalk.yellow('Error')}: ${error.reason || error.responseText}`)
-    console.log('Please check your input values.\r\n')
+    console.log(`\n${chalk.yellow('Error')}: ${error.reason || error.responseText}`)
+    console.log('Please check your input values.\n')
   },
 }

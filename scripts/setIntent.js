@@ -35,18 +35,36 @@ network.select('Set Intent to Trade', wallet => {
       .then(balance => {
         if (balance.toNumber() < atomicAmount) {
           console.log(
-            colors.red('\r\n\r\nError ') +
+            colors.red('\n\nError ') +
               `The selected account cannot stake ${values.stakeAmount} AST. Its balance is ${balance.toNumber() /
-                10 ** constants.AST_DECIMALS}.\r\n`
+                10 ** constants.AST_DECIMALS}.\n`
           )
         } else {
-          prompt.confirm('Set an Intent', 'send transaction', values, () => {
-            const locatorBytes = ethers.utils.formatBytes32String(values.locator)
-            new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
-              .setIntent(values.signerToken, values.senderToken, atomicAmount, locatorBytes)
-              .then(prompt.handleTransaction)
-              .catch(prompt.handleError)
-          })
+          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], ERC20.abi, wallet)
+            .allowance(wallet.address, process.env.INDEXER_ADDRESS)
+            .then(allowance => {
+              if (allowance.lt(atomicAmount)) {
+                console.log(`\n${chalk.yellow('Error')}: Staking not Enabled`)
+                console.log(`Run the ${chalk.bold('enableStaking')} script to enable.\n`)
+              } else {
+                new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+                  .indexes(values.signerToken, values.senderToken)
+                  .then(indexAddress => {
+                    if (indexAddress === '0x0000000000000000000000000000000000000000') {
+                      console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found`)
+                      console.log(`Run the ${chalk.bold('createIndex')} script with your token pair.\n`)
+                    } else {
+                      prompt.confirm('Set an Intent', values, 'send transaction', () => {
+                        const locatorBytes = ethers.utils.formatBytes32String(values.locator)
+                        new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+                          .setIntent(values.signerToken, values.senderToken, atomicAmount, locatorBytes)
+                          .then(prompt.handleTransaction)
+                          .catch(prompt.handleError)
+                      })
+                    }
+                  })
+              }
+            })
         }
       })
   })

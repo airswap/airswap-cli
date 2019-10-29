@@ -9,21 +9,28 @@
     "approveToken": "node scripts/approveToken.js",
     "checkApproval": "node scripts/checkApproval.js",
     "createAccount": "node scripts/util/createAccount.js",
-    "enableStaking": "node scripts/enableStaking.js",
+    "createIndex": "node scripts/util/createIndex.js",
+    "enableStaking": "node scripts/util/enableStaking.js",
     "getAllQuotes": "node scripts/getAllQuotes.js",
     "getLocators": "node scripts/getLocators.js",
     "getNetworkAddress": "node scripts/util/getNetworkAddress.js",
     "getBuyQuote": "node scripts/getBuyQuote.js",
+    "getSellQuote": "node scripts/getSellQuote.js",
     "getBuyOrder": "node scripts/getBuyOrder.js",
-    "setIntent": "node scripts/setIntent.js"
+    "get": "node scripts/queries.js",
+    "setIntent": "node scripts/setIntent.js",
+    "unsetIntent": "node scripts/unsetIntent.js"
   },
   "dependencies": {
     "@airswap/order-utils": "^0.3.3",
     "chalk": "^2.4.2",
+    "cli-spinners": "^2.2.0",
     "dotenv": "^8.2.0",
     "ethers": "^4.0.38",
     "jayson": "^3.1.1",
+    "multispinner": "^0.2.1",
     "ora": "^4.0.2",
-    "prompt": "^1.0.0"
+    "prompt": "^1.0.0",
+    "spinnies": "^0.5.0"
   }
 }

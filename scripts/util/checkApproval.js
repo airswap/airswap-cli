@@ -19,9 +19,9 @@ network.select('Check an Approval', wallet => {
       .allowance(wallet.address, process.env.SWAP_ADDRESS)
       .then(allowance => {
         if (allowance.eq(0)) {
-          console.log(`\r\nThis token ${chalk.red.bold('is not')} approved. (Allowance: 0)\r\n`)
+          console.log(`\nThis token ${chalk.red.bold('is not')} approved. (Allowance: 0)\n`)
         } else {
-          console.log(`\r\nThis token ${chalk.green.bold('is')} approved. (Allowance: ${allowance})\r\n`)
+          console.log(`\nThis token ${chalk.green.bold('is')} approved. (Allowance: ${allowance})\n`)
         }
       })
       .catch(prompt.handleError)

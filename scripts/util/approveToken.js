@@ -15,7 +15,7 @@ const fields = {
 
 network.select('Approve a Token', wallet => {
   prompt.get(fields, values => {
-    prompt.confirm('This will approve the Swap contract to transfer your tokens.', 'approve', values, () => {
+    prompt.confirm('This will approve the Swap contract to transfer your tokens.', values, 'approve', () => {
       new ethers.Contract(values.token, ERC20.abi, wallet)
         .approve(process.env.SWAP_ADDRESS, constants.APPROVAL_AMOUNT)
         .then(prompt.handleTransaction)
