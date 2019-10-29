@@ -10,6 +10,9 @@ const bodyParser = require('body-parser')
 const jayson = require('jayson')
 const { orders, signatures } = require('@airswap/order-utils')
 
+// The token pairs we are serving quotes for and their trade prices
+let tokenPairs = require('./pairs.json')
+
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
 
@@ -30,16 +33,6 @@ let swapContract
 
 // A maximum amount to send. Could be determined dynamically by balance
 let maxSignerParam = 1000
-
-// The token pairs we are serving quotes for and their trade prices
-let tokenPairs = {
-  '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
-    '0xc778417e063141139fce010982780140aa0cd5ab': 0.1,
-  },
-  '0xc778417e063141139fce010982780140aa0cd5ab': {
-    '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': 0.1,
-  },
-}
 
 // Determine whether we're serving quotes for a given token pair
 function isTradingPair({ signerToken, senderToken }) {
