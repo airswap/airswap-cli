@@ -38,7 +38,7 @@ module.exports = {
           provider.getBalance(publicAddress).then(balance => {
             if (balance.eq(0)) {
               console.log(
-                colors.red('\n\nError ') +
+                chalk.red('\n\nError ') +
                   `The selected account (From .env: ${publicAddress}) must have some (${selectedNetwork}) ether to execute transactions.\n`
               )
               return

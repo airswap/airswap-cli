@@ -74,6 +74,8 @@ $ yarn maker:start
 info: Server now listening. (0.0.0.0:8080)
 ```
 
+### Get a Quote from Your Maker
+
 In another shell, run the `yarn peers:get` script to test it out. **Use the default values for everything** but provide a `locator` value of `http://0.0.0.0:8080/` to connect to your newly running maker.
 
 ```bash
@@ -101,13 +103,13 @@ This succeeds because we have a locator in hand, the URL of your local webserver
 
 ### Set Intent to Trade
 
-Run `peers:get` with default values, which will display `No peers found.`.
+By default, your maker is running in isolation. Run `peers:get` with default values, which will display `No peers found.`.
 
 ```bash
 $ yarn peers:get
 ```
 
-To be found, let's announce your maker to the world.
+To be found, announce your maker to the world by setting your "intent to trade" on the Indexer.
 
 ```bash
 $ yarn indexer:set
@@ -146,7 +148,7 @@ Number of locators to return:  (10)
 ...
 ```
 
-### All Together Now
+### Get Quotes from All Makers (Including Yours)
 
 Ensure your maker is still running.
 
@@ -169,9 +171,14 @@ Amount to buy:  (100)
 ✓ Quote from http://10.0.0.169:8080 10
 ```
 
-## Advanced: Trading
+## Advanced: Staking and Trading
 
-### Enable Staking
+### Important Notes
+
+- **Token Values** - All token values are in the indivisible units of a token (wei).
+- **Nonce Window** - Each order is identified by a unique nonce. The nonce window is the amount of time in which
+
+### Indexer Staking
 
 Run the `yarn indexer:enable` script to enable staking on the Rinkeby Indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. Head over to the [Rinkeby AST faucet](https://ast-faucet-ui.development.airswap.io/) to pick up some AST for staking.
 
@@ -187,19 +194,9 @@ This will approve the Indexer contract to stake your AST.
 ...
 ```
 
-### Approve Tokens
+### Token Approvals
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. Rinkeby WETH and DAI tokens can be found the following addresses. To approve the Swap contract to transfer your tokens, use the `yarn approveToken` script for both WETH and DAI above. The Swap contract address is loaded from your `.env` file. You can check the approval status of any token with the `yarn checkApproval` script.
-
-### Important Notes
-
-#### Token Values
-
-All token values are in the indivisible units of a token (wei).
-
-#### Nonce Window
-
-Each order is identified by a unique nonce. The nonce window is the amount of time in which
 
 ## Command Reference
 
