@@ -77,29 +77,40 @@ function peerCall(locator, method, values, callback) {
 
 module.exports = {
   getBuyQuote: (wallet, locator) => {
-    prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'sell', 'buy'), values => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
       peerCall(locator, 'getSenderSideQuote', values, (error, result) => {
-        console.log(`\nQuote from ${chalk.white(locator)} ${result.sender.param}`)
+        prompt.confirm('Got a Quote', {
+          buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+          for: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+          price: chalk.bold(result.sender.param / result.signer.param),
+        })
       })
     })
   },
   getBuyQuoteAll: wallet => {
     indexerCall(wallet, (locators, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
-      prompt.get(getFields(['signerParam'], 'buy', 'sell'), values2 => {
+      prompt.get(getFields(['signerParam'], 'buy', 'pay'), values2 => {
         console.log()
+        hasAtLeastOne = false
         for (let i = 0; i < locators.length; i++) {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
+            hasAtLeastOne = true
             spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
             peerCall(locators[i], 'getSenderSideQuote', Object.assign(values, values2), (error, result) => {
               if (error) {
                 spinnies.fail(locators[i], { text: error })
               } else {
-                spinnies.succeed(locators[i], { text: `Quote from ${chalk.white(locators[i])} ${result.sender.param}` })
+                spinnies.succeed(locators[i], {
+                  text: `Quote from ${chalk.white(locators[i])} ${result.sender.param}`,
+                })
               }
             })
           }
+        }
+        if (!hasAtLeastOne) {
+          console.log('\nNo peers found.\n')
         }
       })
     })

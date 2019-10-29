@@ -8,16 +8,16 @@
   "scripts": {
     "indexer:create": "node scripts/indexer/create.js",
     "indexer:enable": "node scripts/indexer/enable.js",
-    "indexer:query": "node scripts/indexer/query.js",
+    "indexer:get": "node scripts/indexer/get.js",
     "indexer:set": "node scripts/indexer/set.js",
     "indexer:unset": "node scripts/indexer/unset.js",
     "maker:start": "node index.js",
     "maker:test": "yarn mocha maker.test.js",
-    "peers:query": "node scripts/peers/query.js",
+    "peers:get": "node scripts/peers/get.js",
     "token:approve": "node scripts/token/approve.js",
     "token:check": "node scripts/token/check.js",
-    "util:network": "node scripts/util/network.js",
-    "util:account": "node scripts/util/account.js"
+    "utils:network": "node scripts/util/network.js",
+    "utils:account": "node scripts/util/account.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

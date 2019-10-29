@@ -8,22 +8,41 @@ const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const constants = require('../constants.js')
 
+const os = require('os')
+const interfaces = os.networkInterfaces()
+let firstAvailableAddress
+
+for (let id in interfaces) {
+  for (let i = 0; i < interfaces[id].length; i++) {
+    if (interfaces[id][i].family === 'IPv4' && interfaces[id][i].address !== '127.0.0.1') {
+      firstAvailableAddress = interfaces[id][i].address
+      break
+    }
+  }
+}
+
+console.log()
+
 const fields = {
   signerToken: {
     description: `Token address of ${chalk.white.bold('signerToken')} (maker side)`,
     type: 'Address',
+    default: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
   },
   senderToken: {
     description: `Token address of ${chalk.white.bold('senderToken')} (taker side)`,
     type: 'Address',
+    default: '0xc778417e063141139fce010982780140aa0cd5ab',
   },
   locator: {
     description: `Web address of ${chalk.white.bold('your server')} (URL)`,
     type: 'URL',
+    default: `http://${firstAvailableAddress}:${process.env.BIND_PORT}`,
   },
   stakeAmount: {
     description: `Amount of ${chalk.white.bold('token to stake')} (AST)`,
     type: 'Number',
+    default: 0,
   },
 }
 

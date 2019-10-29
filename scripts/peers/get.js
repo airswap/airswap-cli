@@ -34,7 +34,7 @@ const fields = {
   },
 }
 
-network.select('Query Peers', wallet => {
+network.select('Get Quotes and Orders', wallet => {
   prompt.get(fields, result => {
     if (result.kind === 'quote') {
       if (result.side === 'buy') {
