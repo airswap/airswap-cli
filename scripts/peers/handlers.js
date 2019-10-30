@@ -8,7 +8,6 @@ const Spinnies = require('spinnies')
 const { orders } = require('@airswap/order-utils')
 
 const constants = require('../constants.js')
-const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const Indexer = require('../../contracts/Indexer.json')
 
@@ -47,8 +46,8 @@ function getFields(fields, signerSide, senderSide) {
   return retVal
 }
 
-function indexerCall(wallet, callback) {
-  prompt.get(getFields(['signerToken', 'senderToken'], 'buy', 'sell'), values => {
+function indexerCall(wallet, signerSide, senderSide, callback) {
+  prompt.get(getFields(['signerToken', 'senderToken'], signerSide, senderSide), values => {
     new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
       .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, constants.MAX_LOCATORS)
       .then(result => {
@@ -57,7 +56,7 @@ function indexerCall(wallet, callback) {
   })
 }
 
-function peerCall(locator, method, values, callback) {
+function peerCall(locator, method, values, validator, callback) {
   const client = jayson.client.http(locator)
   client.request(method, values, function(err, error, quote) {
     if (err) {
@@ -65,7 +64,7 @@ function peerCall(locator, method, values, callback) {
     } else {
       if (error) {
         callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
-      } else if (!orders.isValidQuote(quote)) {
+      } else if (!orders[validator](quote)) {
         console.log(`\n${chalk.yellow('Got a Malformed Quote')}`)
         console.log(quote)
       } else {
@@ -78,17 +77,17 @@ function peerCall(locator, method, values, callback) {
 module.exports = {
   getBuyQuote: (wallet, locator) => {
     prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
-      peerCall(locator, 'getSenderSideQuote', values, (error, result) => {
+      peerCall(locator, 'getSenderSideQuote', values, 'isValidQuote', (error, result) => {
         prompt.confirm('Got a Quote', {
           buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-          for: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+          pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
           price: chalk.bold(result.sender.param / result.signer.param),
         })
       })
     })
   },
   getBuyQuoteAll: wallet => {
-    indexerCall(wallet, (locators, values) => {
+    indexerCall(wallet, 'buy', 'for', (locators, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
       prompt.get(getFields(['signerParam'], 'buy', 'pay'), values2 => {
         console.log()
@@ -98,15 +97,198 @@ module.exports = {
           if (locators[i]) {
             hasAtLeastOne = true
             spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
-            peerCall(locators[i], 'getSenderSideQuote', Object.assign(values, values2), (error, result) => {
-              if (error) {
-                spinnies.fail(locators[i], { text: error })
-              } else {
-                spinnies.succeed(locators[i], {
-                  text: `Quote from ${chalk.white(locators[i])} ${result.sender.param}`,
-                })
+            peerCall(
+              locators[i],
+              'getSenderSideQuote',
+              Object.assign(values, values2),
+              'isValidQuote',
+              (error, result) => {
+                if (error) {
+                  spinnies.fail(locators[i], { text: error })
+                } else {
+                  spinnies.succeed(locators[i], {
+                    text:
+                      'Quote ' +
+                      chalk.white(
+                        `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
+                          result.sender.param
+                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)})`
+                      ),
+                  })
+                }
               }
-            })
+            )
+          }
+        }
+        if (!hasAtLeastOne) {
+          console.log('\nNo peers found.\n')
+        }
+      })
+    })
+  },
+  getSellQuote: (wallet, locator) => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'senderParam'], 'sell', 'sell'), values => {
+      peerCall(locator, 'getSignerSideQuote', values, 'isValidQuote', (error, result) => {
+        prompt.confirm('Got a Quote', {
+          sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+          for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+          price: chalk.bold(result.signer.param / result.sender.param),
+        })
+      })
+    })
+  },
+  getSellQuoteAll: wallet => {
+    indexerCall(wallet, 'sell', 'pay', (locators, values) => {
+      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
+        console.log()
+        hasAtLeastOne = false
+        for (let i = 0; i < locators.length; i++) {
+          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          if (locators[i]) {
+            hasAtLeastOne = true
+            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            peerCall(
+              locators[i],
+              'getSignerSideQuote',
+              Object.assign(values, values2),
+              'isValidQuote',
+              (error, result) => {
+                if (error) {
+                  spinnies.fail(locators[i], { text: error })
+                } else {
+                  spinnies.succeed(locators[i], {
+                    text:
+                      'Quote ' +
+                      chalk.white(
+                        `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
+                          result.signer.param
+                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)})`
+                      ),
+                  })
+                }
+              }
+            )
+          }
+        }
+        if (!hasAtLeastOne) {
+          console.log('\nNo peers found.\n')
+        }
+      })
+    })
+  },
+  getBuyOrder: (wallet, locator) => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
+      peerCall(
+        locator,
+        'getSenderSideOrder',
+        Object.assign(values, { senderWallet: wallet.address }),
+        'isValidOrder',
+        (error, result) => {
+          prompt.confirm('Got an Order', {
+            buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+            pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+            price: chalk.bold(result.sender.param / result.signer.param),
+            expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+          })
+        }
+      )
+    })
+  },
+  getBuyOrderAll: wallet => {
+    indexerCall(wallet, 'buy', 'for', (locators, values) => {
+      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      prompt.get(getFields(['signerParam'], 'buy', 'pay'), values2 => {
+        console.log()
+        hasAtLeastOne = false
+        for (let i = 0; i < locators.length; i++) {
+          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          if (locators[i]) {
+            hasAtLeastOne = true
+            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            peerCall(
+              locators[i],
+              'getSenderSideOrder',
+              Object.assign(Object.assign(values, values2, { senderWallet: wallet.address })),
+              'isValidOrder',
+              (error, result) => {
+                if (error) {
+                  spinnies.fail(locators[i], { text: error })
+                } else {
+                  spinnies.succeed(locators[i], {
+                    text:
+                      'Order ' +
+                      chalk.white(
+                        `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
+                          result.sender.param
+                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)}, expiry: ${chalk.green(
+                          new Date(result.expiry).toLocaleTimeString()
+                        )})`
+                      ),
+                  })
+                }
+              }
+            )
+          }
+        }
+        if (!hasAtLeastOne) {
+          console.log('\nNo peers found.\n')
+        }
+      })
+    })
+  },
+  getSellOrder: (wallet, locator) => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'senderParam'], 'sell', 'sell'), values => {
+      peerCall(
+        locator,
+        'getSignerSideOrder',
+        Object.assign(values, { senderWallet: wallet.address }),
+        'isValidOrder',
+        (error, result) => {
+          prompt.confirm('Got an Order', {
+            sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+            for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+            price: chalk.bold(result.signer.param / result.sender.param),
+            expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+          })
+        }
+      )
+    })
+  },
+  getSellOrderAll: wallet => {
+    indexerCall(wallet, 'buy', 'for', (locators, values) => {
+      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      prompt.get(getFields(['senderParam'], 'sell', 'for'), values2 => {
+        console.log()
+        hasAtLeastOne = false
+        for (let i = 0; i < locators.length; i++) {
+          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          if (locators[i]) {
+            hasAtLeastOne = true
+            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            peerCall(
+              locators[i],
+              'getSignerSideOrder',
+              Object.assign(Object.assign(values, values2, { senderWallet: wallet.address })),
+              'isValidOrder',
+              (error, result) => {
+                if (error) {
+                  spinnies.fail(locators[i], { text: error })
+                } else {
+                  spinnies.succeed(locators[i], {
+                    text:
+                      'Order ' +
+                      chalk.white(
+                        `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
+                          result.signer.param
+                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)}, expiry: ${chalk.green(
+                          new Date(result.expiry).toLocaleTimeString()
+                        )})`
+                      ),
+                  })
+                }
+              }
+            )
           }
         }
         if (!hasAtLeastOne) {

@@ -8,21 +8,6 @@ const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const constants = require('../constants.js')
 
-const os = require('os')
-const interfaces = os.networkInterfaces()
-let firstAvailableAddress
-
-for (let id in interfaces) {
-  for (let i = 0; i < interfaces[id].length; i++) {
-    if (interfaces[id][i].family === 'IPv4' && interfaces[id][i].address !== '127.0.0.1') {
-      firstAvailableAddress = interfaces[id][i].address
-      break
-    }
-  }
-}
-
-console.log()
-
 const fields = {
   signerToken: {
     description: `Token address of ${chalk.white.bold('signerToken')} (maker side)`,
@@ -37,7 +22,7 @@ const fields = {
   locator: {
     description: `Web address of ${chalk.white.bold('your server')} (URL)`,
     type: 'URL',
-    default: `http://${firstAvailableAddress}:${process.env.BIND_PORT}`,
+    default: `http://${network.getIPAddress()}:${process.env.BIND_PORT}`,
   },
   stakeAmount: {
     description: `Amount of ${chalk.white.bold('token to stake')} (AST)`,
@@ -64,14 +49,14 @@ network.select('Set Intent to Trade', wallet => {
             .then(allowance => {
               if (allowance.lt(atomicAmount)) {
                 console.log(`\n${chalk.yellow('Error')}: Staking not Enabled`)
-                console.log(`Run the ${chalk.bold('enableStaking')} script to enable.\n`)
+                console.log(`Run the ${chalk.bold('yarn indexer:enable')} script to enable.\n`)
               } else {
                 new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
                   .indexes(values.signerToken, values.senderToken)
                   .then(indexAddress => {
-                    if (indexAddress === '0x0000000000000000000000000000000000000000') {
+                    if (indexAddress === constants.NULL_ADDRESS) {
                       console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found`)
-                      console.log(`Run the ${chalk.bold('createIndex')} script with your token pair.\n`)
+                      console.log(`Run the ${chalk.bold('yarn indexer:create')} script with your token pair.\n`)
                     } else {
                       prompt.confirm('Set an Intent', values, 'send transaction', () => {
                         const locatorBytes = ethers.utils.formatBytes32String(values.locator)

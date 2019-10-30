@@ -24,8 +24,7 @@ network.select('Unset Intent to Trade', wallet => {
       .indexes(values.signerToken, values.senderToken)
       .then(indexAddress => {
         if (indexAddress === '0x0000000000000000000000000000000000000000') {
-          console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found`)
-          console.log(`Nothing to unset for this token pair.\n`)
+          console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found\n`)
         } else {
           prompt.confirm('Unset an Intent', values, 'send transaction', () => {
             new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)

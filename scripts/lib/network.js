@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const ethers = require('ethers')
 const prompt = require('prompt')
 const chalk = require('chalk')
+const os = require('os')
 
 dotenv.config()
 
@@ -20,10 +21,8 @@ module.exports = {
 
     const currentAccount = new ethers.Wallet(Buffer.from(process.env.PRIVATE_KEY, 'hex')).address
 
-    console.log()
-    console.log(`${chalk.white.bold('AirSwap')}: ${chalk.white.bold(operation)}`)
-    console.log(chalk.gray(`Current account ${currentAccount}`))
-    console.log()
+    console.log(`\n${chalk.white.bold('AirSwap')}: ${chalk.white.bold(operation)}`)
+    console.log(chalk.gray(`Current account ${currentAccount}\n`))
 
     prompt.get(schema, function(err, result) {
       if (!err) {
@@ -50,5 +49,15 @@ module.exports = {
         }
       }
     })
+  },
+  getIPAddress: function() {
+    const interfaces = os.networkInterfaces()
+    for (let id in interfaces) {
+      for (let i = 0; i < interfaces[id].length; i++) {
+        if (interfaces[id][i].family === 'IPv4' && interfaces[id][i].address !== '127.0.0.1') {
+          return interfaces[id][i].address
+        }
+      }
+    }
   },
 }
