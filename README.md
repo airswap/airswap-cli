@@ -95,7 +95,7 @@ Amount to buy:  (100)
 Got a Quote
 
 buy: 100 0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
-for: 10 0xc778417e063141139fce010982780140aa0cd5ab
+pay: 10 0xc778417e063141139fce010982780140aa0cd5ab
 price: 0.1
 ```
 
@@ -165,10 +165,10 @@ Select a kind (quote, order):  (quote)
 Select a side (buy, sell):  (buy)
 Query a locator (optional):
 Token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-Token to sell:  (0xc778417e063141139fce010982780140aa0cd5ab)
+Token to pay:  (0xc778417e063141139fce010982780140aa0cd5ab)
 Amount to buy:  (100)
 
-✓ Quote from http://10.0.0.169:8080 10
+✓ Quote from http://10.0.0.169:8080 (cost: 10, price: 0.1)
 ```
 
 ## Advanced: Staking and Trading

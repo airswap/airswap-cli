@@ -60,7 +60,7 @@ function peerCall(locator, method, values, validator, callback) {
   const client = jayson.client.http(locator)
   client.request(method, values, function(err, error, quote) {
     if (err) {
-      callback(`Connection error to ${locator}`)
+      callback(`\n${chalk.yellow('Connection Error')}: ${locator}`)
     } else {
       if (error) {
         callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
@@ -78,18 +78,22 @@ module.exports = {
   getBuyQuote: (wallet, locator) => {
     prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
       peerCall(locator, 'getSenderSideQuote', values, 'isValidQuote', (error, result) => {
-        prompt.confirm('Got a Quote', {
-          buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-          pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-          price: chalk.bold(result.sender.param / result.signer.param),
-        })
+        if (error) {
+          console.log(error)
+        } else {
+          prompt.confirm('Got a Quote', {
+            buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+            pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+            price: chalk.bold(result.sender.param / result.signer.param),
+          })
+        }
       })
     })
   },
   getBuyQuoteAll: wallet => {
-    indexerCall(wallet, 'buy', 'for', (locators, values) => {
+    indexerCall(wallet, 'buy', 'pay', (locators, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
-      prompt.get(getFields(['signerParam'], 'buy', 'pay'), values2 => {
+      prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
         hasAtLeastOne = false
         for (let i = 0; i < locators.length; i++) {
@@ -129,11 +133,15 @@ module.exports = {
   getSellQuote: (wallet, locator) => {
     prompt.get(getFields(['signerToken', 'senderToken', 'senderParam'], 'sell', 'sell'), values => {
       peerCall(locator, 'getSignerSideQuote', values, 'isValidQuote', (error, result) => {
-        prompt.confirm('Got a Quote', {
-          sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-          for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-          price: chalk.bold(result.signer.param / result.sender.param),
-        })
+        if (error) {
+          console.log(error)
+        } else {
+          prompt.confirm('Got a Quote', {
+            sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+            for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+            price: chalk.bold(result.signer.param / result.sender.param),
+          })
+        }
       })
     })
   },
@@ -185,20 +193,24 @@ module.exports = {
         Object.assign(values, { senderWallet: wallet.address }),
         'isValidOrder',
         (error, result) => {
-          prompt.confirm('Got an Order', {
-            buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-            pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-            price: chalk.bold(result.sender.param / result.signer.param),
-            expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
-          })
+          if (error) {
+            console.log(error)
+          } else {
+            prompt.confirm('Got an Order', {
+              buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+              pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+              price: chalk.bold(result.sender.param / result.signer.param),
+              expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+            })
+          }
         }
       )
     })
   },
   getBuyOrderAll: wallet => {
-    indexerCall(wallet, 'buy', 'for', (locators, values) => {
+    indexerCall(wallet, 'buy', 'pay', (locators, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
-      prompt.get(getFields(['signerParam'], 'buy', 'pay'), values2 => {
+      prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
         hasAtLeastOne = false
         for (let i = 0; i < locators.length; i++) {
@@ -245,12 +257,16 @@ module.exports = {
         Object.assign(values, { senderWallet: wallet.address }),
         'isValidOrder',
         (error, result) => {
-          prompt.confirm('Got an Order', {
-            sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-            for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-            price: chalk.bold(result.signer.param / result.sender.param),
-            expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
-          })
+          if (error) {
+            console.log(error)
+          } else {
+            prompt.confirm('Got an Order', {
+              sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
+              for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
+              price: chalk.bold(result.signer.param / result.sender.param),
+              expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+            })
+          }
         }
       )
     })
@@ -258,7 +274,7 @@ module.exports = {
   getSellOrderAll: wallet => {
     indexerCall(wallet, 'buy', 'for', (locators, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
-      prompt.get(getFields(['senderParam'], 'sell', 'for'), values2 => {
+      prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
         console.log()
         hasAtLeastOne = false
         for (let i = 0; i < locators.length; i++) {
