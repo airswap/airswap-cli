@@ -17,7 +17,7 @@ AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. U
 
 - **Quotes** are indicative prices and **Orders** are signed and executable for trading.
 - **Intent** is an interest in trading including contact information, without pricing.
-- **Locators** indicate how to connect to a peer. For example, a locator can be a web URL.
+- **Locators** indicate how to connect to a peer. On AirSwap Instant, locators are web URLs.
 
 ## Setup
 
@@ -175,8 +175,10 @@ Amount to buy:  (100)
 
 ### Important Notes
 
+- **Locators** - Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
 - **Token Values** - All token values are in the indivisible units of a token (wei).
 - **Nonce Window** - Each order is identified by a unique nonce. The nonce window is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
+- **Trading ETH** - Swap only supports tokens, not native ether (ETH). To trade ETH it must be wrapped (WETH).
 
 ### Indexer Staking
 
