@@ -46,20 +46,20 @@ To use an existing Ethereum account, set the `PRIVATE_KEY` in your `.env` file. 
 
 ### Ethereum Node
 
-To use an existing Ethereum node, set the `ETHEREUM_NODE` in your `.env` file. Otherwise you can create a free account with INFURA. Navigate to https://infura.io/ to create an account and generate an API key. Your URL will look like this: `https://rinkeby.infura.io/v3/...`
+To use an existing Ethereum node, set the `ETHEREUM_NODE` in your `.env` file. Otherwise you can create a free account with INFURA. Navigate to https://infura.io/ to create an account and generate an API key and URL.
 
 ## Helpful for Testing (Rinkeby)
 
-- **ETH Faucet** for gas - [Rinkeby ETH faucet](https://faucet.rinkeby.io/)
-- **Rinkeby WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
-- **Rinkeby DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-- **AST Faucet** for staking - [Rinkeby AST faucet](https://ast-faucet-ui.development.airswap.io/)
+- **ETH** to pay for transactions - [ETH Faucet](https://faucet.rinkeby.io/)
+- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
+- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
+- **AST** for staking - [AST Faucet](https://ast-faucet-ui.development.airswap.io/)
 
 ## Quick Start: Quoting
 
-Let's set up a maker on Rinkeby to quote WETH/DAI. The reference Node.js maker is configured to quote WETH/DAI at price 0.1 on port 8080.
+The reference Node.js maker is configured to quote `WETH/DAI` at price `0.1` on port `8080`.
 
-### Test and Start the Maker
+### Test and start your maker
 
 First run the tests to check that they pass.
 
@@ -74,7 +74,7 @@ $ yarn maker:start
 info: Server now listening. (0.0.0.0:8080)
 ```
 
-### Get a Quote from Your Maker
+### Get a quote from your maker
 
 In another shell, run the `yarn peers:get` script to test it out. **Use the default values for everything** but provide a `locator` value of `http://0.0.0.0:8080/` to connect to your newly running maker.
 
@@ -101,7 +101,7 @@ price: 0.1
 
 This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do no thave a locator in hand, we need to use an Indexer to find other trading parties.
 
-### Set Intent to Trade
+### Set your intent to trade
 
 By default, your maker is running in isolation. Run `peers:get` with default values, which will display `No peers found.`.
 
@@ -148,7 +148,7 @@ Number of locators to return:  (10)
 ...
 ```
 
-### Get Quotes from All Makers (Including Yours)
+### Get quotes from all makers (including yours)
 
 Ensure your maker is still running.
 
@@ -176,11 +176,11 @@ Amount to buy:  (100)
 ### Important Notes
 
 - **Token Values** - All token values are in the indivisible units of a token (wei).
-- **Nonce Window** - Each order is identified by a unique nonce. The nonce window is the amount of time in which
+- **Nonce Window** - Each order is identified by a unique nonce. The nonce window is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
 
 ### Indexer Staking
 
-Run the `yarn indexer:enable` script to enable staking on the Rinkeby Indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. Head over to the [Rinkeby AST faucet](https://ast-faucet-ui.development.airswap.io/) to pick up some AST for staking.
+Run the `yarn indexer:enable` script to enable staking on an Indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. On Rinkeby, use the [Rinkeby AST Faucet](https://ast-faucet-ui.development.airswap.io/) to pick up some AST for staking.
 
 ```bash
 $ yarn indexer:enable
@@ -196,80 +196,21 @@ This will approve the Indexer contract to stake your AST.
 
 ### Token Approvals
 
-Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. Rinkeby WETH and DAI tokens can be found the following addresses. To approve the Swap contract to transfer your tokens, use the `yarn approveToken` script for both WETH and DAI above. The Swap contract address is loaded from your `.env` file. You can check the approval status of any token with the `yarn checkApproval` script.
+Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. The Swap contract address is loaded from your `.env` file. You can check the approval status of any token with the `yarn token:check` script.
 
-## Command Reference
+## Commands
 
-### Maker
-
-#### Test
-
-```
-yarn maker:test
-```
-
-#### Start
-
-```
-yarn maker:start
-```
-
-### Indexer
-
-#### Create a Token Pair
-
-```
-yarn indexer:create
-```
-
-#### Enable Staking
-
-```
-yarn indexer:enable
-```
-
-#### Get Locators
-
-```
-yarn indexer:get
-```
-
-#### Set Intent
-
-```
-yarn indexer:set
-```
-
-#### Unset Intent
-
-```
-yarn indexer:unset
-```
-
-### Tokens
-
-#### Approve a Token for Trading
-
-```
-yarn token:approve
-```
-
-#### Check a Token Approval
-
-```
-yarn token:check
-```
-
-### Utils
-
-#### Get Network Addresses
-
-```
-yarn utils:network
-```
-
-#### Create a Random Account
-
-```
-yarn utils:account
-```
+| Command               | Description                 |
+| :-------------------- | :-------------------------- |
+| `yarn`                | Install dependencies        |
+| `yarn maker:test`     | Run maker tests             |
+| `yarn maker:start`    | Start the maker             |
+| `yarn indexer:create` | Create a token pair         |
+| `yarn indexer:enable` | Enable staking              |
+| `yarn indexer:set`    | Set an intent to trade      |
+| `yarn indexer:unset`  | Unset an intent to trade    |
+| `yarn indexer:get`    | Get locators                |
+| `yarn token:approve`  | Approve a token for trading |
+| `yarn token:check`    | Check a token approval      |
+| `yarn utils:network`  | Get network addresses       |
+| `yarn utils:account`  | Create a random account     |
