@@ -1,10 +1,10 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
-
-const Indexer = require('../../contracts/Indexer.json')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const constants = require('../constants.js')
+
+const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 
 const fields = {
   signerToken: {
@@ -28,9 +28,13 @@ network.select('Get Locators', wallet => {
   prompt.get(fields, values => {
     new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
       .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, values.count)
-      .then(locators => {
-        for (let i = 0; i < locators.length; i++) {
-          console.log(`${i + 1}. ${ethers.utils.parseBytes32String(locators[i])}`)
+      .then(result => {
+        if (!result.locators.length) {
+          console.log('No locators found.')
+        } else {
+          for (let i = 0; i < result.locators.length; i++) {
+            console.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+          }
         }
       })
       .catch(prompt.handleError)

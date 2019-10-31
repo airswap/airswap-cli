@@ -1,9 +1,9 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
-
-const Indexer = require('../../contracts/Indexer.json')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
+
+const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 
 const fields = {
   signerToken: {

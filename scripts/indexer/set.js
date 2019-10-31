@@ -1,12 +1,11 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
-
-const ERC20 = require('../../contracts/ERC20.json')
-const Indexer = require('../../contracts/Indexer.json')
-
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const constants = require('../constants.js')
+
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 
 const fields = {
   signerToken: {
@@ -34,7 +33,7 @@ const fields = {
 network.select('Set Intent to Trade', wallet => {
   prompt.get(fields, values => {
     const atomicAmount = values.stakeAmount * 10 ** constants.AST_DECIMALS
-    new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], ERC20.abi, wallet)
+    new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], IERC20.abi, wallet)
       .balanceOf(wallet.address)
       .then(balance => {
         if (balance.toNumber() < atomicAmount) {
@@ -44,7 +43,7 @@ network.select('Set Intent to Trade', wallet => {
                 10 ** constants.AST_DECIMALS}.\n`
           )
         } else {
-          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], ERC20.abi, wallet)
+          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], IERC20.abi, wallet)
             .allowance(wallet.address, process.env.INDEXER_ADDRESS)
             .then(allowance => {
               if (allowance.lt(atomicAmount)) {
