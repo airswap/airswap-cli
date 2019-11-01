@@ -48,11 +48,7 @@ network.select('Set Intent to Trade', wallet => {
             .then(allowance => {
               if (allowance.lt(atomicAmount)) {
                 console.log(`\n${chalk.yellow('Error')}: Staking not Enabled`)
-<<<<<<< HEAD
                 console.log(`Run the ${chalk.bold('yarn indexer:enable')} script to enable.\n`)
-=======
-                console.log(`Run ${chalk.bold('yarn indexer:enable')} to enable.\n`)
->>>>>>> update to error message
               } else {
                 new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
                   .indexes(values.signerToken, values.senderToken)
