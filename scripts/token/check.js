@@ -1,9 +1,9 @@
 const ethers = require('ethers')
 const chalk = require('chalk')
-
-const ERC20 = require('../../contracts/ERC20.json')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
+
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 const fields = {
   token: {
@@ -14,7 +14,7 @@ const fields = {
 
 network.select('Check an Approval', wallet => {
   prompt.get(fields, values => {
-    new ethers.Contract(values.token, ERC20.abi, wallet)
+    new ethers.Contract(values.token, IERC20.abi, wallet)
       .allowance(wallet.address, process.env.SWAP_ADDRESS)
       .then(allowance => {
         if (allowance.eq(0)) {

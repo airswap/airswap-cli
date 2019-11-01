@@ -4,12 +4,11 @@ const jayson = require('jayson')
 const chalk = require('chalk')
 const cliSpinners = require('cli-spinners')
 const Spinnies = require('spinnies')
-
-const { orders } = require('@airswap/order-utils')
-
 const constants = require('../constants.js')
 const prompt = require('../lib/prompt.js')
-const Indexer = require('../../contracts/Indexer.json')
+
+const { orders } = require('@airswap/order-utils')
+const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 
 dotenv.config()
 
