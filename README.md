@@ -33,22 +33,24 @@ yarn install
 
 Environment variables are loaded from a `.env` file in the root directory. The following must be set:
 
-- `PRIVATE_KEY` - The private key of an account to use for staking.
+- `ETHEREUM_ACCOUNT` - The private key of an account to use for staking and trading.
 - `ETHEREUM_NODE` - The URL of an Ethereum node to connect to.
-- `INDEXER_ADDRESS` - The address of an Indexer you intend to use.
-- `SWAP_ADDRESS` - The address of a Swap contract you intend to use.
 
 There is an example `.env-example` that you can copy to `.env` to start with. Latest Swap and Indexer deployments found on [AirSwap Docs](https://docs.airswap.io/).
 
 ### Ethereum Account
 
-To use an existing Ethereum account, set the `PRIVATE_KEY` in your `.env` file. Otherwise create a random account using the `yarn utils:account` script. Paste the generated private key into your `.env` file.
+To use an existing Ethereum account, set the `ETHEREUM_ACCOUNT` in your `.env` file. Otherwise create a random account using the `yarn utils:account` script. Paste the generated private key into your `.env` file.
 
 ### Ethereum Node
 
 To use an existing Ethereum node, set the `ETHEREUM_NODE` in your `.env` file. Otherwise you can create a free account with INFURA. Navigate to https://infura.io/ to create an account and generate an API key and URL.
 
-## Helpful for Testing (Rinkeby)
+### Contract Versions
+
+The Swap and Indexer contracts used by Maker Kit are specified within their respective packages, `@airswap/swap` and `@airswap/indexer` in the [AirSwap Protocols](https://github.com/airswap/airswap-protocols) repository.
+
+## Helpful for Testing on Rinkeby
 
 - **ETH** to pay for transactions - [ETH Faucet](https://faucet.rinkeby.io/)
 - **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)

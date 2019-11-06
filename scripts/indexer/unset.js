@@ -4,6 +4,7 @@ const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 const fields = {
   signerToken: {
@@ -19,15 +20,16 @@ const fields = {
 }
 
 network.select('Unset Intent to Trade', wallet => {
+  const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   prompt.get(fields, values => {
-    new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+    new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       .indexes(values.signerToken, values.senderToken)
       .then(indexAddress => {
         if (indexAddress === '0x0000000000000000000000000000000000000000') {
           console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found\n`)
         } else {
           prompt.confirm('Unset an Intent', values, 'send transaction', () => {
-            new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+            new ethers.Contract(indexerAddress, Indexer.abi, wallet)
               .unsetIntent(values.signerToken, values.senderToken)
               .then(prompt.handleTransaction)
               .catch(prompt.handleError)

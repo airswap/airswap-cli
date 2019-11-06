@@ -19,7 +19,11 @@ module.exports = {
       },
     }
 
-    const currentAccount = new ethers.Wallet(Buffer.from(process.env.PRIVATE_KEY, 'hex')).address
+    if (!process.env.ETHEREUM_ACCOUNT) {
+      throw Error('ETHEREUM_ACCOUNT must be set in your .env file.')
+    }
+
+    const currentAccount = new ethers.Wallet(Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')).address
 
     console.log(`\n${chalk.white.bold('AirSwap')}: ${chalk.white.bold(operation)}`)
     console.log(chalk.gray(`Current account ${currentAccount}\n`))
@@ -27,7 +31,7 @@ module.exports = {
     prompt.get(schema, function(err, result) {
       if (!err) {
         selectedNetwork = result.network
-        signerPrivateKey = Buffer.from(process.env.PRIVATE_KEY, 'hex')
+        signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
 
         try {
           const provider = ethers.getDefaultProvider(selectedNetwork)

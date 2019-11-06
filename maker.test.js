@@ -1,7 +1,9 @@
 const assert = require('assert')
 const dotenv = require('dotenv')
-const server = require('./maker')
 const jayson = require('jayson')
+
+const server = require('./maker')
+const constants = require('./scripts/constants.js')
 
 const { orders } = require('@airswap/order-utils')
 
@@ -23,9 +25,8 @@ describe('Maker', function() {
     server.start(
       process.env.BIND_PORT,
       process.env.BIND_ADDRESS,
-      process.env.PRIVATE_KEY,
-      process.env.WALLET_ADDRESS,
-      process.env.SWAP_ADDRESS,
+      process.env.ETHEREUM_ACCOUNT,
+      constants.chainsIds.RINKEBY,
       'error'
     )
   })

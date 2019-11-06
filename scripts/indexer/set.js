@@ -6,6 +6,7 @@ const constants = require('../constants.js')
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 const fields = {
   signerToken: {
@@ -31,9 +32,10 @@ const fields = {
 }
 
 network.select('Set Intent to Trade', wallet => {
+  const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   prompt.get(fields, values => {
     const atomicAmount = values.stakeAmount * 10 ** constants.AST_DECIMALS
-    new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], IERC20.abi, wallet)
+    new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
       .balanceOf(wallet.address)
       .then(balance => {
         if (balance.toNumber() < atomicAmount) {
@@ -43,14 +45,14 @@ network.select('Set Intent to Trade', wallet => {
                 10 ** constants.AST_DECIMALS}.\n`
           )
         } else {
-          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.name], IERC20.abi, wallet)
-            .allowance(wallet.address, process.env.INDEXER_ADDRESS)
+          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
+            .allowance(wallet.address, indexerAddress)
             .then(allowance => {
               if (allowance.lt(atomicAmount)) {
                 console.log(`\n${chalk.yellow('Error')}: Staking not Enabled`)
                 console.log(`Run the ${chalk.bold('yarn indexer:enable')} script to enable.\n`)
               } else {
-                new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+                new ethers.Contract(indexerAddress, Indexer.abi, wallet)
                   .indexes(values.signerToken, values.senderToken)
                   .then(indexAddress => {
                     if (indexAddress === constants.NULL_ADDRESS) {
@@ -59,7 +61,7 @@ network.select('Set Intent to Trade', wallet => {
                     } else {
                       prompt.confirm('Set an Intent', values, 'send transaction', () => {
                         const locatorBytes = ethers.utils.formatBytes32String(values.locator)
-                        new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+                        new ethers.Contract(indexerAddress, Indexer.abi, wallet)
                           .setIntent(values.signerToken, values.senderToken, atomicAmount, locatorBytes)
                           .then(prompt.handleTransaction)
                           .catch(prompt.handleError)
