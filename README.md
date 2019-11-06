@@ -71,10 +71,10 @@ The Swap and Indexer contracts used by Maker Kit are specified within their resp
 
 ## Helpful for Testing on Rinkeby
 
-- **ETH** to pay for transactions - [ETH Faucet](https://faucet.rinkeby.io/)
+- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
 - **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
 - **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-- **AST** for staking - [AST Faucet](https://ast-faucet-ui.development.airswap.io/)
+- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
 
 ## Quick Start: Quoting
 
