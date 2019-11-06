@@ -23,7 +23,7 @@ AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. U
 
 ### Installation
 
-Requires Node.js `v8.10.0` or above. Check out the [Node.js website](https://nodejs.org) to install the latest. Clone the repository and install dependencies:
+Requires Node.js `v8.10.0` or above. Visit [Node.js](https://nodejs.org) to get the latest. Clone the repository and install dependencies:
 
 ```
 git clone https://github.com/airswap/airswap-maker-kit
@@ -36,7 +36,7 @@ Environment variables are loaded from a `.env` file in the root directory. The f
 - `ETHEREUM_ACCOUNT` - The private key of an account to use for staking and trading.
 - `ETHEREUM_NODE` - The URL of an Ethereum node to connect to.
 
-There is an example `.env-example` that you can copy to `.env` to start with. Latest Swap and Indexer deployments found on [AirSwap Docs](https://docs.airswap.io/).
+There is an example `.env-example` that you can copy to `.env` to start with.
 
 ### Ethereum Account
 
@@ -101,7 +101,7 @@ pay: 10 0xc778417e063141139fce010982780140aa0cd5ab
 price: 0.1
 ```
 
-This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do no thave a locator in hand, we need to use an Indexer to find other trading parties.
+This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do no thave a locator in hand, we need to use an indexer to find other trading parties.
 
 ### Set your intent to trade
 
@@ -111,7 +111,7 @@ By default, your maker is running in isolation. Run `peers:get` with default val
 $ yarn peers:get
 ```
 
-To be found, announce your maker to the world by setting your "intent to trade" on the Indexer.
+To be found, announce your maker to the world by setting your "intent to trade" on the indexer.
 
 ```bash
 $ yarn indexer:set
@@ -134,7 +134,7 @@ stakeAmount: 0
 ...
 ```
 
-The transaction will be mined and your locator is now on the Indexer.
+The transaction will be mined and your locator is now on the indexer.
 
 ```bash
 $ yarn indexer:get
@@ -178,8 +178,9 @@ Amount to buy:  (100)
 ### Important Notes
 
 - **Locators** - Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
-- **Token Values** - All token values are in the indivisible units of a token (wei).
-- **Nonce Window** - Each order is identified by a unique nonce. The nonce window is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
+- **CORS** - Makers should run their servers with CORS enabled to accept connections from in-browser web applications like AirSwap Instant.
+- **Token Values** - All token values are in the smallest indivisible units of a token (wei).
+- **Nonce Window** - Each order is identified by a unique nonce. The "nonce window" is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
 - **Trading ETH** - Swap only supports tokens, not native ether (ETH). To trade ETH it must be wrapped (WETH).
 
 ### Indexer Staking
@@ -200,7 +201,7 @@ This will approve the Indexer contract to stake your AST.
 
 ### Token Approvals
 
-Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. The Swap contract address is loaded from your `.env` file. You can check the approval status of any token with the `yarn token:check` script.
+Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
 
 ## Commands
 
