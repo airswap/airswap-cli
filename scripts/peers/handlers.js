@@ -92,11 +92,12 @@ module.exports = {
     })
   },
   getBuyQuoteAll: wallet => {
-    indexerCall(wallet, 'buy', 'pay', (locators, values) => {
+    indexerCall(wallet, 'buy', 'pay', (result, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
       prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
-        hasAtLeastOne = false
+        let hasAtLeastOne = false
+        const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
@@ -147,11 +148,12 @@ module.exports = {
     })
   },
   getSellQuoteAll: wallet => {
-    indexerCall(wallet, 'sell', 'pay', (locators, values) => {
+    indexerCall(wallet, 'sell', 'pay', (result, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
       prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
         console.log()
-        hasAtLeastOne = false
+        let hasAtLeastOne = false
+        const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
@@ -209,11 +211,12 @@ module.exports = {
     })
   },
   getBuyOrderAll: wallet => {
-    indexerCall(wallet, 'buy', 'pay', (locators, values) => {
+    indexerCall(wallet, 'buy', 'pay', (result, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
       prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
-        hasAtLeastOne = false
+        let hasAtLeastOne = false
+        const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
@@ -273,11 +276,12 @@ module.exports = {
     })
   },
   getSellOrderAll: wallet => {
-    indexerCall(wallet, 'buy', 'for', (locators, values) => {
+    indexerCall(wallet, 'buy', 'for', (result, values) => {
       const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
       prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
         console.log()
-        hasAtLeastOne = false
+        let hasAtLeastOne = false
+        const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {

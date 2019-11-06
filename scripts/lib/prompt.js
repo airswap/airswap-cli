@@ -72,9 +72,8 @@ module.exports = {
     }
   },
   handleTransaction: function(tx) {
-    console.log(chalk.underline(`https://${constants.etherscanDomains[selectedNetwork]}/tx/${tx.hash}`))
-    console.log()
-    const spinner = ora(`Mining transaction (${selectedNetwork})...`).start()
+    console.log(chalk.underline(`https://${constants.etherscanDomains[tx.chainId]}/tx/${tx.hash}\n`))
+    const spinner = ora(`Mining transaction (Rinkeby)...`).start()
     tx.wait(constants.DEFAULT_CONFIRMATIONS).then(() => {
       spinner.succeed(`Transaction complete (${constants.DEFAULT_CONFIRMATIONS} confirmations)`)
       console.log()

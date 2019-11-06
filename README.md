@@ -1,5 +1,7 @@
 # AirSwap Maker Kit
 
+**:warning: Maker Kit is in beta for use on Rinkeby only.**
+
 Maker Kit includes tools and examples to help you get started on the AirSwap Network.
 
 [![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)
@@ -23,7 +25,7 @@ AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. U
 
 ### Installation
 
-Requires Node.js `v8.10.0` or above. Visit [Node.js](https://nodejs.org) to get the latest. Clone the repository and install dependencies:
+Requires [Node.js](https://nodejs.org) `v8.10.0` or above and NPM or [Yarn](https://yarnpkg.com/lang/en/docs/install/).
 
 ```
 git clone https://github.com/airswap/airswap-maker-kit
@@ -49,6 +51,23 @@ To use an existing Ethereum node, set the `ETHEREUM_NODE` in your `.env` file. O
 ### Contract Versions
 
 The Swap and Indexer contracts used by Maker Kit are specified within their respective packages, `@airswap/swap` and `@airswap/indexer` in the [AirSwap Protocols](https://github.com/airswap/airswap-protocols) repository.
+
+## Commands
+
+| Command               | Description                 |
+| :-------------------- | :-------------------------- |
+| `yarn`                | Install dependencies        |
+| `yarn maker:test`     | Run maker tests             |
+| `yarn maker:start`    | Start the maker             |
+| `yarn indexer:create` | Create a token pair         |
+| `yarn indexer:enable` | Enable staking              |
+| `yarn indexer:set`    | Set an intent to trade      |
+| `yarn indexer:unset`  | Unset an intent to trade    |
+| `yarn indexer:get`    | Get locators                |
+| `yarn token:approve`  | Approve a token for trading |
+| `yarn token:check`    | Check a token approval      |
+| `yarn utils:network`  | Get network addresses       |
+| `yarn utils:account`  | Create a random account     |
 
 ## Helpful for Testing on Rinkeby
 
@@ -84,9 +103,8 @@ In another shell, run the `yarn peers:get` script to test it out. **Use the defa
 $ yarn peers:get
 
 AirSwap: Get Quotes and Orders
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
+Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 
-Select a network (rinkeby, mainnet):  (rinkeby)
 Select a kind (quote, order):  (quote)
 Select a side (buy, sell):  (buy)
 Query a locator (optional):  http://0.0.0.0:8080/
@@ -117,9 +135,8 @@ To be found, announce your maker to the world by setting your "intent to trade" 
 $ yarn indexer:set
 
 AirSwap: Set Intent to Trade
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
+Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 
-Select a network (rinkeby, mainnet):  (rinkeby)
 Token address of signerToken (maker side):  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Token address of senderToken (taker side):  (0xc778417e063141139fce010982780140aa0cd5ab)
 Web address of your server (URL):  (http://10.0.0.169:8080)
@@ -140,9 +157,8 @@ The transaction will be mined and your locator is now on the indexer.
 $ yarn indexer:get
 
 AirSwap: Get Locators
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
+Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 
-Select a network (rinkeby, mainnet):  (rinkeby)
 Address of signerToken:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Address of senderToken:  (0xc778417e063141139fce010982780140aa0cd5ab)
 Number of locators to return:  (10)
@@ -202,20 +218,3 @@ This will approve the Indexer contract to stake your AST.
 ### Token Approvals
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
-
-## Commands
-
-| Command               | Description                 |
-| :-------------------- | :-------------------------- |
-| `yarn`                | Install dependencies        |
-| `yarn maker:test`     | Run maker tests             |
-| `yarn maker:start`    | Start the maker             |
-| `yarn indexer:create` | Create a token pair         |
-| `yarn indexer:enable` | Enable staking              |
-| `yarn indexer:set`    | Set an intent to trade      |
-| `yarn indexer:unset`  | Unset an intent to trade    |
-| `yarn indexer:get`    | Get locators                |
-| `yarn token:approve`  | Approve a token for trading |
-| `yarn token:check`    | Check a token approval      |
-| `yarn utils:network`  | Get network addresses       |
-| `yarn utils:account`  | Create a random account     |
