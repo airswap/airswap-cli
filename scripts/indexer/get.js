@@ -5,6 +5,7 @@ const prompt = require('../lib/prompt.js')
 const constants = require('../constants.js')
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 const fields = {
   signerToken: {
@@ -25,8 +26,9 @@ const fields = {
 }
 
 network.select('Get Locators', wallet => {
+  const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   prompt.get(fields, values => {
-    new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+    new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, values.count)
       .then(result => {
         if (!result.locators.length) {

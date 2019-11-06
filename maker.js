@@ -8,7 +8,9 @@ const ethers = require('ethers')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const jayson = require('jayson')
+
 const { orders, signatures } = require('@airswap/order-utils')
+const swapDeploys = require('@airswap/swap/deploys.json')
 
 // The token pairs we are serving quotes for and their trade prices
 let tokenPairs = require('./pairs.json')
@@ -29,7 +31,7 @@ let logger
 let signerPrivateKey
 
 // The Swap contract intended for settlement
-let swapContract
+let swapAddress
 
 // A maximum amount to send. Could be determined dynamically by balance
 let maxSignerParam = 1000
@@ -80,7 +82,7 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
     },
   })
   // Generate an order signature
-  order.signature = signatures.getPrivateKeySignature(order, signerPrivateKey, swapContract)
+  order.signature = signatures.getPrivateKeySignature(order, signerPrivateKey, swapAddress)
   return order
 }
 
@@ -176,31 +178,39 @@ app.post(
 )
 
 // Starts the server instance
-exports.start = function(_port, _address, _signerPrivateKey, _signerWallet, _swapContract, _logLevel) {
+exports.start = function(_port, _address, _signerPrivateKey, _chainId, _logLevel) {
   signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
   signerWallet = new ethers.Wallet(signerPrivateKey).address
-  swapContract = _swapContract
+  swapAddress = swapDeploys[_chainId]
 
-  // Specify the Swap contract to use
-  orders.setVerifyingContract(_swapContract)
+  if (!swapAddress) {
+    throw Error(`No Swap contract found for chain ID ${_chainId}.`)
+  } else {
+    // Specify the Swap contract to use
+    orders.setVerifyingContract(swapAddress)
 
-  // Setup logger
-  logger = winston.createLogger({
-    level: _logLevel,
-    transports: [new winston.transports.Console()],
-    format: winston.format.printf(({ level, message }) => {
-      return `${level}: ${message}`
-    }),
-  })
+    // Setup logger
+    logger = winston.createLogger({
+      level: _logLevel,
+      transports: [new winston.transports.Console()],
+      format: winston.format.printf(({ level, message }) => {
+        return `${level}: ${message}`
+      }),
+    })
 
-  // Start server
-  const port = _port || 8080
-  server = app.listen(port, _address, () => {
-    logger.info(`Server now listening. (${_address}:${port})`)
-  })
+    // Start server
+    const port = _port || 8080
+    server = app.listen(port, _address, () => {
+      logger.info(`Server now listening. (${_address}:${port})`)
+    })
+  }
 }
 
 // Stops the server instance
 exports.stop = function(callback) {
-  server.close(callback)
+  if (server === undefined) {
+    throw Error('Cannot stop; server is not running.')
+  } else {
+    server.close(callback)
+  }
 }

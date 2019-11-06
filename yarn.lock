@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airswap/indexer@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-0.3.1.tgz#bb6025bc8a0cd07d0f16e99ba13eac4648620237"
-  integrity sha512-iU5WC/JSZxu9QYKoqHsxDr+mUdaPSFXWmFPC7qcvNnno6XY3Zyb4vCzl+dBfjOf4wr022S2bvE3NBz+NXED4ug==
+"@airswap/indexer@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-0.3.2.tgz#8501a8f132ac7fc9b59dfe064b4b050bf0179a9c"
+  integrity sha512-3HGdIUp/Jqbxd8UojmT+l33bilWIjkm0HqdXO/ugX8nsGMvrMY2X+j7Ca4AB1OSVtZ8xpVBYDBlwMtmGBhosHg==
   dependencies:
     openzeppelin-solidity "2.3"
 
@@ -18,10 +18,25 @@
     ethereumjs-util "^6.1.0"
     web3 "^1.0.0-beta.55"
 
+"@airswap/swap@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-2.2.2.tgz#62f5801bbe48691c6c19790303c8488e5a2658b1"
+  integrity sha512-tqXTPeTjbfY+MTwS0L1EoxlqL6BM6/iNk8uumldJYeikaXdPllNK1MrRDetTJonyb6HwZ/MSnIRI1j+iIohHTw==
+  dependencies:
+    "@airswap/types" "0.3.2"
+    openzeppelin-solidity "2.3"
+
 "@airswap/tokens@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@airswap/tokens/-/tokens-0.1.2.tgz#afa65c12837ee2c43a077cb8655584693f508b21"
   integrity sha512-Sd+PYJdwr86Cux5RgMfSTNMkkWqeC8OvrbG4Wz61dJrI8HCBlK5wmdcudORDj4jq0BY/UfGN0ojIGambyD2DCw==
+  dependencies:
+    openzeppelin-solidity "2.3"
+
+"@airswap/types@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-0.3.2.tgz#d7d6e059e52a4ee7e62e6ec9d9a738065cac5748"
+  integrity sha512-5KxbP6EVevDr+MXaxzKX8mFquZSq6aE3VuptAp/HEFga2S3IPXPgpdA58BxaxBPE4cFS/AB+2aGBbGKySQMhDQ==
   dependencies:
     openzeppelin-solidity "2.3"
 

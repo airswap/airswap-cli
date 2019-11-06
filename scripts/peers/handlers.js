@@ -9,6 +9,7 @@ const prompt = require('../lib/prompt.js')
 
 const { orders } = require('@airswap/order-utils')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 dotenv.config()
 
@@ -46,8 +47,9 @@ function getFields(fields, signerSide, senderSide) {
 }
 
 function indexerCall(wallet, signerSide, senderSide, callback) {
+  const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   prompt.get(getFields(['signerToken', 'senderToken'], signerSide, senderSide), values => {
-    new ethers.Contract(process.env.INDEXER_ADDRESS, Indexer.abi, wallet)
+    new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, constants.MAX_LOCATORS)
       .then(result => {
         callback(result, values)

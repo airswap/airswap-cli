@@ -20,8 +20,9 @@
     "utils:account": "node scripts/util/account.js"
   },
   "dependencies": {
-    "@airswap/indexer": "^0.3.1",
+    "@airswap/indexer": "^0.3.2",
     "@airswap/order-utils": "^0.3.3",
+    "@airswap/swap": "^2.2.2",
     "@airswap/tokens": "^0.1.2",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",

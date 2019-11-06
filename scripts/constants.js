@@ -6,11 +6,15 @@ module.exports = {
   NULL_ADDRESS: '0x0000000000000000000000000000000000000000',
   DEFAULT_CONFIRMATIONS: 2,
   stakingTokenAddresses: {
-    rinkeby: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
-    mainnet: '0x27054b13b1b798b345b591a4d22e6562d47ea75a',
+    '4': '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
+    '1': '0x27054b13b1b798b345b591a4d22e6562d47ea75a',
+  },
+  chainsIds: {
+    MAINNET: '1',
+    RINKEBY: '4',
   },
   etherscanDomains: {
-    rinkeby: 'rinkeby.etherscan.io',
-    mainnet: 'etherscan.io',
+    '4': 'rinkeby.etherscan.io',
+    '1': 'etherscan.io',
   },
 }
