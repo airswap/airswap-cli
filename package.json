@@ -43,5 +43,8 @@
     "eslint": "^6.5.1",
     "http": "^0.0.0",
     "mocha": "^6.2.2"
+  },
+  "resolutions": {
+    "lodash.merge": "^4.6.2"
   }
 }
