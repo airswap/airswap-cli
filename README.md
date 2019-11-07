@@ -191,14 +191,6 @@ Amount to buy:  (100)
 
 ## Advanced: Staking and Trading
 
-### Important Notes
-
-- **Locators** - Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
-- **CORS** - Makers should run their servers with CORS enabled to accept connections from in-browser web applications like AirSwap Instant.
-- **Token Values** - All token values are in the smallest indivisible units of a token (wei).
-- **Nonce Window** - Each order is identified by a unique nonce. The "nonce window" is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
-- **Trading ETH** - Swap only supports tokens, not native ether (ETH). To trade ETH it must be wrapped (WETH).
-
 ### Indexer Staking
 
 Run the `yarn indexer:enable` script to enable staking on an Indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. On Rinkeby, use the [Rinkeby AST Faucet](https://ast-faucet-ui.development.airswap.io/) to pick up some AST for staking.
@@ -218,3 +210,11 @@ This will approve the Indexer contract to stake your AST.
 ### Token Approvals
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
+
+## Important Notes
+
+- **Locators** - Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
+- **CORS** - Makers should run their servers with CORS enabled to accept connections from in-browser web applications like AirSwap Instant.
+- **Token Values** - All token values are in the smallest indivisible units of a token (wei).
+- **Nonce Window** - Each order is identified by a unique nonce. The "nonce window" is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
+- **Trading ETH** - Swap only supports tokens, not native ether (ETH). To trade ETH it must be wrapped (WETH).
