@@ -1,4 +1,3 @@
-const ethers = require('ethers')
 const assert = require('assert')
 const dotenv = require('dotenv')
 const jayson = require('jayson')
@@ -18,7 +17,7 @@ const client = jayson.client.http(`http://${process.env.BIND_ADDRESS}:${process.
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
 const senderToken = constants.rinkebyTokens.WETH
 const signerToken = constants.rinkebyTokens.DAI
-const unusedToken = ethers.constants.AddressZero
+const unusedToken = constants.ADDRESS_ZERO
 
 describe('Maker', function() {
   // Start the server before any tests
