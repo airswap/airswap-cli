@@ -27,12 +27,12 @@ const allFields = {
   signerToken: {
     description: chalk.white('Token to signerSide'),
     type: 'Address',
-    default: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
+    default: constants.rinkebyTokens.DAI,
   },
   senderToken: {
     description: chalk.white('Token to senderSide'),
     type: 'Address',
-    default: '0xc778417e063141139fce010982780140aa0cd5ab',
+    default: constants.rinkebyTokens.WETH,
   },
 }
 
@@ -182,7 +182,7 @@ module.exports = {
                     text:
                       'Quote ' +
                       chalk.white(
-                        `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
+                        `from ${chalk.underline(locators[i])} (get: ${chalk.bold(
                           result.signer.param,
                         )}, price: ${chalk.bold(result.signer.param / result.sender.param)})`,
                       ),
@@ -320,7 +320,7 @@ module.exports = {
                     text:
                       'Order ' +
                       chalk.white(
-                        `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
+                        `from ${chalk.underline(locators[i])} (get: ${chalk.bold(
                           result.signer.param,
                         )}, price: ${chalk.bold(result.signer.param / result.sender.param)}, expiry: ${chalk.green(
                           new Date(result.expiry).toLocaleTimeString(),

@@ -11,12 +11,12 @@ const fields = {
   signerToken: {
     description: `Address of ${chalk.white.bold('signerToken')} to query`,
     type: 'Address',
-    default: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
+    default: constants.rinkebyTokens.DAI,
   },
   senderToken: {
     description: `Address of ${chalk.white.bold('senderToken')} to query`,
     type: 'Address',
-    default: '0xc778417e063141139fce010982780140aa0cd5ab',
+    default: constants.rinkebyTokens.WETH,
   },
   count: {
     description: `Number of ${chalk.white.bold('locators')} to return`,
