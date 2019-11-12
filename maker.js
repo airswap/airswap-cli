@@ -13,7 +13,7 @@ const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 // The token pairs we are serving quotes for and their trade prices
-let tokenPairs = require('./pairs.json')
+const tokenPairs = require('./pairs.json')
 
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
@@ -30,11 +30,14 @@ let logger
 // The private key used to sign orders
 let signerPrivateKey
 
+// The public address for the private key
+let signerWallet
+
 // The Swap contract intended for settlement
 let swapAddress
 
 // A maximum amount to send. Could be determined dynamically by balance
-let maxSignerParam = 1000
+const maxSignerParam = 1000
 
 // Determine whether we're serving quotes for a given token pair
 function isTradingPair({ signerToken, senderToken }) {
@@ -67,7 +70,7 @@ function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
 
 // Create an order object with the provided parameters
 async function createOrder({ signerToken, signerParam, senderWallet, senderToken, senderParam }) {
-  order = await orders.getOrder({
+  const order = await orders.getOrder({
     expiry: Math.round(new Date().getTime() / 1000) + DEFAULT_EXPIRY,
     nonce: Math.round(new Date().getTime() / 1000 / DEFAULT_NONCE_WINDOW),
     signer: {
@@ -94,7 +97,7 @@ const handlers = {
       createQuote({
         senderParam: priceSell(params),
         ...params,
-      })
+      }),
     )
   },
   getSignerSideQuote: function(params, callback) {
@@ -103,7 +106,7 @@ const handlers = {
       createQuote({
         signerParam: priceBuy(params),
         ...params,
-      })
+      }),
     )
   },
   getMaxQuote: function(params, callback) {
@@ -113,7 +116,7 @@ const handlers = {
         signerParam: maxSignerParam,
         senderParam: priceSell({ signerParam: maxSignerParam, ...params }),
         ...params,
-      })
+      }),
     )
   },
   getSenderSideOrder: async function(params, callback) {
@@ -122,7 +125,7 @@ const handlers = {
       await createOrder({
         senderParam: priceSell(params),
         ...params,
-      })
+      }),
     )
   },
   getSignerSideOrder: async function(params, callback) {
@@ -131,7 +134,7 @@ const handlers = {
       await createOrder({
         signerParam: priceBuy(params),
         ...params,
-      })
+      }),
     )
   },
 }
@@ -144,7 +147,7 @@ app.use(
   cors({
     origin: '*',
     methods: 'POST',
-  })
+  }),
 )
 
 // POST body parsing for JSON-RPC
@@ -164,7 +167,13 @@ app.post(
           } else {
             logger.warn(`Invalid ${method} request: Not serving token pair ${params.signerToken} ${params.senderToken}`)
             return new jayson.Method(function(params, callback) {
-              callback({ code: -33601, message: 'Not serving quotes for this token pair' }, null)
+              callback(
+                {
+                  code: -33601,
+                  message: 'Not serving quotes for this token pair',
+                },
+                null,
+              )
             })
           }
         } catch (e) {
@@ -174,7 +183,7 @@ app.post(
         }
       },
     })
-    .middleware()
+    .middleware(),
 )
 
 // Starts the server instance

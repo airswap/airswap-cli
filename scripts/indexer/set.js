@@ -42,7 +42,7 @@ network.select('Set Intent to Trade', wallet => {
           console.log(
             chalk.red('\n\nError ') +
               `The selected account cannot stake ${values.stakeAmount} AST. Its balance is ${balance.toNumber() /
-                10 ** constants.AST_DECIMALS}.\n`
+                10 ** constants.AST_DECIMALS}.\n`,
           )
         } else {
           new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
