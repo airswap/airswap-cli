@@ -21,7 +21,7 @@ const patterns = {
 function generateSchema(fields) {
   const schema = { properties: {} }
 
-  for (let field in fields) {
+  for (const field in fields) {
     schema.properties[field] = {
       description: fields[field].description,
       pattern: patterns[fields[field].type],
@@ -46,7 +46,7 @@ module.exports = {
   confirm: function(title, values, action, callback) {
     console.log(chalk.underline(`\n${chalk.white.bold(title)}\n`))
 
-    for (let value in values) {
+    for (const value in values) {
       console.log(`${value}: ${values[value]}`)
     }
     console.log()
@@ -67,13 +67,13 @@ module.exports = {
           }
           console.log()
           callback()
-        }
+        },
       )
     }
   },
   handleTransaction: function(tx) {
     console.log(chalk.underline(`https://${constants.etherscanDomains[tx.chainId]}/tx/${tx.hash}\n`))
-    const spinner = ora(`Mining transaction (Rinkeby)...`).start()
+    const spinner = ora('Mining transaction (Rinkeby)...').start()
     tx.wait(constants.DEFAULT_CONFIRMATIONS).then(() => {
       spinner.succeed(`Transaction complete (${constants.DEFAULT_CONFIRMATIONS} confirmations)`)
       console.log()

@@ -93,7 +93,10 @@ module.exports = {
   },
   getBuyQuoteAll: wallet => {
     indexerCall(wallet, 'buy', 'pay', (result, values) => {
-      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      const spinnies = new Spinnies({
+        spinner: cliSpinners.dots,
+        succeedColor: chalk.white,
+      })
       prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
         let hasAtLeastOne = false
@@ -102,7 +105,9 @@ module.exports = {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
             hasAtLeastOne = true
-            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            spinnies.add(locators[i], {
+              text: `Querying ${chalk.white(locators[i])}`,
+            })
             peerCall(
               locators[i],
               'getSenderSideQuote',
@@ -117,12 +122,12 @@ module.exports = {
                       'Quote ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
-                          result.sender.param
-                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)})`
+                          result.sender.param,
+                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)})`,
                       ),
                   })
                 }
-              }
+              },
             )
           }
         }
@@ -149,7 +154,10 @@ module.exports = {
   },
   getSellQuoteAll: wallet => {
     indexerCall(wallet, 'sell', 'pay', (result, values) => {
-      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      const spinnies = new Spinnies({
+        spinner: cliSpinners.dots,
+        succeedColor: chalk.white,
+      })
       prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
         console.log()
         let hasAtLeastOne = false
@@ -158,7 +166,9 @@ module.exports = {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
             hasAtLeastOne = true
-            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            spinnies.add(locators[i], {
+              text: `Querying ${chalk.white(locators[i])}`,
+            })
             peerCall(
               locators[i],
               'getSignerSideQuote',
@@ -173,12 +183,12 @@ module.exports = {
                       'Quote ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
-                          result.signer.param
-                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)})`
+                          result.signer.param,
+                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)})`,
                       ),
                   })
                 }
-              }
+              },
             )
           }
         }
@@ -206,13 +216,16 @@ module.exports = {
               expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
             })
           }
-        }
+        },
       )
     })
   },
   getBuyOrderAll: wallet => {
     indexerCall(wallet, 'buy', 'pay', (result, values) => {
-      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      const spinnies = new Spinnies({
+        spinner: cliSpinners.dots,
+        succeedColor: chalk.white,
+      })
       prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
         console.log()
         let hasAtLeastOne = false
@@ -221,7 +234,9 @@ module.exports = {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
             hasAtLeastOne = true
-            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            spinnies.add(locators[i], {
+              text: `Querying ${chalk.white(locators[i])}`,
+            })
             peerCall(
               locators[i],
               'getSenderSideOrder',
@@ -236,14 +251,14 @@ module.exports = {
                       'Order ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
-                          result.sender.param
+                          result.sender.param,
                         )}, price: ${chalk.bold(result.sender.param / result.signer.param)}, expiry: ${chalk.green(
-                          new Date(result.expiry).toLocaleTimeString()
-                        )})`
+                          new Date(result.expiry).toLocaleTimeString(),
+                        )})`,
                       ),
                   })
                 }
-              }
+              },
             )
           }
         }
@@ -271,13 +286,16 @@ module.exports = {
               expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
             })
           }
-        }
+        },
       )
     })
   },
   getSellOrderAll: wallet => {
     indexerCall(wallet, 'buy', 'for', (result, values) => {
-      const spinnies = new Spinnies({ spinner: cliSpinners.dots, succeedColor: chalk.white })
+      const spinnies = new Spinnies({
+        spinner: cliSpinners.dots,
+        succeedColor: chalk.white,
+      })
       prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
         console.log()
         let hasAtLeastOne = false
@@ -286,7 +304,9 @@ module.exports = {
           locators[i] = ethers.utils.parseBytes32String(locators[i])
           if (locators[i]) {
             hasAtLeastOne = true
-            spinnies.add(locators[i], { text: `Querying ${chalk.white(locators[i])}` })
+            spinnies.add(locators[i], {
+              text: `Querying ${chalk.white(locators[i])}`,
+            })
             peerCall(
               locators[i],
               'getSignerSideOrder',
@@ -301,14 +321,14 @@ module.exports = {
                       'Order ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (for: ${chalk.bold(
-                          result.signer.param
+                          result.signer.param,
                         )}, price: ${chalk.bold(result.signer.param / result.sender.param)}, expiry: ${chalk.green(
-                          new Date(result.expiry).toLocaleTimeString()
-                        )})`
+                          new Date(result.expiry).toLocaleTimeString(),
+                        )})`,
                       ),
                   })
                 }
-              }
+              },
             )
           }
         }

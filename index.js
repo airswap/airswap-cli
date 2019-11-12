@@ -15,5 +15,5 @@ server.start(
   process.env.BIND_ADDRESS,
   process.env.ETHEREUM_ACCOUNT,
   constants.chainsIds.RINKEBY,
-  'info'
+  'info',
 )

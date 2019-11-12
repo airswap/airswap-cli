@@ -27,7 +27,7 @@ describe('Maker', function() {
       process.env.BIND_ADDRESS,
       process.env.ETHEREUM_ACCOUNT,
       constants.chainsIds.RINKEBY,
-      'error'
+      'error',
     )
   })
 
@@ -46,11 +46,11 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error, result) {
+        function(err, error) {
           if (err) throw err
           assert.equal(error && error.code, -33601)
           done()
-        }
+        },
       )
     })
     it('should return a valid quote object', function(done) {
@@ -66,7 +66,7 @@ describe('Maker', function() {
           assert.equal(error, null)
           assert(orders.isValidQuote(result))
           done()
-        }
+        },
       )
     })
   })
@@ -81,11 +81,11 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error, result) {
+        function(err, error) {
           if (err) throw err
           assert.equal(error && error.code, -33601)
           done()
-        }
+        },
       )
     })
     it('should return a valid quote object', function(done) {
@@ -101,7 +101,7 @@ describe('Maker', function() {
           assert.equal(error, null)
           assert(orders.isValidQuote(result))
           done()
-        }
+        },
       )
     })
   })
@@ -115,11 +115,11 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error, result) {
+        function(err, error) {
           if (err) throw err
           assert.equal(error && error.code, -33601)
           done()
-        }
+        },
       )
     })
     it('should return a valid max quote', function(done) {
@@ -134,7 +134,7 @@ describe('Maker', function() {
           assert.equal(error, null)
           assert(orders.isValidQuote(result))
           done()
-        }
+        },
       )
     })
   })
@@ -150,11 +150,11 @@ describe('Maker', function() {
           senderWallet,
           senderToken: unusedToken,
         },
-        function(err, error, result) {
+        function(err, error) {
           if (err) throw err
           assert.equal(error && error.code, -33601)
           done()
-        }
+        },
       )
     })
     it('should return a valid order object', function(done) {
@@ -171,7 +171,7 @@ describe('Maker', function() {
           assert.equal(error, null)
           assert(orders.isValidOrder(result))
           done()
-        }
+        },
       )
     })
   })
@@ -187,11 +187,11 @@ describe('Maker', function() {
           senderWallet,
           senderToken: unusedToken,
         },
-        function(err, error, result) {
+        function(err, error) {
           if (err) throw err
           assert.equal(error && error.code, -33601)
           done()
-        }
+        },
       )
     })
     it('should return a valid order object', function(done) {
@@ -208,7 +208,7 @@ describe('Maker', function() {
           assert.equal(error, null)
           assert(orders.isValidOrder(result))
           done()
-        }
+        },
       )
     })
   })
