@@ -1,4 +1,5 @@
 const dotenv = require('dotenv')
+const BigNumber = require('bignumber.js')
 const maker = require('./maker.js')
 const server = require('./comms/web-express.js')
 const constants = require('./scripts/constants.js')
@@ -20,12 +21,16 @@ function isTradingPair({ signerToken, senderToken }) {
 
 // Calculates the senderParam: An amount the taker will send us in a sell
 function priceSell({ signerParam, signerToken, senderToken }) {
-  return signerParam * tokenPairs[signerToken][senderToken]
+  return BigNumber(signerParam)
+    .multipliedBy(tokenPairs[signerToken][senderToken])
+    .toFixed()
 }
 
 // Calculates the signerParam: An amount we would send the taker in a buy
 function priceBuy({ senderParam, senderToken, signerToken }) {
-  return senderParam / tokenPairs[signerToken][senderToken]
+  return BigNumber(senderParam)
+    .dividedBy(tokenPairs[signerToken][senderToken])
+    .toFixed()
 }
 
 // Configure the server
