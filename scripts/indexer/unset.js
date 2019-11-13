@@ -2,6 +2,7 @@ const ethers = require('ethers')
 const chalk = require('chalk')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
+const constants = require('../constants.js')
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
@@ -10,12 +11,12 @@ const fields = {
   signerToken: {
     description: `Token address of ${chalk.white.bold('signerToken')} (maker side)`,
     type: 'Address',
-    default: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
+    default: constants.rinkebyTokens.DAI,
   },
   senderToken: {
     description: `Token address of ${chalk.white.bold('senderToken')} (taker side)`,
     type: 'Address',
-    default: '0xc778417e063141139fce010982780140aa0cd5ab',
+    default: constants.rinkebyTokens.WETH,
   },
 }
 

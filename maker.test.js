@@ -14,10 +14,10 @@ dotenv.config()
 const client = jayson.client.http(`http://${process.env.BIND_ADDRESS}:${process.env.BIND_PORT}`)
 
 // Dummy values for tokens and wallets
-const signerToken = '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea'
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
-const senderToken = '0xc778417e063141139fce010982780140aa0cd5ab'
-const unusedToken = '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea'
+const senderToken = constants.rinkebyTokens.WETH
+const signerToken = constants.rinkebyTokens.DAI
+const unusedToken = constants.ADDRESS_ZERO
 
 describe('Maker', function() {
   // Start the server before any tests
@@ -46,9 +46,9 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error) {
+        function(err, errorResponse) {
           if (err) throw err
-          assert.equal(error && error.code, -33601)
+          assert.equal(errorResponse.error && errorResponse.error.code, -33601)
           done()
         },
       )
@@ -61,9 +61,9 @@ describe('Maker', function() {
           signerToken,
           senderToken,
         },
-        function(err, error, result) {
+        function(err, errorResponse, result) {
           if (err) throw err
-          assert.equal(error, null)
+          assert.equal(errorResponse, null)
           assert(orders.isValidQuote(result))
           done()
         },
@@ -81,9 +81,9 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error) {
+        function(err, errorResponse) {
           if (err) throw err
-          assert.equal(error && error.code, -33601)
+          assert.equal(errorResponse.error && errorResponse.error.code, -33601)
           done()
         },
       )
@@ -115,9 +115,9 @@ describe('Maker', function() {
           signerToken,
           senderToken: unusedToken,
         },
-        function(err, error) {
+        function(err, errorResponse) {
           if (err) throw err
-          assert.equal(error && error.code, -33601)
+          assert.equal(errorResponse.error && errorResponse.error.code, -33601)
           done()
         },
       )
@@ -150,9 +150,9 @@ describe('Maker', function() {
           senderWallet,
           senderToken: unusedToken,
         },
-        function(err, error) {
+        function(err, errorResponse) {
           if (err) throw err
-          assert.equal(error && error.code, -33601)
+          assert.equal(errorResponse.error && errorResponse.error.code, -33601)
           done()
         },
       )
@@ -187,9 +187,9 @@ describe('Maker', function() {
           senderWallet,
           senderToken: unusedToken,
         },
-        function(err, error) {
+        function(err, errorResponse) {
           if (err) throw err
-          assert.equal(error && error.code, -33601)
+          assert.equal(errorResponse.error && errorResponse.error.code, -33601)
           done()
         },
       )
