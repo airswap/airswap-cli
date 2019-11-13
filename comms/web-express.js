@@ -32,25 +32,10 @@ exports.start = function(_handlers, _isTradingPair, _logger) {
     jayson
       .server(_handlers, {
         // Ensures we're serving requested token pairs and catches other errors
-        router: function(method, params) {
+        router: function(method) {
           try {
             _logger.info(`Received ${method} request`)
-            if (_isTradingPair(params)) {
-              if (typeof this._methods[method] === 'object') return this._methods[method]
-            } else {
-              _logger.warn(
-                `Invalid ${method} request: Not serving token pair ${params.signerToken} ${params.senderToken}`,
-              )
-              return new jayson.Method(function(params, callback) {
-                callback(
-                  {
-                    code: -33601,
-                    message: 'Not serving quotes for this token pair',
-                  },
-                  null,
-                )
-              })
-            }
+            if (typeof this._methods[method] === 'object') return this._methods[method]
           } catch (e) {
             return new jayson.Method(function(params, callback) {
               callback(true, null)

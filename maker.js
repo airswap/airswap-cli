@@ -83,9 +83,23 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
   return order
 }
 
+// If not trading a requested pair return an error
+function tradingPairGuard(proceed) {
+  return function(params, callback) {
+    if (isTradingPair(params)) {
+      proceed(params, callback)
+    } else {
+      callback({
+        code: -33601,
+        message: 'Not serving quotes for this token pair',
+      })
+    }
+  }
+}
+
 // Peer API Implementation
 const handlers = {
-  getSenderSideQuote: function(params, callback) {
+  getSenderSideQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -93,8 +107,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSignerSideQuote: function(params, callback) {
+  }),
+  getSignerSideQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -102,8 +116,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getMaxQuote: function(params, callback) {
+  }),
+  getMaxQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -112,8 +126,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSenderSideOrder: async function(params, callback) {
+  }),
+  getSenderSideOrder: tradingPairGuard(async function(params, callback) {
     callback(
       null,
       await createOrder({
@@ -121,8 +135,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSignerSideOrder: async function(params, callback) {
+  }),
+  getSignerSideOrder: tradingPairGuard(async function(params, callback) {
     callback(
       null,
       await createOrder({
@@ -130,7 +144,7 @@ const handlers = {
         ...params,
       }),
     )
-  },
+  }),
 }
 
 let listener

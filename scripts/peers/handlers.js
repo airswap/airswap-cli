@@ -291,7 +291,7 @@ module.exports = {
     })
   },
   getSellOrderAll: wallet => {
-    indexerCall(wallet, 'buy', 'for', (result, values) => {
+    indexerCall(wallet, 'sell', 'pay', (result, values) => {
       const spinnies = new Spinnies({
         spinner: cliSpinners.dots,
         succeedColor: chalk.white,
