@@ -2,12 +2,9 @@
  * A simple maker for the AirSwap Network
  * Warning: For demonstration purposes only, use at your own risk
  */
-const express = require('express')
+
 const winston = require('winston')
 const ethers = require('ethers')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const jayson = require('jayson')
 
 const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -20,9 +17,6 @@ const DEFAULT_EXPIRY = 180
 
 // Only issue unique nonces every ten seconds
 const DEFAULT_NONCE_WINDOW = 10
-
-// Server instance to start and stop
-let server
 
 // Logger instance
 let logger
@@ -89,9 +83,23 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
   return order
 }
 
+// If not trading a requested pair return an error
+function tradingPairGuard(proceed) {
+  return function(params, callback) {
+    if (isTradingPair(params)) {
+      proceed(params, callback)
+    } else {
+      callback({
+        code: -33601,
+        message: 'Not serving quotes for this token pair',
+      })
+    }
+  }
+}
+
 // Peer API Implementation
 const handlers = {
-  getSenderSideQuote: function(params, callback) {
+  getSenderSideQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -99,8 +107,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSignerSideQuote: function(params, callback) {
+  }),
+  getSignerSideQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -108,8 +116,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getMaxQuote: function(params, callback) {
+  }),
+  getMaxQuote: tradingPairGuard(function(params, callback) {
     callback(
       null,
       createQuote({
@@ -118,8 +126,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSenderSideOrder: async function(params, callback) {
+  }),
+  getSenderSideOrder: tradingPairGuard(async function(params, callback) {
     callback(
       null,
       await createOrder({
@@ -127,8 +135,8 @@ const handlers = {
         ...params,
       }),
     )
-  },
-  getSignerSideOrder: async function(params, callback) {
+  }),
+  getSignerSideOrder: tradingPairGuard(async function(params, callback) {
     callback(
       null,
       await createOrder({
@@ -136,58 +144,15 @@ const handlers = {
         ...params,
       }),
     )
-  },
+  }),
 }
 
-// Web server instance
-const app = express()
+let listener
 
-// CORS for connections from web browsers
-app.use(
-  cors({
-    origin: '*',
-    methods: 'POST',
-  }),
-)
+// Configure and start the listener
+exports.start = function(_listener, _signerPrivateKey, _chainId, _logLevel) {
+  listener = _listener
 
-// POST body parsing for JSON-RPC
-app.use(bodyParser.json())
-
-// POST request handler
-app.post(
-  '/',
-  jayson
-    .server(handlers, {
-      // Ensures we're serving requested token pairs and catches other errors
-      router: function(method, params) {
-        try {
-          logger.info(`Received ${method} request`)
-          if (isTradingPair(params)) {
-            if (typeof this._methods[method] === 'object') return this._methods[method]
-          } else {
-            logger.warn(`Invalid ${method} request: Not serving token pair ${params.signerToken} ${params.senderToken}`)
-            return new jayson.Method(function(params, callback) {
-              callback(
-                {
-                  code: -33601,
-                  message: 'Not serving quotes for this token pair',
-                },
-                null,
-              )
-            })
-          }
-        } catch (e) {
-          return new jayson.Method(function(params, callback) {
-            callback(true, null)
-          })
-        }
-      },
-    })
-    .middleware(),
-)
-
-// Starts the server instance
-exports.start = function(_port, _address, _signerPrivateKey, _chainId, _logLevel) {
   signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
   signerWallet = new ethers.Wallet(signerPrivateKey).address
   swapAddress = swapDeploys[_chainId]
@@ -207,19 +172,11 @@ exports.start = function(_port, _address, _signerPrivateKey, _chainId, _logLevel
       }),
     })
 
-    // Start server
-    const port = _port || 8080
-    server = app.listen(port, _address, () => {
-      logger.info(`Server now listening. (${_address}:${port})`)
-    })
+    listener.start(handlers, logger)
   }
 }
 
-// Stops the server instance
+// Stops the transport
 exports.stop = function(callback) {
-  if (server === undefined) {
-    throw Error('Cannot stop; server is not running.')
-  } else {
-    server.close(callback)
-  }
+  listener.stop(callback)
 }
