@@ -2,7 +2,8 @@ const assert = require('assert')
 const dotenv = require('dotenv')
 const jayson = require('jayson')
 
-const server = require('./maker')
+const maker = require('./maker.js')
+const server = require('./comms/web-express.js')
 const constants = require('./scripts/constants.js')
 
 const { orders } = require('@airswap/order-utils')
@@ -19,21 +20,19 @@ const senderToken = constants.rinkebyTokens.WETH
 const signerToken = constants.rinkebyTokens.DAI
 const unusedToken = constants.ADDRESS_ZERO
 
+// Configure the network
+server.configure(process.env.BIND_ADDRESS, process.env.BIND_PORT)
+
 describe('Maker', function() {
   // Start the server before any tests
   before(function() {
-    server.start(
-      process.env.BIND_PORT,
-      process.env.BIND_ADDRESS,
-      process.env.ETHEREUM_ACCOUNT,
-      constants.chainsIds.RINKEBY,
-      'error',
-    )
+    // Start the maker
+    maker.start(server, process.env.ETHEREUM_ACCOUNT, constants.chainsIds.RINKEBY, 'error')
   })
 
   // Stop the server after all tests
   after(function() {
-    server.stop()
+    maker.stop()
   })
 
   // Test the getSenderSideQuote implementation

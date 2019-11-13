@@ -32,7 +32,7 @@
     "dotenv": "^8.2.0",
     "ethers": "^4.0.38",
     "express": "^4.17.1",
-    "jayson": "^3.1.1",
+    "jayson": "3.1.2",
     "multispinner": "^0.2.1",
     "ora": "^4.0.2",
     "prompt": "^1.0.0",
