@@ -25,7 +25,7 @@ exports.configure = function(_address, _port) {
   port = _port
 }
 
-exports.start = function(_handlers, _isTradingPair, _logger) {
+exports.start = function(_handlers, _logger) {
   // POST request handler
   server.post(
     '/',

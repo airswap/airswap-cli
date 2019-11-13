@@ -172,7 +172,7 @@ exports.start = function(_listener, _signerPrivateKey, _chainId, _logLevel) {
       }),
     })
 
-    listener.start(handlers, isTradingPair, logger)
+    listener.start(handlers, logger)
   }
 }
 
