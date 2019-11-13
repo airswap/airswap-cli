@@ -9,14 +9,14 @@ const ethers = require('ethers')
 const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-// The token pairs we are serving quotes for and their trade prices
-const tokenPairs = require('./pairs.json')
-
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
 
 // Only issue unique nonces every ten seconds
 const DEFAULT_NONCE_WINDOW = 10
+
+// Server instance
+let server
 
 // Logger instance
 let logger
@@ -33,20 +33,10 @@ let swapAddress
 // A maximum amount to send. Could be determined dynamically by balance
 const maxSignerParam = 1000
 
-// Determine whether we're serving quotes for a given token pair
-function isTradingPair({ signerToken, senderToken }) {
-  return signerToken in tokenPairs && senderToken in tokenPairs[signerToken]
-}
-
-// Calculate the senderParam: An amount the taker will send us in a sell
-function priceSell({ signerParam, signerToken, senderToken }) {
-  return signerParam * tokenPairs[signerToken][senderToken]
-}
-
-// Calculate the signerParam: An amount we would send the taker in a buy
-function priceBuy({ senderParam, senderToken, signerToken }) {
-  return senderParam / tokenPairs[signerToken][senderToken]
-}
+// Trading strategy handlers
+let isTradingPair
+let priceBuy
+let priceSell
 
 // Create a quote object with the provided parameters
 function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
@@ -86,7 +76,7 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
 // If not trading a requested pair return an error
 function tradingPairGuard(proceed) {
   return function(params, callback) {
-    if (isTradingPair(params)) {
+    if (isTradingPair(params) && typeof priceBuy === 'function' && typeof priceSell === 'function') {
       proceed(params, callback)
     } else {
       callback({
@@ -147,19 +137,21 @@ const handlers = {
   }),
 }
 
-let listener
-
-// Configure and start the listener
-exports.start = function(_listener, _signerPrivateKey, _chainId, _logLevel) {
-  listener = _listener
-
-  signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
-  signerWallet = new ethers.Wallet(signerPrivateKey).address
+// Configure and start the server
+exports.start = function(_server, _signerPrivateKey, _chainId, _isTradingPair, _priceBuy, _priceSell, _logLevel) {
   swapAddress = swapDeploys[_chainId]
 
   if (!swapAddress) {
     throw Error(`No Swap contract found for chain ID ${_chainId}.`)
   } else {
+    server = _server
+    signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
+    signerWallet = new ethers.Wallet(signerPrivateKey).address
+
+    isTradingPair = _isTradingPair
+    priceBuy = _priceBuy
+    priceSell = _priceSell
+
     // Specify the Swap contract to use
     orders.setVerifyingContract(swapAddress)
 
@@ -172,11 +164,11 @@ exports.start = function(_listener, _signerPrivateKey, _chainId, _logLevel) {
       }),
     })
 
-    listener.start(handlers, logger)
+    server.start(handlers, logger)
   }
 }
 
 // Stops the transport
 exports.stop = function(callback) {
-  listener.stop(callback)
+  server.stop(callback)
 }
