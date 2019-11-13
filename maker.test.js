@@ -27,7 +27,21 @@ describe('Maker', function() {
   // Start the server before any tests
   before(function() {
     // Start the maker
-    maker.start(server, process.env.ETHEREUM_ACCOUNT, constants.chainsIds.RINKEBY, 'error')
+    maker.start(
+      server,
+      process.env.ETHEREUM_ACCOUNT,
+      constants.chainsIds.RINKEBY,
+      function({ senderToken }) {
+        return senderToken !== unusedToken
+      },
+      function() {
+        return 0
+      },
+      function() {
+        return 0
+      },
+      'error',
+    )
   })
 
   // Stop the server after all tests

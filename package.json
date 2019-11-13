@@ -25,6 +25,7 @@
     "@airswap/order-utils": "^0.3.3",
     "@airswap/swap": "^2.2.2",
     "@airswap/tokens": "^0.1.2",
+    "bignumber.js": "^9.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
     "cli-spinners": "^2.2.0",
