@@ -58,7 +58,13 @@ function indexerCall(wallet, signerSide, senderSide, callback) {
 }
 
 function peerCall(locator, method, values, validator, callback) {
-  const client = jayson.client.http(locator)
+  // const client = jayson.client.http('http://localhost:3000')
+  let client
+  if (locator.includes('https')) {
+    client = jayson.client.https(locator)
+  } else {
+    client = jayson.client.http(locator)
+  }
   client.request(method, values, function(err, error, quote) {
     if (err) {
       callback(`\n${chalk.yellow('Connection Error')}: ${locator}`)
