@@ -4,7 +4,7 @@
   "description": "Tools to help you get started on the AirSwap Network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/airswap/airswap-protocols"
+    "url": "https://github.com/airswap/airswap-maker-kit"
   },
   "license": "Apache-2.0",
   "main": "handlers.js",
