@@ -1,7 +1,7 @@
 const prompt = require('prompt')
 const chalk = require('chalk')
 const ora = require('ora')
-const constants = require('../constants.js')
+const constants = require('../../constants.js')
 
 prompt.message = ''
 prompt.start()

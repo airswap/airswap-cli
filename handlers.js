@@ -4,7 +4,7 @@ const BigNumber = require('bignumber.js')
 const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-const constants = require('./scripts/constants.js')
+const constants = require('./constants.js')
 
 // Load the .env file
 dotenv.config()

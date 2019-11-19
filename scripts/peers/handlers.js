@@ -4,7 +4,7 @@ const jayson = require('jayson')
 const chalk = require('chalk')
 const cliSpinners = require('cli-spinners')
 const Spinnies = require('spinnies')
-const constants = require('../constants.js')
+const constants = require('../../constants.js')
 const prompt = require('../lib/prompt.js')
 
 const { orders } = require('@airswap/order-utils')
