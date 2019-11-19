@@ -4,7 +4,7 @@ const jayson = require('jayson')
 const chalk = require('chalk')
 const cliSpinners = require('cli-spinners')
 const Spinnies = require('spinnies')
-const constants = require('../constants.js')
+const constants = require('../../constants.js')
 const prompt = require('../lib/prompt.js')
 
 const { orders } = require('@airswap/order-utils')
@@ -58,10 +58,15 @@ function indexerCall(wallet, signerSide, senderSide, callback) {
 }
 
 function peerCall(locator, method, values, validator, callback) {
-  const client = jayson.client.http(locator)
+  let client
+  if (locator.includes('https')) {
+    client = jayson.client.https(locator)
+  } else {
+    client = jayson.client.http(locator)
+  }
   client.request(method, values, function(err, error, quote) {
     if (err) {
-      callback(`\n${chalk.yellow('Connection Error')}: ${locator}`)
+      callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
     } else {
       if (error) {
         callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)

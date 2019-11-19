@@ -2,7 +2,7 @@ const ethers = require('ethers')
 const chalk = require('chalk')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
-const constants = require('../constants.js')
+const constants = require('../../constants.js')
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')

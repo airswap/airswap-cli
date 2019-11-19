@@ -54,20 +54,18 @@ The Swap and Indexer contracts used by Maker Kit are specified within their resp
 
 ## Commands
 
-| Command               | Description                 |
-| :-------------------- | :-------------------------- |
-| `yarn`                | Install dependencies        |
-| `yarn maker:test`     | Run maker tests             |
-| `yarn maker:start`    | Start the maker             |
-| `yarn indexer:create` | Create a token pair         |
-| `yarn indexer:enable` | Enable staking              |
-| `yarn indexer:set`    | Set an intent to trade      |
-| `yarn indexer:unset`  | Unset an intent to trade    |
-| `yarn indexer:get`    | Get locators                |
-| `yarn token:approve`  | Approve a token for trading |
-| `yarn token:check`    | Check a token approval      |
-| `yarn utils:network`  | Get network addresses       |
-| `yarn utils:account`  | Create a random account     |
+| Command               | Description                   |
+| :-------------------- | :---------------------------- |
+| `yarn`                | Install dependencies          |
+| `yarn indexer:create` | Create a new token pair index |
+| `yarn indexer:enable` | Enable staking on the indexer |
+| `yarn indexer:set`    | Set an intent to trade        |
+| `yarn indexer:unset`  | Unset an intent to trade      |
+| `yarn indexer:get`    | Get locators                  |
+| `yarn token:approve`  | Approve a token for trading   |
+| `yarn token:check`    | Check a token approval        |
+| `yarn utils:network`  | Get network addresses         |
+| `yarn utils:account`  | Create a random account       |
 
 ## Helpful for Testing on Rinkeby
 
@@ -78,22 +76,7 @@ The Swap and Indexer contracts used by Maker Kit are specified within their resp
 
 ## Quick Start: Quoting
 
-The reference Node.js maker is configured to quote `WETH/DAI` at price `0.1` on port `8080`.
-
-### Test and start your maker
-
-First run the tests to check that they pass.
-
-```bash
-$ yarn maker:test
-```
-
-All should clear. Now start up the maker to accept start accepting requests.
-
-```bash
-$ yarn maker:start
-info: Server now listening. (0.0.0.0:8080)
-```
+[AirSwap Maker Kit Examples](https://github.com/airswap/airswap-maker-kit-examples) has examples available to get started. For the following guide, start up the [Express](https://github.com/airswap/airswap-maker-kit-examples/tree/master/express) example for Node.js on your local machine.
 
 ### Get a quote from your maker
 
@@ -211,10 +194,6 @@ This will approve the Indexer contract to stake your AST.
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
 
-## Important Notes
+## Locators
 
-- **Locators** - Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
-- **CORS** - Makers should run their servers with CORS enabled to accept connections from in-browser web applications like AirSwap Instant.
-- **Token Values** - All token values are in the smallest indivisible units of a token (wei).
-- **Nonce Window** - Each order is identified by a unique nonce. The "nonce window" is the time within which every order returned will include the same nonce. This can be configured to prevent overexposure.
-- **Trading ETH** - Swap only supports tokens, not native ether (ETH). To trade ETH it must be wrapped (WETH).
+Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.

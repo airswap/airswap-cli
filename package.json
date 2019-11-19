@@ -1,7 +1,7 @@
 {
   "name": "airswap-maker-kit",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "handlers.js",
   "repository": "git@github.com:airswap/airswap-maker-kit.git",
   "author": "Don Mosites <don.mosites@fluidity.io>",
   "license": "MIT",
@@ -11,8 +11,6 @@
     "indexer:get": "node scripts/indexer/get.js",
     "indexer:set": "node scripts/indexer/set.js",
     "indexer:unset": "node scripts/indexer/unset.js",
-    "maker:start": "node index.js",
-    "maker:test": "yarn mocha maker.test.js",
     "peers:get": "node scripts/peers/get.js",
     "token:approve": "node scripts/token/approve.js",
     "token:check": "node scripts/token/check.js",

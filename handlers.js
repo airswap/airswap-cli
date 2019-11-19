@@ -1,13 +1,24 @@
-/*
- * A simple maker for the AirSwap Network
- * Warning: For demonstration purposes only, use at your own risk
- */
-
-const winston = require('winston')
 const ethers = require('ethers')
-
+const dotenv = require('dotenv')
+const BigNumber = require('bignumber.js')
 const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
+
+const constants = require('./constants.js')
+
+// Load the .env file
+dotenv.config()
+
+// Specify the network to use (Mainnet or Rinkeby testnet)
+const chainId = constants.chainsIds.RINKEBY
+
+// Specify the Swap contract to use for settlement
+const swapAddress = swapDeploys[chainId]
+if (!swapAddress) throw new Error(`No Swap contract found for chain ID ${chainId}.`)
+orders.setVerifyingContract(swapAddress)
+
+// Import token pairs to quote for and their trade prices
+const tokenPairs = require('./pairs.json')
 
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
@@ -15,28 +26,36 @@ const DEFAULT_EXPIRY = 180
 // Only issue unique nonces every ten seconds
 const DEFAULT_NONCE_WINDOW = 10
 
-// Server instance
-let server
-
-// Logger instance
-let logger
-
 // The private key used to sign orders
-let signerPrivateKey
+if (!process.env.ETHEREUM_ACCOUNT) throw new Error('ETHEREUM_ACCOUNT must be set in your .env file')
+const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
 
 // The public address for the private key
-let signerWallet
-
-// The Swap contract intended for settlement
-let swapAddress
+const signerWallet = new ethers.Wallet(signerPrivateKey).address
 
 // A maximum amount to send. Could be determined dynamically by balance
 const maxSignerParam = 1000
 
 // Trading strategy handlers
-let isTradingPair
-let priceBuy
-let priceSell
+
+// Determines whether serving quotes for a given token pair
+function isTradingPair({ signerToken, senderToken }) {
+  return signerToken in tokenPairs && senderToken in tokenPairs[signerToken]
+}
+
+// Calculates the senderParam: An amount the taker will send us in a sell
+function priceSell({ signerParam, signerToken, senderToken }) {
+  return BigNumber(signerParam)
+    .multipliedBy(tokenPairs[signerToken][senderToken])
+    .toFixed()
+}
+
+// Calculates the signerParam: An amount we would send the taker in a buy
+function priceBuy({ senderParam, senderToken, signerToken }) {
+  return BigNumber(senderParam)
+    .dividedBy(tokenPairs[signerToken][senderToken])
+    .toFixed()
+}
 
 // Create a quote object with the provided parameters
 function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
@@ -137,38 +156,4 @@ const handlers = {
   }),
 }
 
-// Configure and start the server
-exports.start = function(_server, _signerPrivateKey, _chainId, _isTradingPair, _priceBuy, _priceSell, _logLevel) {
-  swapAddress = swapDeploys[_chainId]
-
-  if (!swapAddress) {
-    throw Error(`No Swap contract found for chain ID ${_chainId}.`)
-  } else {
-    server = _server
-    signerPrivateKey = Buffer.from(_signerPrivateKey, 'hex')
-    signerWallet = new ethers.Wallet(signerPrivateKey).address
-
-    isTradingPair = _isTradingPair
-    priceBuy = _priceBuy
-    priceSell = _priceSell
-
-    // Specify the Swap contract to use
-    orders.setVerifyingContract(swapAddress)
-
-    // Setup logger
-    logger = winston.createLogger({
-      level: _logLevel,
-      transports: [new winston.transports.Console()],
-      format: winston.format.printf(({ level, message }) => {
-        return `${level}: ${message}`
-      }),
-    })
-
-    server.start(handlers, logger)
-  }
-}
-
-// Stops the transport
-exports.stop = function(callback) {
-  server.stop(callback)
-}
+module.exports = handlers
