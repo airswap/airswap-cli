@@ -36,17 +36,12 @@ yarn install
 Environment variables are loaded from a `.env` file in the root directory. The following must be set:
 
 - `ETHEREUM_ACCOUNT` - The private key of an account to use for staking and trading.
-- `ETHEREUM_NODE` - The URL of an Ethereum node to connect to.
 
 There is an example `.env-example` that you can copy to `.env` to start with.
 
 ### Ethereum Account
 
 To use an existing Ethereum account, set the `ETHEREUM_ACCOUNT` in your `.env` file. Otherwise create a random account using the `yarn utils:account` script. Paste the generated private key into your `.env` file.
-
-### Ethereum Node
-
-To use an existing Ethereum node, set the `ETHEREUM_NODE` in your `.env` file. Otherwise you can create a free account with INFURA. Navigate to https://infura.io/ to create an account and generate an API key and URL.
 
 ### Contract Versions
 
