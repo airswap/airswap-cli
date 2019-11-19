@@ -19,21 +19,22 @@
     "lint": "yarn eslint \"./**/*.js\""
   },
   "dependencies": {
-    "@airswap/indexer": "^0.3.2",
-    "@airswap/order-utils": "^0.3.6",
+    "@airswap/swap": "^2.2.2",
+    "bignumber.js": "^9.0.0",
     "dotenv": "^8.2.0",
-    "ethers": "^4.0.39",
-    "jayson": "^3.1.2",
-    "ora": "^4.0.3",
-    "prompt": "^1.0.0",
-    "spinnies": "^0.5.0"
+    "ethers": "^4.0.39"
   },
   "devDependencies": {
-    "assert": "^2.0.0",
+    "@airswap/indexer": "^0.3.2",
+    "@airswap/order-utils": "^0.3.6",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.5.1",
     "eslint-plugin-prettier": "^3.1.1",
-    "prettier": "^1.19.1"
+    "jayson": "^3.1.2",
+    "ora": "^4.0.3",
+    "prettier": "^1.19.1",
+    "prompt": "^1.0.0",
+    "spinnies": "^0.5.0"
   },
   "engines": {
     "node": ">=8.10.0"
