@@ -13,13 +13,17 @@ Maker Kit includes tools and examples to help you get started on the AirSwap Net
 - Blog → https://blog.airswap.io/
 - Support → https://support.airswap.io/
 
-## Introduction
+## Using This Package
 
 AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract.
 
-- **Quotes** are indicative prices and **Orders** are signed and executable for trading.
-- **Intent** is an interest in trading including contact information, without pricing.
-- **Locators** indicate how to connect to a peer. On AirSwap Instant, locators are web URLs.
+This package includes a set of `scripts/` and a file `handlers.js` that implements the latest AirSwap protocol, both as an example and a dependency of [AirSwap Maker Kit Examples](https://github.com/airswap/airswap-maker-kit-examples). Scripts available in this package include functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
+
+### Concepts
+
+- **Quotes** are indicative prices and **Orders** are signed and executable for trading. Makers should be able to provide both.
+- **Intent** is an interest in trading including contact information, without pricing. Indexers help you manage intent.
+- **Locators** are public URLs shorter than 32 characters in length including URL scheme. This is where your maker runs.
 
 ## Setup
 
@@ -49,18 +53,19 @@ The Swap and Indexer contracts used by Maker Kit are specified within their resp
 
 ## Commands
 
-| Command               | Description                   |
-| :-------------------- | :---------------------------- |
-| `yarn`                | Install dependencies          |
-| `yarn indexer:create` | Create a new token pair index |
-| `yarn indexer:enable` | Enable staking on the indexer |
-| `yarn indexer:set`    | Set an intent to trade        |
-| `yarn indexer:unset`  | Unset an intent to trade      |
-| `yarn indexer:get`    | Get locators                  |
-| `yarn token:approve`  | Approve a token for trading   |
-| `yarn token:check`    | Check a token approval        |
-| `yarn utils:network`  | Get network addresses         |
-| `yarn utils:account`  | Create a random account       |
+| Command               | Description                      |
+| :-------------------- | :------------------------------- |
+| `yarn`                | Install dependencies             |
+| `yarn peers:get`      | Get quotes and orders from peers |
+| `yarn indexer:create` | Create a new token pair index    |
+| `yarn indexer:enable` | Enable staking on the indexer    |
+| `yarn indexer:set`    | Set an intent to trade           |
+| `yarn indexer:unset`  | Unset an intent to trade         |
+| `yarn indexer:get`    | Get locators                     |
+| `yarn token:approve`  | Approve a token for trading      |
+| `yarn token:check`    | Check a token approval           |
+| `yarn utils:network`  | Get network addresses            |
+| `yarn utils:account`  | Create a random account          |
 
 ## Helpful for Testing on Rinkeby
 
@@ -188,7 +193,3 @@ This will approve the Indexer contract to stake your AST.
 ### Token Approvals
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
-
-## Locators
-
-Makers must be accessible at public endpoints shorter than 32 characters in length including a URL scheme. For example `https://maker.example.com:8000` or `http://99.84.41.93`.
