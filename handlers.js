@@ -42,14 +42,14 @@ function isTradingPair({ signerToken, senderToken }) {
 function priceSell({ signerParam, signerToken, senderToken }) {
   return BigNumber(signerParam)
     .multipliedBy(tokenPairs[signerToken][senderToken])
-    .toFixed()
+    .toFixed(0)
 }
 
 // Calculates the signerParam: An amount we would send the taker in a buy
 function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
     .dividedBy(tokenPairs[signerToken][senderToken])
-    .toFixed()
+    .toFixed(0)
 }
 
 // Create a quote object with the provided parameters

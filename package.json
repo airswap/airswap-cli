@@ -1,10 +1,14 @@
 {
-  "name": "airswap-maker-kit",
-  "version": "1.0.0",
+  "name": "@airswap/maker-kit",
+  "version": "1.0.1",
+  "description": "Tools to help you get started on the AirSwap Network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airswap/airswap-maker-kit"
+  },
+  "license": "Apache-2.0",
   "main": "handlers.js",
-  "repository": "git@github.com:airswap/airswap-maker-kit.git",
   "author": "Don Mosites <don.mosites@fluidity.io>",
-  "license": "MIT",
   "scripts": {
     "indexer:create": "node scripts/indexer/create.js",
     "indexer:enable": "node scripts/indexer/enable.js",
