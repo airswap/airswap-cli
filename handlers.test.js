@@ -156,7 +156,7 @@ describe('Default Pricing Handlers', function() {
     )
   })
 
-  it('getSignerSideOrder: given senderParam 30, should return signerParam 300', function(done) {
+  it('getSignerSideOrder: given senderParam 300, should return signerParam 30', function(done) {
     handlers.getSignerSideOrder(
       {
         senderParam: 300,
