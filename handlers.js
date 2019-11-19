@@ -83,7 +83,6 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
     },
   })
   // Generate an order signature
-  console.log('spk', signerPrivateKey)
   order.signature = signatures.getPrivateKeySignature(order, signerPrivateKey, swapAddress)
   return order
 }
@@ -152,7 +151,7 @@ const handlers = {
   }),
 }
 
-function initHanlders(privateKey) {
+function initHandlers(privateKey) {
   if (!privateKey) throw new Error('Must pass a privateKey to instantiate trade handlers')
   if (String(privateKey).length !== 64) throw new Error('privateKey should be exactly 64 characters')
   signerPrivateKey = Buffer.from(privateKey, 'hex')
@@ -160,4 +159,4 @@ function initHanlders(privateKey) {
   return handlers
 }
 
-module.exports = initHanlders
+module.exports = initHandlers
