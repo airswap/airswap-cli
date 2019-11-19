@@ -7,15 +7,18 @@ dotenv.config()
 
 module.exports = {
   select: function(operation, callback) {
-    const currentAccount = new ethers.Wallet(Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')).address
-
-    console.log(`\n${chalk.white.bold('AirSwap')}: ${chalk.white.bold(operation)}`)
-    console.log(chalk.gray(`Current account ${currentAccount} ${chalk.green('Rinkeby')}\n`))
-
-    const selectedNetwork = 'rinkeby'
-    const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
-
     try {
+      console.log(`\n${chalk.white.bold('AirSwap')}: ${chalk.white.bold(operation)}`)
+
+      // The private key used to sign orders
+      if (!process.env.ETHEREUM_ACCOUNT) throw new Error('ETHEREUM_ACCOUNT must be set in your .env file')
+      const currentAccount = new ethers.Wallet(Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')).address
+
+      console.log(chalk.gray(`Current account ${currentAccount} ${chalk.green('Rinkeby')}\n`))
+
+      const selectedNetwork = 'rinkeby'
+      const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
+
       const provider = ethers.getDefaultProvider(selectedNetwork)
       const wallet = new ethers.Wallet(signerPrivateKey, provider)
       const publicAddress = wallet.address

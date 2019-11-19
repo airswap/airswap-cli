@@ -1,13 +1,9 @@
 const ethers = require('ethers')
-const dotenv = require('dotenv')
 const BigNumber = require('bignumber.js')
 const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 const constants = require('./constants.js')
-
-// Load the .env file
-dotenv.config()
 
 // Specify the network to use (Mainnet or Rinkeby testnet)
 const chainId = constants.chainsIds.RINKEBY
@@ -27,11 +23,10 @@ const DEFAULT_EXPIRY = 180
 const DEFAULT_NONCE_WINDOW = 10
 
 // The private key used to sign orders
-if (!process.env.ETHEREUM_ACCOUNT) throw new Error('ETHEREUM_ACCOUNT must be set in your .env file')
-const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
+let signerPrivateKey
 
 // The public address for the private key
-const signerWallet = new ethers.Wallet(signerPrivateKey).address
+let signerWallet
 
 // A maximum amount to send. Could be determined dynamically by balance
 const maxSignerParam = 1000
@@ -88,6 +83,7 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
     },
   })
   // Generate an order signature
+  console.log('spk', signerPrivateKey)
   order.signature = signatures.getPrivateKeySignature(order, signerPrivateKey, swapAddress)
   return order
 }
@@ -156,4 +152,12 @@ const handlers = {
   }),
 }
 
-module.exports = handlers
+function initHanlders(privateKey) {
+  if (!privateKey) throw new Error('Must pass a privateKey to instantiate trade handlers')
+  if (String(privateKey).length !== 64) throw new Error('privateKey should be exactly 64 characters')
+  signerPrivateKey = Buffer.from(privateKey, 'hex')
+  signerWallet = new ethers.Wallet(signerPrivateKey).address
+  return handlers
+}
+
+module.exports = initHanlders
