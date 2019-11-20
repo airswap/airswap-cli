@@ -281,7 +281,7 @@ describe('Custom Pricing Handlers', function() {
     )
   })
 
-  it('getMaxQuote: should return a signer 1 WETH and sender 100 DAI', done => {
+  it('getMaxQuote: should return a signer 50 WETH and sender 500 DAI', done => {
     handlers.getMaxQuote(
       {
         signerToken: constants.rinkebyTokens.WETH,

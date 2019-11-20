@@ -113,7 +113,7 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
   return order
 }
 
-// If not trading a requested pair or above maximum amount return an error
+// If not trading a requested pair return an error
 function tradingPairGuard(proceed) {
   return function(params, callback) {
     if (isTradingPair(params) && typeof priceBuy === 'function' && typeof priceSell === 'function') {
@@ -127,6 +127,7 @@ function tradingPairGuard(proceed) {
   }
 }
 
+// If above maximum amount return an error
 function maxAmountGuard(proceed) {
   return function(params, callback) {
     if ('signerParam' in params && getMaxParam(params).lt(params.signerParam)) {
@@ -211,7 +212,7 @@ function initialize(_privateKey, _tradingFunctions) {
   signerWallet = new ethers.Wallet(signerPrivateKey).address
 
   // If provided, override default trading functions
-  // isTradingPair, priceBuy, priceSell, getMaxSignerAmount are required
+  // isTradingPair, priceBuy, priceSell, getMaxParam are required
   // getExpiry, getNonce are optional
   if (typeof _tradingFunctions === 'object') {
     // Override trading functions
