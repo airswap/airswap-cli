@@ -59,7 +59,7 @@ function priceBuy({ senderParam, senderToken, signerToken }) {
     .toFixed(0)
 }
 
-// Maximum amount we're willing to send
+// Get max param based on whether signerParam or senderParam is provided
 function getMaxParam(params) {
   if ('signerParam' in params) {
     switch (params.signerToken) {
@@ -68,13 +68,15 @@ function getMaxParam(params) {
       case constants.rinkebyTokens.DAI:
         return BigNumber(tokenAmounts[constants.rinkebyTokens.DAI])
     }
-  } else {
+  } else if ('senderParam' in params) {
     switch (params.signerToken) {
       case constants.rinkebyTokens.DAI:
         return BigNumber(priceBuy({ signerParam: tokenAmounts[constants.rinkebyTokens.DAI], ...params }))
       case constants.rinkebyTokens.WETH:
         return BigNumber(priceSell({ signerParam: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
     }
+  } else {
+    throw new Error('Neither signerParam or senderParam provied to getMaxParam')
   }
 }
 
