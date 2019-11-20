@@ -29,7 +29,7 @@ let signerPrivateKey
 let signerWallet
 
 // A maximum amount to send. Could be determined dynamically by balance
-const maxSignerParam = 1000
+const maxSignerParam = BigNumber(100 * 10 ** constants.decimals.DAI).toString()
 
 // Get an expiry based on current time plus default expiry
 function getExpiry() {
