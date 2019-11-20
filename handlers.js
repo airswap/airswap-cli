@@ -29,9 +29,19 @@ let signerPrivateKey
 let signerWallet
 
 // A maximum amount to send. Could be determined dynamically by balance
-const maxSignerParam = 1000
+const maxSignerParam = BigNumber(100)
+  .multipliedBy(BigNumber(10).pow(constants.decimals.DAI))
+  .toString()
 
-// Trading strategy handlers
+// Get an expiry based on current time plus default expiry
+function getExpiry() {
+  return Math.round(new Date().getTime() / 1000) + DEFAULT_EXPIRY
+}
+
+// Get a nonce based on current time, unique per nonce window
+function getNonce() {
+  return Math.round(new Date().getTime() / 1000 / DEFAULT_NONCE_WINDOW)
+}
 
 // Determines whether serving quotes for a given token pair
 function isTradingPair({ signerToken, senderToken }) {
@@ -69,8 +79,8 @@ function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
 // Create an order object with the provided parameters
 async function createOrder({ signerToken, signerParam, senderWallet, senderToken, senderParam }) {
   const order = await orders.getOrder({
-    expiry: Math.round(new Date().getTime() / 1000) + DEFAULT_EXPIRY,
-    nonce: Math.round(new Date().getTime() / 1000 / DEFAULT_NONCE_WINDOW),
+    expiry: getExpiry(),
+    nonce: getNonce(),
     signer: {
       wallet: signerWallet,
       token: signerToken,
@@ -151,12 +161,43 @@ const handlers = {
   }),
 }
 
-function initHandlers(privateKey) {
-  if (!privateKey) throw new Error('Must pass a privateKey to instantiate trade handlers')
-  if (String(privateKey).length !== 64) throw new Error('privateKey should be exactly 64 characters')
-  signerPrivateKey = Buffer.from(privateKey, 'hex')
+function initialize(_privateKey, _tradingFunctions) {
+  if (!_privateKey) throw new Error('Private key is required')
+  if (String(_privateKey).length !== 64) throw new Error('Private key should be 64 characters long')
+  signerPrivateKey = Buffer.from(_privateKey, 'hex')
   signerWallet = new ethers.Wallet(signerPrivateKey).address
+
+  // If provided, override default trading functions
+  // priceBuy, priceSell, isTradingPair are required
+  // getExpiry, getNonce are optional
+  if (typeof _tradingFunctions === 'object') {
+    // Override trading functions
+    if (
+      typeof _tradingFunctions.priceBuy === 'function' &&
+      typeof _tradingFunctions.priceSell === 'function' &&
+      typeof _tradingFunctions.isTradingPair === 'function'
+    ) {
+      priceBuy = _tradingFunctions.priceBuy
+      priceSell = _tradingFunctions.priceSell
+      isTradingPair = _tradingFunctions.isTradingPair
+
+      // If provided, override expiry function
+      if (typeof _tradingFunctions.getExpiry === 'function') {
+        getExpiry = _tradingFunctions.getExpiry
+      }
+
+      // If provided, override nonce function
+      if (typeof _tradingFunctions.getNonce === 'function') {
+        getNonce = _tradingFunctions.getNonce
+      }
+    } else {
+      throw new Error(
+        'Either provide all required trading functions or none. Required: priceBuy, priceSell, isTradingPair; Optional: getExpiry, getNonce',
+      )
+    }
+  }
+
   return handlers
 }
 
-module.exports = initHandlers
+module.exports = initialize

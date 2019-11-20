@@ -20,12 +20,14 @@
     "token:check": "node scripts/token/check.js",
     "utils:network": "node scripts/util/network.js",
     "utils:account": "node scripts/util/account.js",
-    "lint": "yarn eslint \"./**/*.js\""
+    "lint": "yarn eslint \"./**/*.js\"",
+    "test": "yarn mocha handlers.test.js"
   },
   "dependencies": {
     "@airswap/swap": "^2.2.2",
     "bignumber.js": "^9.0.0",
-    "ethers": "^4.0.39"
+    "ethers": "^4.0.39",
+    "mocha": "^6.2.2"
   },
   "devDependencies": {
     "@airswap/indexer": "^0.3.2",
