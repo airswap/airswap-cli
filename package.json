@@ -1,7 +1,7 @@
 {
   "name": "@airswap/maker-kit",
-  "version": "1.0.1",
-  "description": "Tools to help you get started on the AirSwap Network",
+  "version": "1.0.2",
+  "description": "Tools to get started on the AirSwap Network",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-maker-kit"
