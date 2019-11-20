@@ -218,7 +218,7 @@ module.exports = {
               buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
               pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
               price: chalk.bold(result.sender.param / result.signer.param),
-              expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+              expiry: chalk.green(new Date(result.expiry * 1000).toLocaleTimeString()),
             })
           }
         },
@@ -258,7 +258,7 @@ module.exports = {
                         `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
                           result.sender.param,
                         )}, price: ${chalk.bold(result.sender.param / result.signer.param)}, expiry: ${chalk.green(
-                          new Date(result.expiry).toLocaleTimeString(),
+                          new Date(result.expiry * 1000).toLocaleTimeString(),
                         )})`,
                       ),
                   })
@@ -288,7 +288,7 @@ module.exports = {
               sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
               for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
               price: chalk.bold(result.signer.param / result.sender.param),
-              expiry: chalk.green(new Date(result.expiry).toLocaleTimeString()),
+              expiry: chalk.green(new Date(result.expiry * 1000).toLocaleTimeString()),
             })
           }
         },
@@ -328,7 +328,7 @@ module.exports = {
                         `from ${chalk.underline(locators[i])} (get: ${chalk.bold(
                           result.signer.param,
                         )}, price: ${chalk.bold(result.signer.param / result.sender.param)}, expiry: ${chalk.green(
-                          new Date(result.expiry).toLocaleTimeString(),
+                          new Date(result.expiry * 1000).toLocaleTimeString(),
                         )})`,
                       ),
                   })
