@@ -16,7 +16,9 @@ const unusedToken = constants.ADDRESS_ZERO
 let handlers
 
 function toAtomicAmount(amount, decimals) {
-  return BigNumber(amount * 10 ** decimals).toFixed(0)
+  return BigNumber(amount)
+    .multipliedBy(BigNumber(10).pow(decimals))
+    .toFixed(0)
 }
 
 describe('Trading Pair Guard', function() {
