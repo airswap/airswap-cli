@@ -27,12 +27,6 @@ let signerPrivateKey
 
 // The public address for the private key
 let signerWallet
-
-// A maximum amount to send. Could be determined dynamically by balance
-const maxSignerParam = BigNumber(100)
-  .multipliedBy(BigNumber(10).pow(constants.decimals.DAI))
-  .toString()
-
 // Get an expiry based on current time plus default expiry
 function getExpiry() {
   return Math.round(new Date().getTime() / 1000) + DEFAULT_EXPIRY
@@ -60,6 +54,28 @@ function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
     .dividedBy(tokenPairs[signerToken][senderToken])
     .toFixed(0)
+}
+
+const dummyBalanceWETH = BigNumber(100 * 10 ** constants.decimals.WETH)
+const dummyBalanceDAI = BigNumber(10000 * 10 ** constants.decimals.DAI)
+
+// Maximum amount we're willing to send
+function getMaxParam(params) {
+  if ('signerParam' in params) {
+    switch (params.signerToken) {
+      case constants.rinkebyTokens.WETH:
+        return dummyBalanceWETH
+      case constants.rinkebyTokens.DAI:
+        return dummyBalanceDAI
+    }
+  } else {
+    switch (params.signerToken) {
+      case constants.rinkebyTokens.DAI:
+        return BigNumber(priceBuy({ signerParam: dummyBalanceDAI, ...params }))
+      case constants.rinkebyTokens.WETH:
+        return BigNumber(priceSell({ signerParam: dummyBalanceWETH, ...params }))
+    }
+  }
 }
 
 // Create a quote object with the provided parameters
@@ -97,7 +113,7 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
   return order
 }
 
-// If not trading a requested pair return an error
+// If not trading a requested pair or above maximum amount return an error
 function tradingPairGuard(proceed) {
   return function(params, callback) {
     if (isTradingPair(params) && typeof priceBuy === 'function' && typeof priceSell === 'function') {
@@ -111,54 +127,81 @@ function tradingPairGuard(proceed) {
   }
 }
 
+function maxAmountGuard(proceed) {
+  return function(params, callback) {
+    if ('signerParam' in params && getMaxParam(params).lt(params.signerParam)) {
+      callback({
+        code: -33603,
+        message: `Maximum signerParam is ${getMaxParam(params)}`,
+      })
+    } else if ('senderParam' in params && getMaxParam(params).lt(params.senderParam)) {
+      callback({
+        code: -33603,
+        message: `Maximum senderParam is ${getMaxParam(params)}`,
+      })
+    } else {
+      proceed(params, callback)
+    }
+  }
+}
+
 // Peer API Implementation
 const handlers = {
-  getSenderSideQuote: tradingPairGuard(function(params, callback) {
-    callback(
-      null,
-      createQuote({
-        senderParam: priceSell(params),
-        ...params,
-      }),
-    )
-  }),
-  getSignerSideQuote: tradingPairGuard(function(params, callback) {
-    callback(
-      null,
-      createQuote({
-        signerParam: priceBuy(params),
-        ...params,
-      }),
-    )
-  }),
+  getSenderSideQuote: tradingPairGuard(
+    maxAmountGuard(function(params, callback) {
+      callback(
+        null,
+        createQuote({
+          senderParam: priceSell(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
+  getSignerSideQuote: tradingPairGuard(
+    maxAmountGuard(function(params, callback) {
+      callback(
+        null,
+        createQuote({
+          signerParam: priceBuy(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
+    const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
     callback(
       null,
       createQuote({
-        signerParam: maxSignerParam,
-        senderParam: priceSell({ signerParam: maxSignerParam, ...params }),
+        signerParam: signerParam.toString(),
+        senderParam: priceSell({ signerParam, ...params }),
         ...params,
       }),
     )
   }),
-  getSenderSideOrder: tradingPairGuard(async function(params, callback) {
-    callback(
-      null,
-      await createOrder({
-        senderParam: priceSell(params),
-        ...params,
-      }),
-    )
-  }),
-  getSignerSideOrder: tradingPairGuard(async function(params, callback) {
-    callback(
-      null,
-      await createOrder({
-        signerParam: priceBuy(params),
-        ...params,
-      }),
-    )
-  }),
+  getSenderSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      callback(
+        null,
+        await createOrder({
+          senderParam: priceSell(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
+  getSignerSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      callback(
+        null,
+        await createOrder({
+          signerParam: priceBuy(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
 }
 
 function initialize(_privateKey, _tradingFunctions) {
@@ -168,18 +211,20 @@ function initialize(_privateKey, _tradingFunctions) {
   signerWallet = new ethers.Wallet(signerPrivateKey).address
 
   // If provided, override default trading functions
-  // priceBuy, priceSell, isTradingPair are required
+  // isTradingPair, priceBuy, priceSell, getMaxSignerAmount are required
   // getExpiry, getNonce are optional
   if (typeof _tradingFunctions === 'object') {
     // Override trading functions
     if (
+      typeof _tradingFunctions.isTradingPair === 'function' &&
       typeof _tradingFunctions.priceBuy === 'function' &&
       typeof _tradingFunctions.priceSell === 'function' &&
-      typeof _tradingFunctions.isTradingPair === 'function'
+      typeof _tradingFunctions.getMaxParam === 'function'
     ) {
       priceBuy = _tradingFunctions.priceBuy
       priceSell = _tradingFunctions.priceSell
       isTradingPair = _tradingFunctions.isTradingPair
+      getMaxParam = _tradingFunctions.getMaxParam
 
       // If provided, override expiry function
       if (typeof _tradingFunctions.getExpiry === 'function') {

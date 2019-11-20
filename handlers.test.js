@@ -100,6 +100,35 @@ describe('Trading Pair Guard', function() {
   })
 })
 
+describe('Max Amount Guard', function() {
+  it('getSenderSideQuote: 101 WETH should fail as above maximum amount', done => {
+    handlers.getSenderSideQuote(
+      {
+        signerParam: toAtomicAmount(101, constants.decimals.WETH),
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err) {
+        assert(err && err.code === -33603)
+        done()
+      },
+    )
+  })
+  it('getSignerSideQuote: 20001 DAI should fail as above maximum amount', done => {
+    handlers.getSignerSideQuote(
+      {
+        senderParam: toAtomicAmount(20001, constants.decimals.DAI),
+        senderToken: constants.rinkebyTokens.DAI,
+        signerToken: constants.rinkebyTokens.WETH,
+      },
+      function(err) {
+        assert(err && err.code === -33603)
+        done()
+      },
+    )
+  })
+})
+
 describe('Default Pricing Handlers', function() {
   it('getSenderSideQuote: given signer 1 WETH, should return sender 200 DAI', done => {
     handlers.getSenderSideQuote(
@@ -182,6 +211,12 @@ describe('Default Pricing Handlers', function() {
 describe('Custom Pricing Handlers', function() {
   before(() => {
     handlers = initializeHandlers(wallet.privateKey.slice(2), {
+      isTradingPair({ signerToken, senderToken }) {
+        if (signerToken === constants.rinkebyTokens.WETH && senderToken === constants.rinkebyTokens.DAI) {
+          return true
+        }
+        return false
+      },
       priceBuy({ senderParam }) {
         const customPrice = 0.1
         return BigNumber(senderParam)
@@ -194,11 +229,10 @@ describe('Custom Pricing Handlers', function() {
           .multipliedBy(customPrice)
           .toFixed(0)
       },
-      isTradingPair({ signerToken, senderToken }) {
-        if (signerToken === constants.rinkebyTokens.WETH && senderToken === constants.rinkebyTokens.DAI) {
-          return true
+      getMaxParam({ signerToken }) {
+        if (signerToken === constants.rinkebyTokens.WETH) {
+          return BigNumber(toAtomicAmount(50, constants.decimals.WETH))
         }
-        return false
       },
     })
   })
@@ -242,6 +276,21 @@ describe('Custom Pricing Handlers', function() {
       function(err, quote) {
         assert(orders.isValidQuote(quote))
         assert(BigNumber(quote.signer.param).eq(toAtomicAmount(0.1, constants.decimals.WETH)))
+        done()
+      },
+    )
+  })
+
+  it('getMaxQuote: should return a signer 1 WETH and sender 100 DAI', done => {
+    handlers.getMaxQuote(
+      {
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err, quote) {
+        assert(orders.isValidQuote(quote))
+        assert(BigNumber(quote.signer.param).eq(toAtomicAmount(50, constants.decimals.WETH)))
+        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(500, constants.decimals.DAI)))
         done()
       },
     )
