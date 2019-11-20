@@ -14,7 +14,10 @@ if (!swapAddress) throw new Error(`No Swap contract found for chain ID ${chainId
 orders.setVerifyingContract(swapAddress)
 
 // Import token pairs to quote for and their trade prices
-const tokenPairs = require('./pairs.json')
+const tokenPairs = require('./token-pairs.json')
+
+// Import token amounts to use for maximums
+const tokenAmounts = require('./token-amounts.json')
 
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
@@ -27,12 +30,6 @@ let signerPrivateKey
 
 // The public address for the private key
 let signerWallet
-
-// A maximum amount to send. Could be determined dynamically by balance
-const maxSignerParam = BigNumber(100)
-  .multipliedBy(BigNumber(10).pow(constants.decimals.DAI))
-  .toString()
-
 // Get an expiry based on current time plus default expiry
 function getExpiry() {
   return Math.round(new Date().getTime() / 1000) + DEFAULT_EXPIRY
@@ -60,6 +57,27 @@ function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
     .dividedBy(tokenPairs[signerToken][senderToken])
     .toFixed(0)
+}
+
+// Get max param based on whether signerParam or senderParam is provided
+function getMaxParam(params) {
+  if ('signerParam' in params) {
+    switch (params.signerToken) {
+      case constants.rinkebyTokens.WETH:
+        return BigNumber(tokenAmounts[constants.rinkebyTokens.WETH])
+      case constants.rinkebyTokens.DAI:
+        return BigNumber(tokenAmounts[constants.rinkebyTokens.DAI])
+    }
+  } else if ('senderParam' in params) {
+    switch (params.signerToken) {
+      case constants.rinkebyTokens.DAI:
+        return BigNumber(priceBuy({ signerParam: tokenAmounts[constants.rinkebyTokens.DAI], ...params }))
+      case constants.rinkebyTokens.WETH:
+        return BigNumber(priceSell({ signerParam: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
+    }
+  } else {
+    throw new Error('Neither signerParam or senderParam provied to getMaxParam')
+  }
 }
 
 // Create a quote object with the provided parameters
@@ -111,54 +129,82 @@ function tradingPairGuard(proceed) {
   }
 }
 
+// If above maximum amount return an error
+function maxAmountGuard(proceed) {
+  return function(params, callback) {
+    if ('signerParam' in params && getMaxParam(params).lt(params.signerParam)) {
+      callback({
+        code: -33603,
+        message: `Maximum signerParam is ${getMaxParam(params)}`,
+      })
+    } else if ('senderParam' in params && getMaxParam(params).lt(params.senderParam)) {
+      callback({
+        code: -33603,
+        message: `Maximum senderParam is ${getMaxParam(params)}`,
+      })
+    } else {
+      proceed(params, callback)
+    }
+  }
+}
+
 // Peer API Implementation
 const handlers = {
-  getSenderSideQuote: tradingPairGuard(function(params, callback) {
-    callback(
-      null,
-      createQuote({
-        senderParam: priceSell(params),
-        ...params,
-      }),
-    )
-  }),
-  getSignerSideQuote: tradingPairGuard(function(params, callback) {
-    callback(
-      null,
-      createQuote({
-        signerParam: priceBuy(params),
-        ...params,
-      }),
-    )
-  }),
+  getSenderSideQuote: tradingPairGuard(
+    maxAmountGuard(function(params, callback) {
+      callback(
+        null,
+        createQuote({
+          senderParam: priceSell(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
+  getSignerSideQuote: tradingPairGuard(
+    maxAmountGuard(function(params, callback) {
+      callback(
+        null,
+        createQuote({
+          signerParam: priceBuy(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
+    const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
     callback(
       null,
       createQuote({
-        signerParam: maxSignerParam,
-        senderParam: priceSell({ signerParam: maxSignerParam, ...params }),
+        signerParam: signerParam.toString(),
+        senderParam: priceSell({ signerParam, ...params }),
         ...params,
       }),
     )
   }),
-  getSenderSideOrder: tradingPairGuard(async function(params, callback) {
-    callback(
-      null,
-      await createOrder({
-        senderParam: priceSell(params),
-        ...params,
-      }),
-    )
-  }),
-  getSignerSideOrder: tradingPairGuard(async function(params, callback) {
-    callback(
-      null,
-      await createOrder({
-        signerParam: priceBuy(params),
-        ...params,
-      }),
-    )
-  }),
+  getSenderSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      callback(
+        null,
+        await createOrder({
+          senderParam: priceSell(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
+  getSignerSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      callback(
+        null,
+        await createOrder({
+          signerParam: priceBuy(params),
+          ...params,
+        }),
+      )
+    }),
+  ),
 }
 
 function initialize(_privateKey, _tradingFunctions) {
@@ -168,18 +214,20 @@ function initialize(_privateKey, _tradingFunctions) {
   signerWallet = new ethers.Wallet(signerPrivateKey).address
 
   // If provided, override default trading functions
-  // priceBuy, priceSell, isTradingPair are required
+  // isTradingPair, priceBuy, priceSell, getMaxParam are required
   // getExpiry, getNonce are optional
   if (typeof _tradingFunctions === 'object') {
     // Override trading functions
     if (
+      typeof _tradingFunctions.isTradingPair === 'function' &&
       typeof _tradingFunctions.priceBuy === 'function' &&
       typeof _tradingFunctions.priceSell === 'function' &&
-      typeof _tradingFunctions.isTradingPair === 'function'
+      typeof _tradingFunctions.getMaxParam === 'function'
     ) {
       priceBuy = _tradingFunctions.priceBuy
       priceSell = _tradingFunctions.priceSell
       isTradingPair = _tradingFunctions.isTradingPair
+      getMaxParam = _tradingFunctions.getMaxParam
 
       // If provided, override expiry function
       if (typeof _tradingFunctions.getExpiry === 'function') {
