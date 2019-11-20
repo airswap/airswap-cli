@@ -14,7 +14,10 @@ if (!swapAddress) throw new Error(`No Swap contract found for chain ID ${chainId
 orders.setVerifyingContract(swapAddress)
 
 // Import token pairs to quote for and their trade prices
-const tokenPairs = require('./pairs.json')
+const tokenPairs = require('./token-pairs.json')
+
+// Import token amounts to use for maximums
+const tokenAmounts = require('./token-amounts.json')
 
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
@@ -56,24 +59,21 @@ function priceBuy({ senderParam, senderToken, signerToken }) {
     .toFixed(0)
 }
 
-const dummyBalanceWETH = BigNumber(100 * 10 ** constants.decimals.WETH)
-const dummyBalanceDAI = BigNumber(10000 * 10 ** constants.decimals.DAI)
-
 // Maximum amount we're willing to send
 function getMaxParam(params) {
   if ('signerParam' in params) {
     switch (params.signerToken) {
       case constants.rinkebyTokens.WETH:
-        return dummyBalanceWETH
+        return BigNumber(tokenAmounts[constants.rinkebyTokens.WETH])
       case constants.rinkebyTokens.DAI:
-        return dummyBalanceDAI
+        return BigNumber(tokenAmounts[constants.rinkebyTokens.DAI])
     }
   } else {
     switch (params.signerToken) {
       case constants.rinkebyTokens.DAI:
-        return BigNumber(priceBuy({ signerParam: dummyBalanceDAI, ...params }))
+        return BigNumber(priceBuy({ signerParam: tokenAmounts[constants.rinkebyTokens.DAI], ...params }))
       case constants.rinkebyTokens.WETH:
-        return BigNumber(priceSell({ signerParam: dummyBalanceWETH, ...params }))
+        return BigNumber(priceSell({ signerParam: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
     }
   }
 }
