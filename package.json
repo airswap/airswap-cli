@@ -1,6 +1,6 @@
 {
   "name": "@airswap/maker-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tools to get started on the AirSwap Network",
   "repository": {
     "type": "git",
@@ -24,19 +24,19 @@
     "test": "yarn mocha handlers.test.js"
   },
   "dependencies": {
+    "@airswap/order-utils": "^0.3.6",
     "@airswap/swap": "^2.2.2",
     "bignumber.js": "^9.0.0",
-    "ethers": "^4.0.39",
-    "mocha": "^6.2.2"
+    "ethers": "^4.0.39"
   },
   "devDependencies": {
     "@airswap/indexer": "^0.3.2",
-    "@airswap/order-utils": "^0.3.6",
     "babel-eslint": "^10.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^6.5.1",
     "eslint-plugin-prettier": "^3.1.1",
     "jayson": "^3.1.2",
+    "mocha": "^6.2.2",
     "ora": "^4.0.3",
     "prettier": "^1.19.1",
     "prompt": "^1.0.0",
