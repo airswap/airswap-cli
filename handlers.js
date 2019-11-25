@@ -112,6 +112,11 @@ async function createOrder({ signerToken, signerParam, senderWallet, senderToken
   })
   // Generate an order signature
   order.signature = signatures.getPrivateKeySignature(order, signerPrivateKey, swapAddress)
+
+  // Cast Uint8Array to Hex
+  order.signature.r = ethers.utils.hexlify(order.signature.r)
+  order.signature.s = ethers.utils.hexlify(order.signature.s)
+
   return order
 }
 
