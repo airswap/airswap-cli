@@ -86,10 +86,12 @@ function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
     signer: {
       token: signerToken,
       param: signerParam,
+      kind: constants.ERC20_INTERFACE_ID,
     },
     sender: {
       token: senderToken,
       param: senderParam,
+      kind: constants.ERC20_INTERFACE_ID,
     },
   }
 }
