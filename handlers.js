@@ -224,7 +224,7 @@ const handlers = {
   }),
   getSenderSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken']
+      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken', 'signatureValidator']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -243,7 +243,7 @@ const handlers = {
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken']
+      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken', 'signatureValidator']
       if (hasParams(params, required)) {
         callback(
           null,

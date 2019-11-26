@@ -257,6 +257,7 @@ describe('Default Pricing Handlers', function() {
         signerParam: toAtomicAmount(2, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
+        signatureValidator: constants.ADDRESS_ZERO,
         senderWallet,
       },
       function(err, order) {
@@ -273,6 +274,7 @@ describe('Default Pricing Handlers', function() {
         senderParam: toAtomicAmount(3, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.DAI,
         senderToken: constants.rinkebyTokens.WETH,
+        signatureValidator: constants.ADDRESS_ZERO,
         senderWallet,
       },
       function(err, order) {
