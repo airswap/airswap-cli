@@ -30,6 +30,14 @@
     "@airswap/types" "0.4.3"
     openzeppelin-solidity "2.3"
 
+"@airswap/swap@3.3.4":
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-3.3.4.tgz#d38b9d61bacdeb7d9fec750732b502a29a47fe0a"
+  integrity sha512-2D/3jmlCqL2UZwt8/6RcV4YrOAnNMDOQBmH2d/VqJYkoGgBYO1hAAiLNG6aYds2z9exSO9ubQ2cqnnxmZXAi6A==
+  dependencies:
+    "@airswap/types" "1.4.3"
+    openzeppelin-solidity "2.3"
+
 "@airswap/tokens@0.1.3":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@airswap/tokens/-/tokens-0.1.3.tgz#353cde28553671923dbea083d02a3e6db1b13912"
@@ -41,6 +49,13 @@
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@airswap/types/-/types-0.4.3.tgz#7344637dfb3328ef32bd656a6fc343c8cd96afba"
   integrity sha512-f1UjilkI8Rv3zHyrR5hjOj7PYNK8U+0DAMkN85flF/x1op6XP4D/htXZKouGvYmFU284CxPznH6AfbMKjGK18w==
+  dependencies:
+    openzeppelin-solidity "2.3"
+
+"@airswap/types@1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-1.4.3.tgz#2076cc865b0cd6267c93b61151c7f43887e55f1e"
+  integrity sha512-B0yULgKxGNivABdyN70/wB/6lq/O0RzbKmKfSfHIsdZ82Gr7omjYysxuVWlJ+fWCBT5vuEe8kgbJdfLqaY5qbA==
   dependencies:
     openzeppelin-solidity "2.3"
 

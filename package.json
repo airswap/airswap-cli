@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@airswap/order-utils": "0.3.12",
-    "@airswap/swap": "2.3.4",
+    "@airswap/swap": "3.3.4",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
   },
@@ -43,7 +43,7 @@
     "spinnies": "^0.5.0"
   },
   "engines": {
-    "node": ">=8.10.0"
+    "node": "^10.13.0"
   },
   "resolutions": {
     "lodash.merge": "^4.6.2"
