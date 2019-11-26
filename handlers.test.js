@@ -7,6 +7,11 @@ const { orders } = require('@airswap/order-utils')
 const wallet = ethers.Wallet.createRandom()
 const initializeHandlers = require('./handlers.js')
 
+const swapDeploys = require('@airswap/swap/deploys.json')
+
+// Specify the Swap contract to use for settlement
+const swapAddress = swapDeploys[constants.chainsIds.RINKEBY]
+
 // Dummy values for tokens and wallets
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
 const senderToken = constants.rinkebyTokens.DAI
@@ -23,6 +28,19 @@ function toAtomicAmount(amount, decimals) {
     .multipliedBy(BigNumber(10).pow(decimals))
     .toFixed(0)
 }
+
+describe('Setup', function() {
+  before(() => {
+    handlers = initializeHandlers(wallet.privateKey.slice(2))
+  })
+
+  it('ping', done => {
+    handlers.ping({}, function(err, response) {
+      assert(response === 'pong')
+      done()
+    })
+  })
+})
 
 describe('Trading Pair Guard', function() {
   before(() => {
@@ -97,6 +115,66 @@ describe('Trading Pair Guard', function() {
       },
       function(err) {
         assert(err && err.code === -33601)
+        done()
+      },
+    )
+  })
+})
+
+describe('Required Params', function() {
+  before(() => {
+    handlers = initializeHandlers(wallet.privateKey.slice(2))
+  })
+
+  it('getSenderSideQuote: should fail for insufficient params', done => {
+    handlers.getSenderSideQuote(
+      {
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err) {
+        assert(err && err.code === -33604)
+        done()
+      },
+    )
+  })
+
+  it('getSignerSideQuote: should fail for insufficient params', done => {
+    handlers.getSignerSideQuote(
+      {
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err) {
+        assert(err && err.code === -33604)
+        done()
+      },
+    )
+  })
+
+  // Test the getSenderSideOrder implementation
+  it('getSenderSideOrder: should fail for insufficient params', done => {
+    handlers.getSenderSideOrder(
+      {
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err) {
+        assert(err && err.code === -33604)
+        done()
+      },
+    )
+  })
+
+  // Test the getSignerSideOrder implementation
+  it('getSignerSideOrder: should fail for insufficient params', done => {
+    handlers.getSignerSideOrder(
+      {
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err) {
+        assert(err && err.code === -33604)
         done()
       },
     )
@@ -184,6 +262,7 @@ describe('Default Pricing Handlers', function() {
         signerParam: toAtomicAmount(2, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
+        signatureValidator: swapAddress,
         senderWallet,
       },
       function(err, order) {
@@ -200,6 +279,7 @@ describe('Default Pricing Handlers', function() {
         senderParam: toAtomicAmount(3, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.DAI,
         senderToken: constants.rinkebyTokens.WETH,
+        signatureValidator: swapAddress,
         senderWallet,
       },
       function(err, order) {

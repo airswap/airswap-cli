@@ -87,13 +87,13 @@ function getMaxParam(params) {
 function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
   return {
     signer: {
-      token: signerToken,
-      param: signerParam,
+      token: signerToken.toLowerCase(),
+      param: String(signerParam),
       kind: constants.ERC20_INTERFACE_ID,
     },
     sender: {
-      token: senderToken,
-      param: senderParam,
+      token: senderToken.toLowerCase(),
+      param: String(senderParam),
       kind: constants.ERC20_INTERFACE_ID,
     },
   }
@@ -153,63 +153,116 @@ function maxAmountGuard(proceed) {
   }
 }
 
+// Ensure a request has minimum required params
+function hasParams(params, required) {
+  for (var i = 0; i < required.length; i++) {
+    if (typeof params[required[i]] !== 'string') {
+      return false
+    }
+  }
+  return true
+}
+
 // Peer API Implementation
 const handlers = {
   getSenderSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      callback(
-        null,
-        createQuote({
-          senderParam: priceSell(params),
-          ...params,
-        }),
-      )
+      const required = ['signerParam', 'signerToken', 'senderToken']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          createQuote({
+            senderParam: priceSell(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getSignerSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      callback(
-        null,
-        createQuote({
-          signerParam: priceBuy(params),
-          ...params,
-        }),
-      )
+      const required = ['senderParam', 'senderToken', 'signerToken']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          createQuote({
+            signerParam: priceBuy(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
     const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
-    callback(
-      null,
-      createQuote({
-        signerParam: signerParam.toString(),
-        senderParam: priceSell({ signerParam, ...params }),
-        ...params,
-      }),
-    )
-  }),
-  getSenderSideOrder: tradingPairGuard(
-    maxAmountGuard(async function(params, callback) {
+    const required = ['signerToken', 'senderToken']
+    if (hasParams(params, required)) {
       callback(
         null,
-        await createOrder({
-          senderParam: priceSell(params),
+        createQuote({
+          signerParam: signerParam.toString(),
+          senderParam: priceSell({ signerParam, ...params }),
           ...params,
         }),
       )
+    } else {
+      callback({
+        code: -33604,
+        message: `Require ${required.join(', ')}`,
+      })
+    }
+  }),
+  getSenderSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken', 'signatureValidator']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          await createOrder({
+            senderParam: priceSell(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      callback(
-        null,
-        await createOrder({
-          signerParam: priceBuy(params),
-          ...params,
-        }),
-      )
+      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken', 'signatureValidator']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          await createOrder({
+            signerParam: priceBuy(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
+  ping: function(params, callback) {
+    callback(null, 'pong')
+  },
 }
 
 function initialize(_privateKey, _tradingFunctions) {
