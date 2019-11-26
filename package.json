@@ -24,7 +24,7 @@
     "test": "yarn mocha handlers.test.js"
   },
   "dependencies": {
-    "@airswap/order-utils": "0.3.11",
+    "@airswap/order-utils": "0.3.12",
     "@airswap/swap": "2.2.2",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
