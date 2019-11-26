@@ -5,6 +5,9 @@ const swapDeploys = require('@airswap/swap/deploys.json')
 
 const constants = require('./constants.js')
 
+BigNumber.config({ ERRORS: false })
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
+
 // Specify the network to use (Mainnet or Rinkeby testnet)
 const chainId = constants.chainsIds.RINKEBY
 
@@ -76,7 +79,7 @@ function getMaxParam(params) {
         return BigNumber(priceSell({ signerParam: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
     }
   } else {
-    throw new Error('Neither signerParam or senderParam provied to getMaxParam')
+    throw new Error('Neither signerParam or senderParam provided to getMaxParam')
   }
 }
 

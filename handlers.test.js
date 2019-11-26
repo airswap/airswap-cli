@@ -15,6 +15,9 @@ const unusedToken = constants.ADDRESS_ZERO
 
 let handlers
 
+BigNumber.config({ ERRORS: false })
+BigNumber.config({ EXPONENTIAL_AT: 1e9 })
+
 function toAtomicAmount(amount, decimals) {
   return BigNumber(amount)
     .multipliedBy(BigNumber(10).pow(decimals))
