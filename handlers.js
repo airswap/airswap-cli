@@ -4,12 +4,13 @@ const { orders, signatures } = require('@airswap/order-utils')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 const constants = require('./constants.js')
+const orderConstants = require('@airswap/order-utils/src/constants.js')
 
 BigNumber.config({ ERRORS: false })
 BigNumber.config({ EXPONENTIAL_AT: 1e9 })
 
 // Specify the network to use (Mainnet or Rinkeby testnet)
-const chainId = constants.chainsIds.RINKEBY
+const chainId = constants.chainIds.RINKEBY
 
 // Specify the Swap contract to use for settlement
 const swapAddress = swapDeploys[chainId]
@@ -89,12 +90,12 @@ function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
     signer: {
       token: signerToken.toLowerCase(),
       param: String(signerParam),
-      kind: constants.ERC20_INTERFACE_ID,
+      kind: orderConstants.ERC20_INTERFACE_ID,
     },
     sender: {
       token: senderToken.toLowerCase(),
       param: String(senderParam),
-      kind: constants.ERC20_INTERFACE_ID,
+      kind: orderConstants.ERC20_INTERFACE_ID,
     },
   }
 }

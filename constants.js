@@ -5,8 +5,6 @@ module.exports = {
   INDEX_HEAD: '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF',
   ADDRESS_ZERO: '0x0000000000000000000000000000000000000000',
   DEFAULT_CONFIRMATIONS: 2,
-  ERC20_INTERFACE_ID: '0x277f8169',
-  ERC721_INTERFACE_ID: '0x80ac58cd',
   rinkebyTokens: {
     DAI: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
     WETH: '0xc778417e063141139fce010982780140aa0cd5ab',
@@ -19,7 +17,7 @@ module.exports = {
     '4': '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
     '1': '0x27054b13b1b798b345b591a4d22e6562d47ea75a',
   },
-  chainsIds: {
+  chainIds: {
     MAINNET: '1',
     RINKEBY: '4',
   },
