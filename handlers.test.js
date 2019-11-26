@@ -10,7 +10,7 @@ const initializeHandlers = require('./handlers.js')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 // Specify the Swap contract to use for settlement
-const swapAddress = swapDeploys[constants.chainsIds.RINKEBY]
+const swapAddress = swapDeploys[constants.chainIds.RINKEBY]
 
 // Dummy values for tokens and wallets
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
