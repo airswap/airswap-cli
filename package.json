@@ -1,6 +1,6 @@
 {
   "name": "@airswap/maker-kit",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Tools to get started on the AirSwap Network",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@airswap/order-utils": "0.3.12",
-    "@airswap/swap": "2.2.2",
+    "@airswap/swap": "2.3.4",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
   },
