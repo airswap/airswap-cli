@@ -87,13 +87,13 @@ function getMaxParam(params) {
 function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
   return {
     signer: {
-      token: signerToken,
-      param: signerParam,
+      token: signerToken.toLowerCase(),
+      param: String(signerParam),
       kind: constants.ERC20_INTERFACE_ID,
     },
     sender: {
-      token: senderToken,
-      param: senderParam,
+      token: senderToken.toLowerCase(),
+      param: String(senderParam),
       kind: constants.ERC20_INTERFACE_ID,
     },
   }
