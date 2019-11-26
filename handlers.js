@@ -153,63 +153,116 @@ function maxAmountGuard(proceed) {
   }
 }
 
+// Ensure a request has minimum required params
+function hasParams(params, required) {
+  for (var i = 0; i < required.length; i++) {
+    if (typeof params[required[i]] !== 'string') {
+      return false
+    }
+  }
+  return true
+}
+
 // Peer API Implementation
 const handlers = {
   getSenderSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      callback(
-        null,
-        createQuote({
-          senderParam: priceSell(params),
-          ...params,
-        }),
-      )
+      const required = ['signerParam', 'signerToken', 'signerKind', 'senderToken', 'senderKind']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          createQuote({
+            senderParam: priceSell(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getSignerSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      callback(
-        null,
-        createQuote({
-          signerParam: priceBuy(params),
-          ...params,
-        }),
-      )
+      const required = ['senderParam', 'senderToken', 'senderKind', 'signerToken', 'signerKind']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          createQuote({
+            signerParam: priceBuy(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
     const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
-    callback(
-      null,
-      createQuote({
-        signerParam: signerParam.toString(),
-        senderParam: priceSell({ signerParam, ...params }),
-        ...params,
-      }),
-    )
-  }),
-  getSenderSideOrder: tradingPairGuard(
-    maxAmountGuard(async function(params, callback) {
+    const required = ['signerToken', 'signerKind', 'senderToken', 'senderKind']
+    if (hasParams(params, required)) {
       callback(
         null,
-        await createOrder({
-          senderParam: priceSell(params),
+        createQuote({
+          signerParam: signerParam.toString(),
+          senderParam: priceSell({ signerParam, ...params }),
           ...params,
         }),
       )
+    } else {
+      callback({
+        code: -33604,
+        message: `Require ${required.join(', ')}`,
+      })
+    }
+  }),
+  getSenderSideOrder: tradingPairGuard(
+    maxAmountGuard(async function(params, callback) {
+      const required = ['signerParam', 'signerToken', 'signerKind', 'senderWallet', 'senderToken', 'senderKind']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          await createOrder({
+            senderParam: priceSell(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      callback(
-        null,
-        await createOrder({
-          signerParam: priceBuy(params),
-          ...params,
-        }),
-      )
+      const required = ['senderParam', 'senderToken', 'senderKind', 'senderWallet', 'signerToken', 'signerKind']
+      if (hasParams(params, required)) {
+        callback(
+          null,
+          await createOrder({
+            signerParam: priceBuy(params),
+            ...params,
+          }),
+        )
+      } else {
+        callback({
+          code: -33604,
+          message: `Require ${required.join(', ')}`,
+        })
+      }
     }),
   ),
+  ping: function(params, callback) {
+    callback(null, 'pong')
+  },
 }
 
 function initialize(_privateKey, _tradingFunctions) {
