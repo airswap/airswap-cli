@@ -211,9 +211,7 @@ describe('Default Pricing Handlers', function() {
       {
         signerParam: toAtomicAmount(1, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
@@ -228,9 +226,7 @@ describe('Default Pricing Handlers', function() {
       {
         senderParam: toAtomicAmount(100, constants.decimals.DAI),
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
@@ -244,9 +240,7 @@ describe('Default Pricing Handlers', function() {
     handlers.getMaxQuote(
       {
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
@@ -262,9 +256,7 @@ describe('Default Pricing Handlers', function() {
       {
         signerParam: toAtomicAmount(2, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
         senderWallet,
       },
       function(err, order) {
@@ -280,9 +272,7 @@ describe('Default Pricing Handlers', function() {
       {
         senderParam: toAtomicAmount(3, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.DAI,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.WETH,
-        senderKind: constants.ERC20_INTERFACE_ID,
         senderWallet,
       },
       function(err, order) {
@@ -342,9 +332,7 @@ describe('Custom Pricing Handlers', function() {
       {
         signerParam: toAtomicAmount(1, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
@@ -359,9 +347,7 @@ describe('Custom Pricing Handlers', function() {
       {
         senderParam: toAtomicAmount(1, constants.decimals.DAI),
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
@@ -375,9 +361,7 @@ describe('Custom Pricing Handlers', function() {
     handlers.getMaxQuote(
       {
         signerToken: constants.rinkebyTokens.WETH,
-        signerKind: constants.ERC20_INTERFACE_ID,
         senderToken: constants.rinkebyTokens.DAI,
-        senderKind: constants.ERC20_INTERFACE_ID,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))

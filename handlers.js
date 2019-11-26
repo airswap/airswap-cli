@@ -167,7 +167,7 @@ function hasParams(params, required) {
 const handlers = {
   getSenderSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'signerKind', 'senderToken', 'senderKind']
+      const required = ['signerParam', 'signerToken', 'senderToken']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -186,7 +186,7 @@ const handlers = {
   ),
   getSignerSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'senderKind', 'signerToken', 'signerKind']
+      const required = ['senderParam', 'senderToken', 'signerToken']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -205,7 +205,7 @@ const handlers = {
   ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
     const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
-    const required = ['signerToken', 'signerKind', 'senderToken', 'senderKind']
+    const required = ['signerToken', 'senderToken']
     if (hasParams(params, required)) {
       callback(
         null,
@@ -224,7 +224,7 @@ const handlers = {
   }),
   getSenderSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'signerKind', 'senderWallet', 'senderToken', 'senderKind']
+      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -243,7 +243,7 @@ const handlers = {
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'senderKind', 'senderWallet', 'signerToken', 'signerKind']
+      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken']
       if (hasParams(params, required)) {
         callback(
           null,
