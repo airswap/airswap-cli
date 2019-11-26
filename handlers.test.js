@@ -24,6 +24,19 @@ function toAtomicAmount(amount, decimals) {
     .toFixed(0)
 }
 
+describe('Setup', function() {
+  before(() => {
+    handlers = initializeHandlers(wallet.privateKey.slice(2))
+  })
+
+  it('ping', done => {
+    handlers.ping({}, function(err, response) {
+      assert(response === 'pong')
+      done()
+    })
+  })
+})
+
 describe('Trading Pair Guard', function() {
   before(() => {
     handlers = initializeHandlers(wallet.privateKey.slice(2))
