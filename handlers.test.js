@@ -7,6 +7,11 @@ const { orders } = require('@airswap/order-utils')
 const wallet = ethers.Wallet.createRandom()
 const initializeHandlers = require('./handlers.js')
 
+const swapDeploys = require('@airswap/swap/deploys.json')
+
+// Specify the Swap contract to use for settlement
+const swapAddress = swapDeploys[constants.chainsIds.RINKEBY]
+
 // Dummy values for tokens and wallets
 const senderWallet = '0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2'
 const senderToken = constants.rinkebyTokens.DAI
@@ -257,7 +262,7 @@ describe('Default Pricing Handlers', function() {
         signerParam: toAtomicAmount(2, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
-        signatureValidator: constants.ADDRESS_ZERO,
+        signatureValidator: swapAddress,
         senderWallet,
       },
       function(err, order) {
@@ -274,7 +279,7 @@ describe('Default Pricing Handlers', function() {
         senderParam: toAtomicAmount(3, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.DAI,
         senderToken: constants.rinkebyTokens.WETH,
-        signatureValidator: constants.ADDRESS_ZERO,
+        signatureValidator: swapAddress,
         senderWallet,
       },
       function(err, order) {
