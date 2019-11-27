@@ -1,7 +1,5 @@
 # AirSwap Maker Kit
 
-**:warning: Maker Kit is in beta for use on Rinkeby only.**
-
 Maker Kit includes tools and examples to help you get started on the AirSwap Network.
 
 [![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)
@@ -50,6 +48,10 @@ To use an existing Ethereum account, set the `ETHEREUM_ACCOUNT` in your `.env` f
 ### Contract Versions
 
 The Swap and Indexer contracts used by Maker Kit are specified within their respective packages, `@airswap/swap` and `@airswap/indexer` in the [AirSwap Protocols](https://github.com/airswap/airswap-protocols) repository.
+
+### Selecting a Network
+
+By default, Maker Kit will connect to Rinkeby (`4`) for testing. To instead connect to mainnet, set the `CHAIN_ID` in your `.env` file to `1`.
 
 ## Commands
 
@@ -161,7 +163,6 @@ $ yarn peers:get
 AirSwap: Get Quotes and Orders
 Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
 
-Select a network (rinkeby, mainnet):  (rinkeby)
 Select a kind (quote, order):  (quote)
 Select a side (buy, sell):  (buy)
 Query a locator (optional):
@@ -183,8 +184,6 @@ $ yarn indexer:enable
 
 AirSwap: Enable Staking
 Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
-
-Select a network (rinkeby, mainnet):  (rinkeby)
 
 This will approve the Indexer contract to stake your AST.
 ...

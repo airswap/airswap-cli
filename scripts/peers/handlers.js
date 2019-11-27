@@ -107,7 +107,12 @@ module.exports = {
         let hasAtLeastOne = false
         const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
-          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          try {
+            locators[i] = ethers.utils.parseBytes32String(locators[i])
+          } catch (e) {
+            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            locators[i] = false
+          }
           if (locators[i]) {
             hasAtLeastOne = true
             spinnies.add(locators[i], {
@@ -168,7 +173,12 @@ module.exports = {
         let hasAtLeastOne = false
         const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
-          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          try {
+            locators[i] = ethers.utils.parseBytes32String(locators[i])
+          } catch (e) {
+            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            locators[i] = false
+          }
           if (locators[i]) {
             hasAtLeastOne = true
             spinnies.add(locators[i], {
@@ -236,7 +246,12 @@ module.exports = {
         let hasAtLeastOne = false
         const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
-          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          try {
+            locators[i] = ethers.utils.parseBytes32String(locators[i])
+          } catch (e) {
+            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            locators[i] = false
+          }
           if (locators[i]) {
             hasAtLeastOne = true
             spinnies.add(locators[i], {
@@ -306,7 +321,12 @@ module.exports = {
         let hasAtLeastOne = false
         const locators = result.locators
         for (let i = 0; i < locators.length; i++) {
-          locators[i] = ethers.utils.parseBytes32String(locators[i])
+          try {
+            locators[i] = ethers.utils.parseBytes32String(locators[i])
+          } catch (e) {
+            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            locators[i] = false
+          }
           if (locators[i]) {
             hasAtLeastOne = true
             spinnies.add(locators[i], {
