@@ -61,7 +61,7 @@ function priceSell({ signerParam, signerToken, senderToken }) {
 function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
     .dividedBy(tokenPairs[signerToken][senderToken])
-    .integerValue(BigNumber.ROUND_DOWN)
+    .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 }
 
