@@ -81,7 +81,7 @@ module.exports = {
     })
   },
   handleError: function(error) {
-    console.log(`\n${chalk.yellow('Error')}: ${error.reason || error.responseText}`)
+    console.log(`\n${chalk.yellow('Error')}: ${error.reason || error.responseText || error}`)
     console.log('Please check your input values.\n')
   },
 }

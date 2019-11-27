@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const ethers = require('ethers')
 const chalk = require('chalk')
 const os = require('os')
+const constants = require('../../constants.js')
 
 dotenv.config()
 
@@ -13,10 +14,11 @@ module.exports = {
       // The private key used to sign orders
       if (!process.env.ETHEREUM_ACCOUNT) throw new Error('ETHEREUM_ACCOUNT must be set in your .env file')
       const currentAccount = new ethers.Wallet(Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')).address
+      const selectedNetwork = constants.chainNames[process.env.CHAIN_ID || '4']
+      const networkName = process.env.CHAIN_ID === '1' ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
 
-      console.log(chalk.gray(`Current account ${currentAccount} ${chalk.green('Rinkeby')}\n`))
+      console.log(chalk.gray(`Current account ${currentAccount} ${networkName}\n`))
 
-      const selectedNetwork = 'rinkeby'
       const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
 
       const provider = ethers.getDefaultProvider(selectedNetwork)
@@ -34,7 +36,7 @@ module.exports = {
         callback(wallet)
       })
     } catch (error) {
-      console.log(`\n${chalk.yellow('Error')}: ${error.reason}`)
+      console.log(`\n${chalk.yellow('Error')}: ${error.reason || error.message || error}`)
     }
   },
   getIPAddress: function() {
