@@ -53,14 +53,16 @@ function isTradingPair({ signerToken, senderToken }) {
 function priceSell({ signerParam, signerToken, senderToken }) {
   return BigNumber(signerParam)
     .multipliedBy(tokenPairs[signerToken][senderToken])
-    .toFixed(0)
+    .integerValue(BigNumber.ROUND_CEIL)
+    .toString()
 }
 
 // Calculates the signerParam: An amount we would send the taker in a buy
 function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
     .dividedBy(tokenPairs[signerToken][senderToken])
-    .toFixed(0)
+    .integerValue(BigNumber.ROUND_FLOOR)
+    .toString()
 }
 
 // Get max param based on whether signerParam or senderParam is provided
@@ -180,7 +182,7 @@ const handlers = {
       } else {
         callback({
           code: -33604,
-          message: `Require ${required.join(', ')}`,
+          message: `Require strings ${required.join(', ')}`,
         })
       }
     }),
@@ -199,7 +201,7 @@ const handlers = {
       } else {
         callback({
           code: -33604,
-          message: `Require ${required.join(', ')}`,
+          message: `Require strings ${required.join(', ')}`,
         })
       }
     }),
@@ -219,13 +221,13 @@ const handlers = {
     } else {
       callback({
         code: -33604,
-        message: `Require ${required.join(', ')}`,
+        message: `Require strings ${required.join(', ')}`,
       })
     }
   }),
   getSenderSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken', 'signatureValidator']
+      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -237,14 +239,14 @@ const handlers = {
       } else {
         callback({
           code: -33604,
-          message: `Require ${required.join(', ')}`,
+          message: `Require strings ${required.join(', ')}`,
         })
       }
     }),
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken', 'signatureValidator']
+      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken']
       if (hasParams(params, required)) {
         callback(
           null,
@@ -256,7 +258,7 @@ const handlers = {
       } else {
         callback({
           code: -33604,
-          message: `Require ${required.join(', ')}`,
+          message: `Require strings ${required.join(', ')}`,
         })
       }
     }),
