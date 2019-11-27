@@ -27,7 +27,7 @@ This package includes a set of `scripts/` and a file `handlers.js` that implemen
 
 ### Installation
 
-Requires [Node.js](https://nodejs.org) `v8.10.0` or above and NPM or [Yarn](https://yarnpkg.com/lang/en/docs/install/).
+Requires [Node.js](https://nodejs.org) `^10.13.0` and NPM or [Yarn](https://yarnpkg.com/lang/en/docs/install/).
 
 ```
 git clone https://github.com/airswap/airswap-maker-kit
