@@ -22,7 +22,7 @@ const fields = {
   locator: {
     description: `Web address of ${chalk.white.bold('your server')} (URL)`,
     type: 'URL',
-    default: `http://${network.getIPAddress()}:${process.env.BIND_PORT}`,
+    default: `http://${network.getIPAddress()}:${constants.DEFAULT_PORT}`,
   },
   stakeAmount: {
     description: `Amount of ${chalk.white.bold('token to stake')} (AST)`,
