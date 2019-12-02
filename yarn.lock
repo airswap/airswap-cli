@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@airswap/indexer@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-0.3.2.tgz#8501a8f132ac7fc9b59dfe064b4b050bf0179a9c"
-  integrity sha512-3HGdIUp/Jqbxd8UojmT+l33bilWIjkm0HqdXO/ugX8nsGMvrMY2X+j7Ca4AB1OSVtZ8xpVBYDBlwMtmGBhosHg==
+"@airswap/indexer@1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-1.5.5.tgz#601774b3332f12d9238b3d0912e34e6e51cfc6ca"
+  integrity sha512-TgY54TPq4D3yZZbB9Is20dyBHgpVSvXMpgE7rA6NIk2Fk6+oeitfZGCmplRk4NmW+EIj8RaZcl+7USeGpypL3g==
   dependencies:
     openzeppelin-solidity "2.3"
 

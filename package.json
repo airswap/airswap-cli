@@ -30,7 +30,7 @@
     "ethers": "^4.0.39"
   },
   "devDependencies": {
-    "@airswap/indexer": "^0.3.2",
+    "@airswap/indexer": "1.5.5",
     "babel-eslint": "^10.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^6.5.1",
