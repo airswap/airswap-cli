@@ -18,10 +18,10 @@ if (!swapAddress) throw new Error(`No Swap contract found for chain ID ${chainId
 orders.setVerifyingContract(swapAddress)
 
 // Import token pairs to quote for and their trade prices
-const tokenPairs = require('./token-pairs.json')
+let tokenPrices = require('./token-prices.json')
 
 // Import token amounts to use for maximums
-const tokenAmounts = require('./token-amounts.json')
+let tokenAmounts = require('./token-amounts.json')
 
 // Default expiry to three minutes
 const DEFAULT_EXPIRY = 180
@@ -46,13 +46,13 @@ function getNonce() {
 
 // Determines whether serving quotes for a given token pair
 function isTradingPair({ signerToken, senderToken }) {
-  return signerToken in tokenPairs && senderToken in tokenPairs[signerToken]
+  return signerToken in tokenPrices && senderToken in tokenPrices[signerToken]
 }
 
 // Calculates the senderParam: An amount the taker will send us in a sell
 function priceSell({ signerParam, signerToken, senderToken }) {
   return BigNumber(signerParam)
-    .multipliedBy(tokenPairs[signerToken][senderToken])
+    .multipliedBy(tokenPrices[signerToken][senderToken])
     .integerValue(BigNumber.ROUND_CEIL)
     .toString()
 }
@@ -60,7 +60,7 @@ function priceSell({ signerParam, signerToken, senderToken }) {
 // Calculates the signerParam: An amount we would send the taker in a buy
 function priceBuy({ senderParam, senderToken, signerToken }) {
   return BigNumber(senderParam)
-    .dividedBy(tokenPairs[signerToken][senderToken])
+    .dividedBy(tokenPrices[signerToken][senderToken])
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 }
@@ -268,7 +268,7 @@ const handlers = {
   },
 }
 
-function initialize(_privateKey, _tradingFunctions) {
+function initialize(_privateKey, _tokenPrices, _tokenAmounts, _tradingFunctions) {
   if (!_privateKey) throw new Error('Private key is required')
   if (String(_privateKey).length !== 64) throw new Error('Private key should be 64 characters long')
   signerPrivateKey = Buffer.from(_privateKey, 'hex')
@@ -303,6 +303,16 @@ function initialize(_privateKey, _tradingFunctions) {
       throw new Error(
         'Either provide all required trading functions or none. Required: priceBuy, priceSell, isTradingPair; Optional: getExpiry, getNonce',
       )
+    }
+  }
+
+  // If provided, override the price and amount values
+  if (typeof _tokenPrices === 'object') {
+    if (typeof _tokenAmounts === 'object') {
+      tokenPrices = _tokenPrices
+      tokenAmounts = _tokenAmounts
+    } else {
+      throw new Error('Either provide both tokenPrices and tokenAmounts or neither')
     }
   }
 
