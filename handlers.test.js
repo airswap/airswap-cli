@@ -288,7 +288,6 @@ describe('Custom Pricing Data', function() {
   before(() => {
     handlers = initializeHandlers(
       wallet.privateKey.slice(2),
-      false,
       {
         '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
           '0xc778417e063141139fce010982780140aa0cd5ab': 0.005,
@@ -321,7 +320,7 @@ describe('Custom Pricing Data', function() {
 
 describe('Custom Pricing Handlers', function() {
   before(() => {
-    handlers = initializeHandlers(wallet.privateKey.slice(2), {
+    handlers = initializeHandlers(wallet.privateKey.slice(2), false, false, {
       isTradingPair({ signerToken, senderToken }) {
         if (signerToken === constants.rinkebyTokens.WETH && senderToken === constants.rinkebyTokens.DAI) {
           return true

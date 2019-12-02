@@ -268,7 +268,7 @@ const handlers = {
   },
 }
 
-function initialize(_privateKey, _tradingFunctions, _tokenPrices, _tokenAmounts) {
+function initialize(_privateKey, _tokenPrices, _tokenAmounts, _tradingFunctions) {
   if (!_privateKey) throw new Error('Private key is required')
   if (String(_privateKey).length !== 64) throw new Error('Private key should be 64 characters long')
   signerPrivateKey = Buffer.from(_privateKey, 'hex')

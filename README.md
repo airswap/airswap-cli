@@ -11,7 +11,7 @@ Maker Kit includes tools and examples to help you get started on the AirSwap Net
 - Blog → https://blog.airswap.io/
 - Support → https://support.airswap.io/
 
-## Using This Package
+## Introduction
 
 AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract.
 
@@ -23,7 +23,7 @@ This package includes a set of `scripts/` and a file `handlers.js` that implemen
 - **Intent** is an interest in trading including contact information, without pricing. Indexers help you manage intent.
 - **Locators** are public URLs shorter than 32 characters in length including URL scheme. This is where your maker runs.
 
-## Setup
+## Using the Commands
 
 ### Installation
 
@@ -173,7 +173,7 @@ Amount to buy:  (100)
 ✓ Quote from http://10.0.0.169:3000 (cost: 10, price: 0.1)
 ```
 
-## Advanced: Staking and Trading
+## Staking and Trading
 
 ### Indexer Staking
 
@@ -192,3 +192,44 @@ This will approve the Indexer contract to stake your AST.
 ### Token Approvals
 
 Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
+
+## Using as a Package
+
+### Custom Price and Amounts
+
+Using the package to handle API requests, you can provide either the pricing handlers or the pricing data.
+
+```JavaScript
+const initializeHandlers = require('@airswap/maker-kit');
+
+const customPrices = {
+  [signerToken]: {
+    [senderToken]: tokenPairPrice
+  },
+  ...
+};
+
+const customAmounts = {
+  [token]: maxAmount,
+  ...
+};
+
+const handlers = initializeHandlers(PRIVATE_KEY, customPrices, customAmounts)
+const result = handlers.getSignerSideQuote(...)
+```
+
+### Custom Pricing Functions
+
+```JavaScript
+const initializeHandlers = require('@airswap/maker-kit');
+
+const customPricingFunctions = {
+  isTradingPair: function(params) { ... }, // Returns true or false for a given token pair.
+  priceBuy: function(params) { ... }, // Returns signerParam: An amount we would send the taker in a buy
+  priceSell: function(params) { ... }, // Returns senderParam: An amount the taker will send us in a sell
+  getMaxParam: function(params) { ... } // Returns maxParam: A maximum amount we are willing to buy or sell
+}
+
+const handlers = initializeHandlers(PRIVATE_KEY, false, false, customPricingFunctions)
+const result = handlers.getSignerSideQuote(...)
+```
