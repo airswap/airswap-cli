@@ -82,7 +82,7 @@ By default, Maker Kit will connect to Rinkeby (`4`) for testing. To instead conn
 
 ### Get a quote from your maker
 
-In another shell, run the `yarn peers:get` script to test it out. **Use the default values for everything** but provide a `locator` value of `http://0.0.0.0:8080/` to connect to your newly running maker.
+In another shell, run the `yarn peers:get` script to test it out. **Use the default values for everything** but provide a `locator` value of `http://0.0.0.0:3000/` to connect to your newly running maker.
 
 ```bash
 $ yarn peers:get
@@ -92,7 +92,7 @@ Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 
 Select a kind (quote, order):  (quote)
 Select a side (buy, sell):  (buy)
-Query a locator (optional):  http://0.0.0.0:8080/
+Query a locator (optional):  http://0.0.0.0:3000/
 Token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Token to pay:  (0xc778417e063141139fce010982780140aa0cd5ab)
 Amount to buy:  (100)
@@ -124,14 +124,14 @@ Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 
 Token address of signerToken (maker side):  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Token address of senderToken (taker side):  (0xc778417e063141139fce010982780140aa0cd5ab)
-Web address of your server (URL):  (http://10.0.0.169:8080)
+Web address of your server (URL):  (http://10.0.0.169:3000)
 Amount of token to stake (AST):  (0)
 
 Set an Intent
 
 signerToken: 0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
 senderToken: 0xc778417e063141139fce010982780140aa0cd5ab
-locator: http://10.0.0.169:8080
+locator: http://10.0.0.169:3000
 stakeAmount: 0
 ...
 ```
@@ -147,7 +147,7 @@ Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
 Address of signerToken:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Address of senderToken:  (0xc778417e063141139fce010982780140aa0cd5ab)
 Number of locators to return:  (10)
-1. http://10.0.0.169:8080
+1. http://10.0.0.169:3000
 ...
 ```
 
@@ -170,7 +170,7 @@ Token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 Token to pay:  (0xc778417e063141139fce010982780140aa0cd5ab)
 Amount to buy:  (100)
 
-✓ Quote from http://10.0.0.169:8080 (cost: 10, price: 0.1)
+✓ Quote from http://10.0.0.169:3000 (cost: 10, price: 0.1)
 ```
 
 ## Advanced: Staking and Trading
