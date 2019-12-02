@@ -284,6 +284,41 @@ describe('Default Pricing Handlers', function() {
   })
 })
 
+describe('Custom Pricing Data', function() {
+  before(() => {
+    handlers = initializeHandlers(
+      wallet.privateKey.slice(2),
+      false,
+      {
+        '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
+          '0xc778417e063141139fce010982780140aa0cd5ab': 0.005,
+        },
+        '0xc778417e063141139fce010982780140aa0cd5ab': {
+          '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': 150,
+        },
+      },
+      {
+        '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': '20000000000000000000000',
+        '0xc778417e063141139fce010982780140aa0cd5ab': '100000000000000000000',
+      },
+    )
+  })
+  it('getSenderSideQuote: given signer 1 DAI, should return sender 0.1 WETH', done => {
+    handlers.getSenderSideQuote(
+      {
+        signerParam: toAtomicAmount(1, constants.decimals.WETH),
+        signerToken: constants.rinkebyTokens.WETH,
+        senderToken: constants.rinkebyTokens.DAI,
+      },
+      function(err, quote) {
+        assert(orders.isValidQuote(quote))
+        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(150, constants.decimals.DAI)))
+        done()
+      },
+    )
+  })
+})
+
 describe('Custom Pricing Handlers', function() {
   before(() => {
     handlers = initializeHandlers(wallet.privateKey.slice(2), {
