@@ -200,36 +200,36 @@ Tokens must be approved for trading on the Swap contract. This is a one-time tra
 Using the package to handle API requests, you can provide either the pricing handlers or the pricing data.
 
 ```JavaScript
-const initializeHandlers = require('@airswap/maker-kit');
+const initHandlers = require('@airswap/maker-kit')
 
 const customPrices = {
   [signerToken]: {
     [senderToken]: tokenPairPrice
   },
   ...
-};
+}
 
 const customAmounts = {
   [token]: maxAmount,
   ...
-};
+}
 
-const handlers = initializeHandlers(PRIVATE_KEY, customPrices, customAmounts)
+const handlers = initHandlers(PRIVATE_KEY, customPrices, customAmounts)
 const result = handlers.getSignerSideQuote(...)
 ```
 
 ### Custom Pricing Functions
 
 ```JavaScript
-const initializeHandlers = require('@airswap/maker-kit');
+const initHandlers = require('@airswap/maker-kit')
 
 const customPricingFunctions = {
   isTradingPair: function(params) { ... }, // Returns true or false for a given token pair.
   priceBuy: function(params) { ... }, // Returns signerParam: An amount we would send the taker in a buy
   priceSell: function(params) { ... }, // Returns senderParam: An amount the taker will send us in a sell
-  getMaxParam: function(params) { ... } // Returns maxParam: A maximum amount we are willing to buy or sell
+  getMaxParam: function(params) { ... }, // Returns maxParam: A maximum amount we are willing to buy or sell
 }
 
-const handlers = initializeHandlers(PRIVATE_KEY, false, false, customPricingFunctions)
+const handlers = initHandlers(PRIVATE_KEY, false, false, customPricingFunctions)
 const result = handlers.getSignerSideQuote(...)
 ```
