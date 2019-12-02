@@ -110,7 +110,7 @@ module.exports = {
           try {
             locators[i] = ethers.utils.parseBytes32String(locators[i])
           } catch (e) {
-            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            console.log(`Could not parse (${locators[i]}): ${e.message}`)
             locators[i] = false
           }
           if (locators[i]) {
@@ -176,7 +176,7 @@ module.exports = {
           try {
             locators[i] = ethers.utils.parseBytes32String(locators[i])
           } catch (e) {
-            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            console.log(`Could not parse (${locators[i]}): ${e.message}`)
             locators[i] = false
           }
           if (locators[i]) {
@@ -249,7 +249,7 @@ module.exports = {
           try {
             locators[i] = ethers.utils.parseBytes32String(locators[i])
           } catch (e) {
-            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            console.log(`Could not parse (${locators[i]}): ${e.message}`)
             locators[i] = false
           }
           if (locators[i]) {
@@ -324,7 +324,7 @@ module.exports = {
           try {
             locators[i] = ethers.utils.parseBytes32String(locators[i])
           } catch (e) {
-            console.log(`Bad locator (${locators[i]}): ${e.message}`)
+            console.log(`Could not parse (${locators[i]}): ${e.message}`)
             locators[i] = false
           }
           if (locators[i]) {

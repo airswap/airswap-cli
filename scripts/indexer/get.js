@@ -35,7 +35,11 @@ network.select('Get Locators', wallet => {
           console.log('No locators found.')
         } else {
           for (let i = 0; i < result.locators.length; i++) {
-            console.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+            try {
+              console.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+            } catch (e) {
+              console.log(`${i + 1}. Could not parse (${result.locators[i]})`)
+            }
           }
         }
       })
