@@ -33,6 +33,7 @@ const fields = {
 
 network.select('Set Intent to Trade', wallet => {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     const atomicAmount = values.stakeAmount * 10 ** constants.AST_DECIMALS
     new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)

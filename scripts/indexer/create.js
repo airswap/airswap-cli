@@ -20,6 +20,7 @@ const fields = {
 
 network.select('Create an Index', wallet => {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     indexerContract.indexes(values.signerToken, values.senderToken).then(index => {

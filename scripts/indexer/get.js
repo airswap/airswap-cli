@@ -27,6 +27,7 @@ const fields = {
 
 network.select('Get Locators', wallet => {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, values.count)
