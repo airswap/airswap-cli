@@ -1,4 +1,5 @@
 const ethers = require('ethers')
+const chalk = require('chalk')
 const network = require('../lib/network.js')
 const prompt = require('../lib/prompt.js')
 const constants = require('../../constants.js')
@@ -8,6 +9,7 @@ const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 network.select('Enable Staking', wallet => {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.confirm('This will approve the Indexer contract to stake your AST.', {}, 'approve', () => {
     new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
       .approve(indexerAddress, constants.APPROVAL_AMOUNT)

@@ -22,6 +22,7 @@ const fields = {
 
 network.select('Unset Intent to Trade', wallet => {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       .indexes(values.signerToken, values.senderToken)

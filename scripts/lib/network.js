@@ -17,7 +17,7 @@ module.exports = {
       const selectedNetwork = constants.chainNames[process.env.CHAIN_ID || '4']
       const networkName = process.env.CHAIN_ID === '1' ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
 
-      console.log(chalk.gray(`Current account ${currentAccount} ${networkName}\n`))
+      console.log(chalk.gray(`Account ${currentAccount} ${networkName}\n`))
 
       const signerPrivateKey = Buffer.from(process.env.ETHEREUM_ACCOUNT, 'hex')
 
