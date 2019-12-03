@@ -8,7 +8,10 @@
   },
   "license": "Apache-2.0",
   "main": "handlers.js",
-  "author": "Don Mosites <don.mosites@fluidity.io>",
+  "contributors": [
+    "Don Mosites <don.mosites@fluidity.io>",
+    "Graham Perich <graham.perich@fluidity.io>"
+  ],
   "scripts": {
     "indexer:create": "node scripts/indexer/create.js",
     "indexer:enable": "node scripts/indexer/enable.js",
