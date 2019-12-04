@@ -24,9 +24,9 @@ network.select('Create an Index', wallet => {
   prompt.get(fields, values => {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     indexerContract.indexes(values.signerToken, values.senderToken).then(index => {
-      if (index != constants.ADDRESS_ZERO) {
+      if (index !== constants.ADDRESS_ZERO) {
         console.log(`\n${chalk.yellow('Error')}: Index already exists`)
-        console.log(`You can stake on the Index using ${chalk.bold('yarn indexer:set')}`)
+        console.log(`You can stake on this index using ${chalk.bold('yarn indexer:set')}\n`)
       } else {
         prompt.confirm('This will create a new Index for a token pair.', values, 'send transaction', () => {
           new ethers.Contract(indexerAddress, Indexer.abi, wallet)
