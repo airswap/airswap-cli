@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@airswap/order-utils": "0.3.12",
-    "@airswap/swap": "3.3.4",
+    "@airswap/swap": "3.3.5",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
   },
