@@ -21,9 +21,9 @@
     "lint": "yarn eslint \"./**/*.js\""
   },
   "dependencies": {
-    "@airswap/indexer": "^0.3.2",
+    "@airswap/indexer": "2.6.7",
     "@airswap/order-utils": "^0.3.3",
-    "@airswap/swap": "^2.2.2",
+    "@airswap/swap": "3.3.5",
     "@airswap/tokens": "^0.1.2",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
