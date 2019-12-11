@@ -1,6 +1,6 @@
 {
   "name": "@airswap/maker-kit",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Tools to get started on the AirSwap Network",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "test": "yarn mocha handlers.test.js"
   },
   "dependencies": {
-    "@airswap/order-utils": "0.3.12",
+    "@airswap/order-utils": "0.3.13",
     "@airswap/swap": "3.3.5",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
