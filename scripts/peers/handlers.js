@@ -69,7 +69,7 @@ function peerCall(locator, method, values, validator, callback) {
       callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
     } else {
       if (error) {
-        callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
+        callback(`\n${chalk.yellow('Error')} ${chalk.white(locator)} ${JSON.stringify(error)}\n`)
       } else if (!orders[validator](quote)) {
         console.log(`\n${chalk.yellow('Got a Malformed Quote')}`)
         console.log(quote)
