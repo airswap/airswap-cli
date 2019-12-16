@@ -104,7 +104,7 @@ pay: 10 0xc778417e063141139fce010982780140aa0cd5ab
 price: 0.1
 ```
 
-This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do no thave a locator in hand, we need to use an indexer to find other trading parties.
+This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do not have a locator in hand, we need to use an indexer to find other trading parties.
 
 ### Set your intent to trade
 
