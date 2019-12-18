@@ -30,7 +30,7 @@ network.select('Create an Index', wallet => {
       } else {
         prompt.confirm('This will create a new Index for a token pair.', values, 'send transaction', () => {
           new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-            .createIndex(values.signerToken, values.senderToken)
+            .createIndex(values.signerToken, values.senderToken, constants.PROTOCOL_CODE)
             .then(prompt.handleTransaction)
             .catch(prompt.handleError)
         })
