@@ -69,7 +69,13 @@ network.select('Set Intent to Trade', wallet => {
                           prompt.confirm('Set an Intent', values, 'send transaction', () => {
                             const locatorBytes = ethers.utils.formatBytes32String(values.locator)
                             new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-                              .setIntent(values.signerToken, values.senderToken, atomicAmount, locatorBytes)
+                              .setIntent(
+                                values.signerToken,
+                                values.senderToken,
+                                constants.PROTOCOL_CODE,
+                                atomicAmount,
+                                locatorBytes,
+                              )
                               .then(prompt.handleTransaction)
                               .catch(prompt.handleError)
                           })

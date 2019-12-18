@@ -32,7 +32,7 @@ network.select('Unset Intent to Trade', wallet => {
         } else {
           prompt.confirm('Unset an Intent', values, 'send transaction', () => {
             new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-              .unsetIntent(values.signerToken, values.senderToken)
+              .unsetIntent(values.signerToken, values.senderToken, constants.PROTOCOL_CODE)
               .then(prompt.handleTransaction)
               .catch(prompt.handleError)
           })
