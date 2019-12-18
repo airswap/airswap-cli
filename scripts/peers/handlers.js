@@ -50,7 +50,13 @@ function indexerCall(wallet, signerSide, senderSide, callback) {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   prompt.get(getFields(['signerToken', 'senderToken'], signerSide, senderSide), values => {
     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-      .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, constants.MAX_LOCATORS)
+      .getLocators(
+        values.signerToken,
+        values.senderToken,
+        constants.PROTOCOL_CODE,
+        constants.INDEX_HEAD,
+        constants.MAX_LOCATORS,
+      )
       .then(result => {
         callback(result, values)
       })

@@ -36,7 +36,7 @@ network.select('Set Intent to Trade', wallet => {
   console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
   prompt.get(fields, values => {
-    indexerContract.indexes(values.signerToken, values.senderToken).then(index => {
+    indexerContract.indexes(values.signerToken, values.senderToken, constants.PROTOCOL_CODE).then(index => {
       if (index === constants.ADDRESS_ZERO) {
         console.log(`\n${chalk.yellow('Error')}: Index does not exist`)
         console.log(`You can create one for this token pair using ${chalk.bold('yarn indexer:create')}\n`)
@@ -60,7 +60,7 @@ network.select('Set Intent to Trade', wallet => {
                     console.log(`Run the ${chalk.bold('yarn indexer:enable')} script to enable.\n`)
                   } else {
                     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-                      .indexes(values.signerToken, values.senderToken)
+                      .indexes(values.signerToken, values.senderToken, constants.PROTOCOL_CODE)
                       .then(indexAddress => {
                         if (indexAddress === constants.NULL_ADDRESS) {
                           console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found`)

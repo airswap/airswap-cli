@@ -25,7 +25,7 @@ network.select('Unset Intent to Trade', wallet => {
   console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-      .indexes(values.signerToken, values.senderToken)
+      .indexes(values.signerToken, values.senderToken, constants.PROTOCOL_CODE)
       .then(indexAddress => {
         if (indexAddress === '0x0000000000000000000000000000000000000000') {
           console.log(`\n${chalk.yellow('Error')}: Token Pair Not Found\n`)

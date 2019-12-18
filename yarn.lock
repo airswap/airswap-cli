@@ -2,20 +2,12 @@
 # yarn lockfile v1
 
 
-"@airswap/index@0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@airswap/index/-/index-0.3.4.tgz#e0aa8e8a6f14a710c826f2f5877b254af832ede8"
-  integrity sha512-4bNozejpKFhY0g018p9y+QGTVtTpOIBk5Cxu9bcOdQzDY6LVhcMkNlSP8WXKLqa6f1wEg63Me3m7Pzmftf+QFA==
+"@airswap/indexer@2.6.7-beta.2":
+  version "2.6.7-beta.2"
+  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-2.6.7-beta.2.tgz#6405230d6f068b751cb3b729ea9d0933b115445b"
+  integrity sha512-ZERmFwnBP8aqjfpi0Ysw9xFsesfOIPphAigYvfOsUrI39uJXed/91i+LiPbphyRNYYn+k8lHTojTqGH5+svrmw==
   dependencies:
-    openzeppelin-solidity "2.3"
-
-"@airswap/indexer@2.6.7":
-  version "2.6.7"
-  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-2.6.7.tgz#6b74375246d6a3cb600ec016f7f8490a2044b895"
-  integrity sha512-O7Hpi8rHayuzaBnTLhg9OZoAdlc1fk0FAUMBKDUIs4K5cD6QLVRzBbOiwJQzVuX4/eWDug3bDZW/zNOp6sf1Aw==
-  dependencies:
-    "@airswap/index" "0.3.4"
-    openzeppelin-solidity "2.3"
+    openzeppelin-solidity "2.4"
 
 "@airswap/order-utils@0.3.13":
   version "0.3.13"
@@ -3067,6 +3059,11 @@ openzeppelin-solidity@2.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-2.3.0.tgz#1ab7b4cc3782a5472ed61eb740c56a8bfdd74119"
   integrity sha512-QYeiPLvB1oSbDt6lDQvvpx7k8ODczvE474hb2kLXZBPKMsxKT1WxTCHBYrCU7kS7hfAku4DcJ0jqOyL+jvjwQw==
+
+openzeppelin-solidity@2.4:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-2.4.0.tgz#5f0a7b30571c45493449166e57b947203415349d"
+  integrity sha512-533gc5jkspxW5YT0qJo02Za5q1LHwXK9CJCc48jNj/22ncNM/3M/3JfWLqfpB90uqLwOKOovpl0JfaMQTR+gXQ==
 
 optionator@^0.8.3:
   version "0.8.3"
