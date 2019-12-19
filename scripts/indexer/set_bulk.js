@@ -27,6 +27,10 @@ const fields = {
 async function setIntent(signerToken, senderToken, locator, stakeAmount, wallet) {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   console.log(chalk.white(`Indexer ${indexerAddress}\n`))
+  console.log(chalk.white(`Signer Token ${signerToken}`))
+  console.log(chalk.white(`Sender Token ${senderToken}`))
+  console.log(chalk.white(`Locator ${locator}`))
+  console.log(chalk.white(`Stake Amount ${stakeAmount}`))
 
   const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
   const index = await indexerContract.indexes(signerToken, senderToken, constants.PROTOCOL_CODE)
