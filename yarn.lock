@@ -2,33 +2,34 @@
 # yarn lockfile v1
 
 
-"@airswap/indexer@2.6.7-beta.2":
-  version "2.6.7-beta.2"
-  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-2.6.7-beta.2.tgz#6405230d6f068b751cb3b729ea9d0933b115445b"
-  integrity sha512-ZERmFwnBP8aqjfpi0Ysw9xFsesfOIPphAigYvfOsUrI39uJXed/91i+LiPbphyRNYYn+k8lHTojTqGH5+svrmw==
+"@airswap/indexer@3.6.7":
+  version "3.6.7"
+  resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-3.6.7.tgz#26621ec9e7889941b3d7ea4cad0507e29056b98f"
+  integrity sha512-BzSA5pbnoJFNMprXInim0QvcuAfI5mZD4LD1i12qQAYpjfTfzxlWiBY8V3hOil2GIiFzwliyrg7BIKez9XMl1w==
   dependencies:
     openzeppelin-solidity "2.4"
 
-"@airswap/order-utils@0.3.13":
-  version "0.3.13"
-  resolved "https://registry.yarnpkg.com/@airswap/order-utils/-/order-utils-0.3.13.tgz#ddb8a819e9319278d5eb969394416feeaf6e90dc"
-  integrity sha512-BsNjl8zy7IdRM/QduJcAmFElFe7Mtn1qHc2bX4jQfVTl/QdXnUdkM5EAq80U0WHw8V5pzXEfp97RedLwGWsMJg==
+"@airswap/order-utils@0.3.16":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@airswap/order-utils/-/order-utils-0.3.16.tgz#faeee55c296de702c81dfc314324b76b0ff329f6"
+  integrity sha512-43vCuiMC0pNGGsb88GWM0WwBaadAoaynFrjIhImYti9byxDSVwxunf+c8VEjsx7pypeInnfDhqwsIfxs/q1isQ==
   dependencies:
-    "@airswap/swap" "3.3.5"
+    "@airswap/swap" "4.3.5"
     "@airswap/tokens" "0.1.3"
     eth-sig-util "^2.2.0"
+    ethereumjs-abi "^0.6.7"
     ethereumjs-util "^6.1.0"
     ethers "^5.0.0-beta.159"
     web3 "^1.0.0-beta.55"
     web3-eth "1.2.2"
 
-"@airswap/swap@3.3.5":
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-3.3.5.tgz#f46f6de1f3f159d90d267881ad26ebe86e1432cc"
-  integrity sha512-MBXc2pN+n8ymA5950ZAjIVlMwLJTXHUmmWIqPmTRT7lOp/chQhR2sbS9Yw9DrbSw93E33APT87mjIiw1o1QPJA==
+"@airswap/swap@4.3.5":
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-4.3.5.tgz#d73d02b3efc9169920d3976be293916fba22db09"
+  integrity sha512-2B6s0tYucg7d+rhhtqKNijivrQ1ltkMGm922A9SS2oquh36eFFELsYNbGgEZLXK7sCE2odNa0RzlkRBMLnP2Bg==
   dependencies:
-    "@airswap/types" "1.4.4"
-    openzeppelin-solidity "2.3"
+    "@airswap/types" "2.4.4"
+    openzeppelin-solidity "2.4"
 
 "@airswap/tokens@0.1.3":
   version "0.1.3"
@@ -37,12 +38,12 @@
   dependencies:
     openzeppelin-solidity "2.3"
 
-"@airswap/types@1.4.4":
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-1.4.4.tgz#4ef8f16fcc95fe4380824cf1bb81f947c6b990bc"
-  integrity sha512-Xr3mdaPdokIZFf+auHLHU9+sxAI05U3H7Fm35HNCGfA8wx+pEj1KnZmtBrSW9QVvGXGCOYN5QLwh6flIH8FUAQ==
+"@airswap/types@2.4.4":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-2.4.4.tgz#31d6b70886b5affe6b4be1d6be57a8859beeb0f3"
+  integrity sha512-IDefnjoW8/vpoZmNAflt7oC2/Nthn2nF4dSoSx3pWks+BmizpmQja6VAkMy1vASml6oUMxag5IIIwC0D4/953A==
   dependencies:
-    openzeppelin-solidity "2.3"
+    openzeppelin-solidity "2.4"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.5.5"
@@ -1701,6 +1702,14 @@ ethereumjs-abi@0.6.5:
   dependencies:
     bn.js "^4.10.0"
     ethereumjs-util "^4.3.0"
+
+ethereumjs-abi@^0.6.7:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz#71bc152db099f70e62f108b7cdfca1b362c6fcae"
+  integrity sha512-Tx0r/iXI6r+lRsdvkFDlut0N08jWMnKRZ6Gkq+Nmw75lZe4e6o3EkSnkaBP5NF6+m5PTGAr9JP43N3LyeoglsA==
+  dependencies:
+    bn.js "^4.11.8"
+    ethereumjs-util "^6.0.0"
 
 ethereumjs-common@^1.3.1, ethereumjs-common@^1.3.2:
   version "1.4.0"
