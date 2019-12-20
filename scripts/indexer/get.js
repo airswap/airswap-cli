@@ -30,7 +30,7 @@ network.select('Get Locators', wallet => {
   console.log(chalk.white(`Indexer ${indexerAddress}\n`))
   prompt.get(fields, values => {
     new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-      .getLocators(values.signerToken, values.senderToken, constants.INDEX_HEAD, values.count)
+      .getLocators(values.signerToken, values.senderToken, constants.PROTOCOL_CODE, constants.INDEX_HEAD, values.count)
       .then(result => {
         if (!result.locators.length) {
           console.log('No locators found.')

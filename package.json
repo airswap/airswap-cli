@@ -14,9 +14,11 @@
   ],
   "scripts": {
     "indexer:create": "node scripts/indexer/create.js",
+    "indexer:create-bulk": "node scripts/indexer/create_bulk.js",
     "indexer:enable": "node scripts/indexer/enable.js",
     "indexer:get": "node scripts/indexer/get.js",
     "indexer:set": "node scripts/indexer/set.js",
+    "indexer:set-bulk": "node scripts/indexer/set_bulk.js",
     "indexer:unset": "node scripts/indexer/unset.js",
     "peers:get": "node scripts/peers/get.js",
     "token:approve": "node scripts/token/approve.js",
@@ -27,13 +29,13 @@
     "test": "yarn mocha handlers.test.js"
   },
   "dependencies": {
-    "@airswap/order-utils": "0.3.13",
-    "@airswap/swap": "3.3.5",
+    "@airswap/order-utils": "0.3.16",
+    "@airswap/swap": "4.3.5",
     "bignumber.js": "^9.0.0",
     "ethers": "^4.0.39"
   },
   "devDependencies": {
-    "@airswap/indexer": "2.6.7",
+    "@airswap/indexer": "3.6.7",
     "babel-eslint": "^10.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^6.5.1",
