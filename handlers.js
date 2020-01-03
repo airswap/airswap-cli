@@ -49,73 +49,75 @@ function isTradingPair({ signerToken, senderToken }) {
   return signerToken in tokenPrices && senderToken in tokenPrices[signerToken]
 }
 
-// Calculates the senderParam: An amount the taker will send us in a sell
-function priceSell({ signerParam, signerToken, senderToken }) {
-  return BigNumber(signerParam)
+// Calculates the senderAmount: An amount the taker will send us in a sell
+function priceSell({ signerAmount, signerToken, senderToken }) {
+  return BigNumber(signerAmount)
     .multipliedBy(tokenPrices[signerToken][senderToken])
     .integerValue(BigNumber.ROUND_CEIL)
     .toString()
 }
 
-// Calculates the signerParam: An amount we would send the taker in a buy
-function priceBuy({ senderParam, senderToken, signerToken }) {
-  return BigNumber(senderParam)
+// Calculates the signerAmount: An amount we would send the taker in a buy
+function priceBuy({ senderAmount, senderToken, signerToken }) {
+  return BigNumber(senderAmount)
     .dividedBy(tokenPrices[signerToken][senderToken])
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString()
 }
 
-// Get max param based on whether signerParam or senderParam is provided
-function getMaxParam(params) {
-  if ('signerParam' in params) {
+// Get max param based on whether signerAmount or senderAmount is provided
+function getMaxAmount(params) {
+  if ('signerAmount' in params) {
     switch (params.signerToken) {
       case constants.rinkebyTokens.WETH:
         return BigNumber(tokenAmounts[constants.rinkebyTokens.WETH])
       case constants.rinkebyTokens.DAI:
         return BigNumber(tokenAmounts[constants.rinkebyTokens.DAI])
     }
-  } else if ('senderParam' in params) {
+  } else if ('senderAmount' in params) {
     switch (params.signerToken) {
       case constants.rinkebyTokens.DAI:
-        return BigNumber(priceBuy({ signerParam: tokenAmounts[constants.rinkebyTokens.DAI], ...params }))
+        return BigNumber(priceBuy({ signerAmount: tokenAmounts[constants.rinkebyTokens.DAI], ...params }))
       case constants.rinkebyTokens.WETH:
-        return BigNumber(priceSell({ signerParam: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
+        return BigNumber(priceSell({ signerAmount: tokenAmounts[constants.rinkebyTokens.WETH], ...params }))
     }
   } else {
-    throw new Error('Neither signerParam or senderParam provided to getMaxParam')
+    throw new Error('Neither signerAmount or senderAmount provided to getMaxAmount')
   }
 }
 
 // Create a quote object with the provided parameters
-function createQuote({ signerToken, signerParam, senderToken, senderParam }) {
+function createQuote({ signerToken, signerAmount, senderToken, senderAmount }) {
   return {
     signer: {
-      token: signerToken.toLowerCase(),
-      param: String(signerParam),
       kind: orderConstants.ERC20_INTERFACE_ID,
+      token: signerToken.toLowerCase(),
+      amount: String(signerAmount),
+      id: '0',
     },
     sender: {
-      token: senderToken.toLowerCase(),
-      param: String(senderParam),
       kind: orderConstants.ERC20_INTERFACE_ID,
+      token: senderToken.toLowerCase(),
+      amount: String(senderAmount),
+      id: '0',
     },
   }
 }
 
 // Create an order object with the provided parameters
-async function createOrder({ signerToken, signerParam, senderWallet, senderToken, senderParam }) {
+async function createOrder({ signerToken, signerAmount, senderWallet, senderToken, senderAmount }) {
   const order = await orders.getOrder({
     expiry: getExpiry(),
     nonce: getNonce(),
     signer: {
       wallet: signerWallet,
       token: signerToken,
-      param: signerParam,
+      amount: signerAmount,
     },
     sender: {
       wallet: senderWallet,
       token: senderToken,
-      param: senderParam,
+      amount: senderAmount,
     },
   })
   // Generate an order signature
@@ -140,15 +142,15 @@ function tradingPairGuard(proceed) {
 // If above maximum amount return an error
 function maxAmountGuard(proceed) {
   return function(params, callback) {
-    if ('signerParam' in params && getMaxParam(params).lt(params.signerParam)) {
+    if ('signerAmount' in params && getMaxAmount(params).lt(params.signerAmount)) {
       callback({
         code: -33603,
-        message: `Maximum signerParam is ${getMaxParam(params)}`,
+        message: `Maximum signerAmount is ${getMaxAmount(params)}`,
       })
-    } else if ('senderParam' in params && getMaxParam(params).lt(params.senderParam)) {
+    } else if ('senderAmount' in params && getMaxAmount(params).lt(params.senderAmount)) {
       callback({
         code: -33603,
-        message: `Maximum senderParam is ${getMaxParam(params)}`,
+        message: `Maximum senderAmount is ${getMaxAmount(params)}`,
       })
     } else {
       proceed(params, callback)
@@ -170,12 +172,12 @@ function hasParams(params, required) {
 const handlers = {
   getSenderSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'senderToken']
+      const required = ['signerAmount', 'signerToken', 'senderToken']
       if (hasParams(params, required)) {
         callback(
           null,
           createQuote({
-            senderParam: priceSell(params),
+            senderAmount: priceSell(params),
             ...params,
           }),
         )
@@ -189,12 +191,12 @@ const handlers = {
   ),
   getSignerSideQuote: tradingPairGuard(
     maxAmountGuard(function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'signerToken']
+      const required = ['senderAmount', 'senderToken', 'signerToken']
       if (hasParams(params, required)) {
         callback(
           null,
           createQuote({
-            signerParam: priceBuy(params),
+            signerAmount: priceBuy(params),
             ...params,
           }),
         )
@@ -207,14 +209,14 @@ const handlers = {
     }),
   ),
   getMaxQuote: tradingPairGuard(function(params, callback) {
-    const signerParam = getMaxParam({ signerParam: params.signerParam, signerToken: params.signerToken })
+    const signerAmount = getMaxAmount({ signerAmount: params.signerAmount, signerToken: params.signerToken })
     const required = ['signerToken', 'senderToken']
     if (hasParams(params, required)) {
       callback(
         null,
         createQuote({
-          signerParam: signerParam.toString(),
-          senderParam: priceSell({ signerParam, ...params }),
+          signerAmount: signerAmount.toString(),
+          senderAmount: priceSell({ signerAmount, ...params }),
           ...params,
         }),
       )
@@ -227,12 +229,12 @@ const handlers = {
   }),
   getSenderSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['signerParam', 'signerToken', 'senderWallet', 'senderToken']
+      const required = ['signerAmount', 'signerToken', 'senderWallet', 'senderToken']
       if (hasParams(params, required)) {
         callback(
           null,
           await createOrder({
-            senderParam: priceSell(params),
+            senderAmount: priceSell(params),
             ...params,
           }),
         )
@@ -246,12 +248,12 @@ const handlers = {
   ),
   getSignerSideOrder: tradingPairGuard(
     maxAmountGuard(async function(params, callback) {
-      const required = ['senderParam', 'senderToken', 'senderWallet', 'signerToken']
+      const required = ['senderAmount', 'senderToken', 'senderWallet', 'signerToken']
       if (hasParams(params, required)) {
         callback(
           null,
           await createOrder({
-            signerParam: priceBuy(params),
+            signerAmount: priceBuy(params),
             ...params,
           }),
         )
@@ -275,7 +277,7 @@ function initialize(_privateKey, _tokenPrices, _tokenAmounts, _tradingFunctions)
   signerWallet = new ethers.Wallet(signerPrivateKey).address
 
   // If provided, override default trading functions
-  // isTradingPair, priceBuy, priceSell, getMaxParam are required
+  // isTradingPair, priceBuy, priceSell, getMaxAmount are required
   // getExpiry, getNonce are optional
   if (typeof _tradingFunctions === 'object') {
     // Override trading functions
@@ -283,12 +285,12 @@ function initialize(_privateKey, _tokenPrices, _tokenAmounts, _tradingFunctions)
       typeof _tradingFunctions.isTradingPair === 'function' &&
       typeof _tradingFunctions.priceBuy === 'function' &&
       typeof _tradingFunctions.priceSell === 'function' &&
-      typeof _tradingFunctions.getMaxParam === 'function'
+      typeof _tradingFunctions.getMaxAmount === 'function'
     ) {
       priceBuy = _tradingFunctions.priceBuy
       priceSell = _tradingFunctions.priceSell
       isTradingPair = _tradingFunctions.isTradingPair
-      getMaxParam = _tradingFunctions.getMaxParam
+      getMaxAmount = _tradingFunctions.getMaxAmount
 
       // If provided, override expiry function
       if (typeof _tradingFunctions.getExpiry === 'function') {
