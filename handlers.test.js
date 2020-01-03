@@ -45,7 +45,7 @@ describe('Trading Pair Guard', function() {
   it('getSenderSideQuote: should fail for inactive token pair', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: 1,
+        signerAmount: 1,
         unusedToken,
         senderToken,
       },
@@ -59,7 +59,7 @@ describe('Trading Pair Guard', function() {
   it('getSignerSideQuote: should fail for inactive token pair', done => {
     handlers.getSignerSideQuote(
       {
-        senderParam: 1,
+        senderAmount: 1,
         signerToken,
         unusedToken,
       },
@@ -87,7 +87,7 @@ describe('Trading Pair Guard', function() {
   it('getSenderSideOrder: should fail for inactive token pair', done => {
     handlers.getSenderSideOrder(
       {
-        signerParam: 1,
+        signerAmount: 1,
         signerToken,
         unusedToken,
         senderWallet,
@@ -103,7 +103,7 @@ describe('Trading Pair Guard', function() {
   it('getSignerSideOrder: should fail for inactive token pair', done => {
     handlers.getSignerSideOrder(
       {
-        senderParam: 1,
+        senderAmount: 1,
         unusedToken,
         senderToken,
         senderWallet,
@@ -180,7 +180,7 @@ describe('Max Amount Guard', function() {
   it('getSenderSideQuote: 101 WETH should fail as above maximum amount', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: toAtomicAmount(101, constants.decimals.WETH),
+        signerAmount: toAtomicAmount(101, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
       },
@@ -193,7 +193,7 @@ describe('Max Amount Guard', function() {
   it('getSignerSideQuote: 20001 DAI should fail as above maximum amount', done => {
     handlers.getSignerSideQuote(
       {
-        senderParam: toAtomicAmount(20001, constants.decimals.DAI),
+        senderAmount: toAtomicAmount(20001, constants.decimals.DAI),
         senderToken: constants.rinkebyTokens.DAI,
         signerToken: constants.rinkebyTokens.WETH,
       },
@@ -209,13 +209,13 @@ describe('Default Pricing Handlers', function() {
   it('getSenderSideQuote: given signer 1 WETH, should return sender 200 DAI', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: toAtomicAmount(1, constants.decimals.WETH),
+        signerAmount: toAtomicAmount(1, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(200, constants.decimals.DAI)))
+        assert(BigNumber(quote.sender.amount).eq(toAtomicAmount(200, constants.decimals.DAI)))
         done()
       },
     )
@@ -224,13 +224,13 @@ describe('Default Pricing Handlers', function() {
   it('getSignerSideQuote: given sender 100 DAI, should return signer 0.5 WETH', done => {
     handlers.getSignerSideQuote(
       {
-        senderParam: toAtomicAmount(100, constants.decimals.DAI),
+        senderAmount: toAtomicAmount(100, constants.decimals.DAI),
         senderToken: constants.rinkebyTokens.DAI,
         signerToken: constants.rinkebyTokens.WETH,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.signer.param).eq(toAtomicAmount(0.5, constants.decimals.WETH)))
+        assert(BigNumber(quote.signer.amount).eq(toAtomicAmount(0.5, constants.decimals.WETH)))
         done()
       },
     )
@@ -244,8 +244,8 @@ describe('Default Pricing Handlers', function() {
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.signer.param).eq(toAtomicAmount(100, constants.decimals.WETH)))
-        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(20000, constants.decimals.DAI)))
+        assert(BigNumber(quote.signer.amount).eq(toAtomicAmount(100, constants.decimals.WETH)))
+        assert(BigNumber(quote.sender.amount).eq(toAtomicAmount(20000, constants.decimals.DAI)))
         done()
       },
     )
@@ -254,14 +254,14 @@ describe('Default Pricing Handlers', function() {
   it('getSenderSideOrder: given signer 2 WETH, should return sender 400 DAI', done => {
     handlers.getSenderSideOrder(
       {
-        signerParam: toAtomicAmount(2, constants.decimals.WETH),
+        signerAmount: toAtomicAmount(2, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
         senderWallet,
       },
       function(err, order) {
         assert(orders.isValidOrder(order))
-        assert(BigNumber(order.sender.param).eq(toAtomicAmount(400, constants.decimals.DAI)))
+        assert(BigNumber(order.sender.amount).eq(toAtomicAmount(400, constants.decimals.DAI)))
         done()
       },
     )
@@ -270,14 +270,14 @@ describe('Default Pricing Handlers', function() {
   it('getSignerSideOrder: given sender 3 WETH, should return signer 600 DAI', done => {
     handlers.getSignerSideOrder(
       {
-        senderParam: toAtomicAmount(3, constants.decimals.WETH),
+        senderAmount: toAtomicAmount(3, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.DAI,
         senderToken: constants.rinkebyTokens.WETH,
         senderWallet,
       },
       function(err, order) {
         assert(orders.isValidOrder(order))
-        assert(BigNumber(order.signer.param).eq(toAtomicAmount(600, constants.decimals.DAI)))
+        assert(BigNumber(order.signer.amount).eq(toAtomicAmount(600, constants.decimals.DAI)))
         done()
       },
     )
@@ -305,13 +305,13 @@ describe('Custom Pricing Data', function() {
   it('getSenderSideQuote: given signer 1 DAI, should return sender 0.1 WETH', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: toAtomicAmount(1, constants.decimals.WETH),
+        signerAmount: toAtomicAmount(1, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(150, constants.decimals.DAI)))
+        assert(BigNumber(quote.sender.amount).eq(toAtomicAmount(150, constants.decimals.DAI)))
         done()
       },
     )
@@ -327,19 +327,19 @@ describe('Custom Pricing Handlers', function() {
         }
         return false
       },
-      priceBuy({ senderParam }) {
+      priceBuy({ senderAmount }) {
         const customPrice = 0.1
-        return BigNumber(senderParam)
+        return BigNumber(senderAmount)
           .multipliedBy(customPrice)
           .toFixed(0)
       },
-      priceSell({ signerParam }) {
+      priceSell({ signerAmount }) {
         const customPrice = 10
-        return BigNumber(signerParam)
+        return BigNumber(signerAmount)
           .multipliedBy(customPrice)
           .toFixed(0)
       },
-      getMaxParam({ signerToken }) {
+      getMaxAmount({ signerToken }) {
         if (signerToken === constants.rinkebyTokens.WETH) {
           return BigNumber(toAtomicAmount(50, constants.decimals.WETH))
         }
@@ -350,7 +350,7 @@ describe('Custom Pricing Handlers', function() {
   it('getSenderSideQuote: should fail for inactive token pair', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: toAtomicAmount(100, constants.decimals.DAI),
+        signerAmount: toAtomicAmount(100, constants.decimals.DAI),
         unusedToken,
         senderToken,
       },
@@ -364,13 +364,13 @@ describe('Custom Pricing Handlers', function() {
   it('getSenderSideQuote: given signer 1 DAI, should return sender 0.1 WETH', done => {
     handlers.getSenderSideQuote(
       {
-        signerParam: toAtomicAmount(1, constants.decimals.WETH),
+        signerAmount: toAtomicAmount(1, constants.decimals.WETH),
         signerToken: constants.rinkebyTokens.WETH,
         senderToken: constants.rinkebyTokens.DAI,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(10, constants.decimals.DAI)))
+        assert(BigNumber(quote.sender.amount).eq(toAtomicAmount(10, constants.decimals.DAI)))
         done()
       },
     )
@@ -379,13 +379,13 @@ describe('Custom Pricing Handlers', function() {
   it('getSignerSideQuote: given sender 1 DAI, should return sender 0.1 WETH', done => {
     handlers.getSignerSideQuote(
       {
-        senderParam: toAtomicAmount(1, constants.decimals.DAI),
+        senderAmount: toAtomicAmount(1, constants.decimals.DAI),
         senderToken: constants.rinkebyTokens.DAI,
         signerToken: constants.rinkebyTokens.WETH,
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.signer.param).eq(toAtomicAmount(0.1, constants.decimals.WETH)))
+        assert(BigNumber(quote.signer.amount).eq(toAtomicAmount(0.1, constants.decimals.WETH)))
         done()
       },
     )
@@ -399,8 +399,8 @@ describe('Custom Pricing Handlers', function() {
       },
       function(err, quote) {
         assert(orders.isValidQuote(quote))
-        assert(BigNumber(quote.signer.param).eq(toAtomicAmount(50, constants.decimals.WETH)))
-        assert(BigNumber(quote.sender.param).eq(toAtomicAmount(500, constants.decimals.DAI)))
+        assert(BigNumber(quote.signer.amount).eq(toAtomicAmount(50, constants.decimals.WETH)))
+        assert(BigNumber(quote.sender.amount).eq(toAtomicAmount(500, constants.decimals.DAI)))
         done()
       },
     )

@@ -14,12 +14,12 @@ const indexerDeploys = require('@airswap/indexer/deploys.json')
 dotenv.config()
 
 const allFields = {
-  signerParam: {
+  signerAmount: {
     description: chalk.white('Amount to signerSide'),
     type: 'Number',
     default: 100,
   },
-  senderParam: {
+  senderAmount: {
     description: chalk.white('Amount to senderSide'),
     type: 'Number',
     default: 100,
@@ -88,15 +88,15 @@ function peerCall(locator, method, values, validator, callback) {
 
 module.exports = {
   getBuyQuote: (wallet, locator) => {
-    prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'signerAmount'], 'buy', 'pay'), values => {
       peerCall(locator, 'getSenderSideQuote', values, 'isValidQuote', (error, result) => {
         if (error) {
           console.log(error)
         } else {
           prompt.confirm('Got a Quote', {
-            buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-            pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-            price: chalk.bold(result.sender.param / result.signer.param),
+            buy: `${chalk.bold(result.signer.amount)} ${result.signer.token}`,
+            pay: `${chalk.bold(result.sender.amount)} ${result.sender.token}`,
+            price: chalk.bold(result.sender.amount / result.signer.amount),
           })
         }
       })
@@ -108,7 +108,7 @@ module.exports = {
         spinner: cliSpinners.dots,
         succeedColor: chalk.white,
       })
-      prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
+      prompt.get(getFields(['signerAmount'], 'buy', 'buy'), values2 => {
         console.log()
         let hasAtLeastOne = false
         const locators = result.locators
@@ -138,8 +138,8 @@ module.exports = {
                       'Quote ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
-                          result.sender.param,
-                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)})`,
+                          result.sender.amount,
+                        )}, price: ${chalk.bold(result.sender.amount / result.signer.amount)})`,
                       ),
                   })
                 }
@@ -154,15 +154,15 @@ module.exports = {
     })
   },
   getSellQuote: (wallet, locator) => {
-    prompt.get(getFields(['signerToken', 'senderToken', 'senderParam'], 'sell', 'sell'), values => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'senderAmount'], 'sell', 'sell'), values => {
       peerCall(locator, 'getSignerSideQuote', values, 'isValidQuote', (error, result) => {
         if (error) {
           console.log(error)
         } else {
           prompt.confirm('Got a Quote', {
-            sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-            for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-            price: chalk.bold(result.signer.param / result.sender.param),
+            sell: `${chalk.bold(result.sender.amount)} ${result.sender.token}`,
+            for: `${chalk.bold(result.signer.amount)} ${result.signer.token}`,
+            price: chalk.bold(result.signer.amount / result.sender.amount),
           })
         }
       })
@@ -174,7 +174,7 @@ module.exports = {
         spinner: cliSpinners.dots,
         succeedColor: chalk.white,
       })
-      prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
+      prompt.get(getFields(['senderAmount'], 'sell', 'sell'), values2 => {
         console.log()
         let hasAtLeastOne = false
         const locators = result.locators
@@ -204,8 +204,8 @@ module.exports = {
                       'Quote ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (get: ${chalk.bold(
-                          result.signer.param,
-                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)})`,
+                          result.signer.amount,
+                        )}, price: ${chalk.bold(result.signer.amount / result.sender.amount)})`,
                       ),
                   })
                 }
@@ -220,7 +220,7 @@ module.exports = {
     })
   },
   getBuyOrder: (wallet, locator) => {
-    prompt.get(getFields(['signerToken', 'senderToken', 'signerParam'], 'buy', 'pay'), values => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'signerAmount'], 'buy', 'pay'), values => {
       peerCall(
         locator,
         'getSenderSideOrder',
@@ -231,9 +231,9 @@ module.exports = {
             console.log(error)
           } else {
             prompt.confirm('Got an Order', {
-              buy: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-              pay: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-              price: chalk.bold(result.sender.param / result.signer.param),
+              buy: `${chalk.bold(result.signer.amount)} ${result.signer.token}`,
+              pay: `${chalk.bold(result.sender.amount)} ${result.sender.token}`,
+              price: chalk.bold(result.sender.amount / result.signer.amount),
               expiry: chalk.green(new Date(result.expiry * 1000).toLocaleTimeString()),
             })
           }
@@ -247,7 +247,7 @@ module.exports = {
         spinner: cliSpinners.dots,
         succeedColor: chalk.white,
       })
-      prompt.get(getFields(['signerParam'], 'buy', 'buy'), values2 => {
+      prompt.get(getFields(['signerAmount'], 'buy', 'buy'), values2 => {
         console.log()
         let hasAtLeastOne = false
         const locators = result.locators
@@ -277,8 +277,8 @@ module.exports = {
                       'Order ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (cost: ${chalk.bold(
-                          result.sender.param,
-                        )}, price: ${chalk.bold(result.sender.param / result.signer.param)}, expiry: ${chalk.green(
+                          result.sender.amount,
+                        )}, price: ${chalk.bold(result.sender.amount / result.signer.amount)}, expiry: ${chalk.green(
                           new Date(result.expiry * 1000).toLocaleTimeString(),
                         )})`,
                       ),
@@ -295,7 +295,7 @@ module.exports = {
     })
   },
   getSellOrder: (wallet, locator) => {
-    prompt.get(getFields(['signerToken', 'senderToken', 'senderParam'], 'sell', 'sell'), values => {
+    prompt.get(getFields(['signerToken', 'senderToken', 'senderAmount'], 'sell', 'sell'), values => {
       peerCall(
         locator,
         'getSignerSideOrder',
@@ -306,9 +306,9 @@ module.exports = {
             console.log(error)
           } else {
             prompt.confirm('Got an Order', {
-              sell: `${chalk.bold(result.sender.param)} ${result.sender.token}`,
-              for: `${chalk.bold(result.signer.param)} ${result.signer.token}`,
-              price: chalk.bold(result.signer.param / result.sender.param),
+              sell: `${chalk.bold(result.sender.amount)} ${result.sender.token}`,
+              for: `${chalk.bold(result.signer.amount)} ${result.signer.token}`,
+              price: chalk.bold(result.signer.amount / result.sender.amount),
               expiry: chalk.green(new Date(result.expiry * 1000).toLocaleTimeString()),
             })
           }
@@ -322,7 +322,7 @@ module.exports = {
         spinner: cliSpinners.dots,
         succeedColor: chalk.white,
       })
-      prompt.get(getFields(['senderParam'], 'sell', 'sell'), values2 => {
+      prompt.get(getFields(['senderAmount'], 'sell', 'sell'), values2 => {
         console.log()
         let hasAtLeastOne = false
         const locators = result.locators
@@ -352,8 +352,8 @@ module.exports = {
                       'Order ' +
                       chalk.white(
                         `from ${chalk.underline(locators[i])} (get: ${chalk.bold(
-                          result.signer.param,
-                        )}, price: ${chalk.bold(result.signer.param / result.sender.param)}, expiry: ${chalk.green(
+                          result.signer.amount,
+                        )}, price: ${chalk.bold(result.signer.amount / result.sender.amount)}, expiry: ${chalk.green(
                           new Date(result.expiry * 1000).toLocaleTimeString(),
                         )})`,
                       ),

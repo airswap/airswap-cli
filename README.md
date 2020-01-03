@@ -225,9 +225,9 @@ const initHandlers = require('@airswap/maker-kit')
 
 const customPricingFunctions = {
   isTradingPair: function(params) { ... }, // Returns true or false for a given token pair.
-  priceBuy: function(params) { ... }, // Returns signerParam: An amount we would send the taker in a buy
-  priceSell: function(params) { ... }, // Returns senderParam: An amount the taker will send us in a sell
-  getMaxParam: function(params) { ... }, // Returns maxParam: A maximum amount we are willing to buy or sell
+  priceBuy: function(params) { ... }, // Returns signerAmount: An amount we would send the taker in a buy
+  priceSell: function(params) { ... }, // Returns senderAmount: An amount the taker will send us in a sell
+  getMaxAmount: function(params) { ... }, // Returns maxAmount: A maximum amount we are willing to buy or sell
 }
 
 const handlers = initHandlers(PRIVATE_KEY, false, false, customPricingFunctions)
