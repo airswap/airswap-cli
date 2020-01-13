@@ -1,56 +1,88 @@
 {
-  "name": "@airswap/maker-kit",
-  "version": "1.0.14",
-  "description": "Tools to get started on the AirSwap Network",
+  "name": "airswap-maker-kit",
+  "description": "Tools for Makers on the AirSwap Network",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-maker-kit"
   },
-  "license": "Apache-2.0",
-  "main": "handlers.js",
   "contributors": [
-    "Don Mosites <don.mosites@fluidity.io>",
-    "Graham Perich <graham.perich@fluidity.io>"
+    "Don Mosites <don.mosites@fluidity.io>"
   ],
-  "scripts": {
-    "indexer:create": "node scripts/indexer/create.js",
-    "indexer:create-bulk": "node scripts/indexer/create_bulk.js",
-    "indexer:enable": "node scripts/indexer/enable.js",
-    "indexer:get": "node scripts/indexer/get.js",
-    "indexer:set": "node scripts/indexer/set.js",
-    "indexer:set-bulk": "node scripts/indexer/set_bulk.js",
-    "indexer:unset": "node scripts/indexer/unset.js",
-    "peers:get": "node scripts/peers/get.js",
-    "token:approve": "node scripts/token/approve.js",
-    "token:check": "node scripts/token/check.js",
-    "utils:network": "node scripts/util/network.js",
-    "utils:account": "node scripts/util/account.js",
-    "lint": "yarn eslint \"./**/*.js\"",
-    "test": "yarn mocha handlers.test.js"
+  "bin": {
+    "airswap": "./bin/run"
   },
+  "bugs": "https://github.com/airswap/airswap-maker-kit/issues",
   "dependencies": {
-    "@airswap/order-utils": "0.3.18",
+    "@airswap/indexer": "3.6.8",
+    "@airswap/order-utils": "0.3.19",
     "@airswap/swap": "4.3.5",
-    "bignumber.js": "^9.0.0",
-    "ethers": "^4.0.39"
+    "@airswap/tokens": "0.1.4",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "@types/fs-extra": "^8.0.1",
+    "@types/listr": "^0.14.2",
+    "@types/node-emoji": "^1.8.1",
+    "axios": "^0.19.0",
+    "cli-ux": "^5.4.1",
+    "console.table": "^0.10.0",
+    "ethers": "^4.0.40",
+    "fs-extra": "^8.1.0",
+    "jayson": "^3.2.0",
+    "keytar": "^5.0.0",
+    "listr": "^0.14.3",
+    "node-emoji": "^1.10.0",
+    "table": "^5.4.6",
+    "tslib": "^1"
   },
   "devDependencies": {
-    "@airswap/indexer": "3.6.7",
-    "babel-eslint": "^10.0.3",
-    "dotenv": "^8.2.0",
-    "eslint": "^6.5.1",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jayson": "^3.1.2",
-    "mocha": "^6.2.2",
-    "ora": "^4.0.3",
-    "prettier": "^1.19.1",
-    "prompt": "^1.0.0",
-    "spinnies": "^0.5.0"
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "globby": "^10",
+    "mocha": "^5",
+    "nyc": "^14",
+    "ts-node": "^8",
+    "typescript": "^3.3"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=8.0.0"
   },
-  "resolutions": {
-    "lodash.merge": "^4.6.2"
-  }
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/airswap/airswap-maker-kit",
+  "keywords": [
+    "airswap"
+  ],
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "airswap",
+    "hooks": {
+      "init": "./src/init"
+    },
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
 }
