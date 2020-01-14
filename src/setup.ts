@@ -38,6 +38,7 @@ export default async function setup(ctx: any, title: string, callback: Function,
 
     const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedNetwork}.json`)
     if (!(await fs.pathExists(metadataPath))) {
+      ctx.log(chalk.yellow('\nLocal metadata not found'))
       await updateMetadata(ctx)
     }
     const metadata = require(metadataPath)
