@@ -8,7 +8,7 @@ import { intro } from '../setup'
 const constants = require('../constants.json')
 
 export default class Network extends Command {
-  static description = 'Set the active network'
+  static description = 'set the active network'
   async run() {
     intro(this, Network.description)
 

@@ -217,6 +217,7 @@ export async function updateMetadata(ctx: any) {
       },
     },
   })
+  ctx.log(`Rinkeby: ${metadataRinkeby}`)
 
   const metadataMainnet = path.join(ctx.config.configDir, 'metadata-mainnet.json')
 
@@ -241,7 +242,9 @@ export async function updateMetadata(ctx: any) {
         byAddress,
       })
 
+      ctx.log(`Mainnet: ${metadataMainnet}`)
       cli.action.stop()
+      ctx.log()
     })
     .catch((error: any) => console.log(error))
 }

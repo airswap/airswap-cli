@@ -9,10 +9,10 @@ const constants = require('../../constants.json')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-export default class OrdersBuy extends Command {
-  static description = 'Approve a token for trade'
+export default class TokensApprove extends Command {
+  static description = 'approve a token for trading'
   async run() {
-    setup(this, 'Approve a token for trading', async (wallet: any, metadata: any) => {
+    setup(this, TokensApprove.description, async (wallet: any, metadata: any) => {
       const swapAddress = swapDeploys[wallet.provider.network.chainId]
       const token = await promptToken(metadata, 'token')
       this.log()

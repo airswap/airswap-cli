@@ -8,7 +8,7 @@ import { peerCall, printOrder, printObject, confirmTransaction } from '../../uti
 import { orders } from '@airswap/order-utils'
 
 export default class QuoteGet extends Command {
-  static description = 'Get an order'
+  static description = 'get a quote from a peer'
   async run() {
     setup(this, QuoteGet.description, async (wallet: any, metadata: any) => {
       const request = await getRequest(wallet, metadata, 'Quote')

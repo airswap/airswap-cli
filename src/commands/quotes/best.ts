@@ -3,7 +3,7 @@ import setup from '../../setup'
 import { getBest } from '../../utils'
 
 export default class QuotesBest extends Command {
-  static description = 'Get a best quote'
+  static description = 'get the best available order'
   async run() {
     setup(this, QuotesBest.description, async (wallet: any, metadata: any) => {
       getBest(this, 'Quote', metadata, wallet, (request: any, order: any) => {

@@ -11,10 +11,10 @@ import { orders } from '@airswap/order-utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-export default class OrdersBuy extends Command {
-  static description = 'get an order from a locator'
+export default class OrdersGet extends Command {
+  static description = 'get an order from a peer'
   async run() {
-    setup(this, 'Get an order', async (wallet: any, metadata: any) => {
+    setup(this, OrdersGet.description, async (wallet: any, metadata: any) => {
       const request = await getRequest(wallet, metadata, 'Order')
       const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
 

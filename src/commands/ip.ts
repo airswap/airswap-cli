@@ -3,7 +3,7 @@ import { Command } from '@oclif/command'
 import { intro } from '../setup'
 
 export default class IP extends Command {
-  static description = 'Local network addresses'
+  static description = 'display local network addresses'
 
   async run() {
     const interfaces = os.networkInterfaces()

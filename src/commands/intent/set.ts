@@ -11,10 +11,10 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
-export default class SetIntent extends Command {
-  static description = 'set an intent to trade'
+export default class IntentSet extends Command {
+  static description = 'set an intent on the indexer'
   async run() {
-    setup(this, 'Set an intent to trade', async (wallet: any, metadata: any) => {
+    setup(this, IntentSet.description, async (wallet: any, metadata: any) => {
       const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))

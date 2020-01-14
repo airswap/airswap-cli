@@ -7,7 +7,7 @@ import * as keytar from 'keytar'
 import * as emoji from 'node-emoji'
 
 export default class AccountUnset extends Command {
-  static description = 'Unset the current account'
+  static description = 'unset the current account'
 
   async run() {
     const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')

@@ -10,7 +10,7 @@ const constants = require('../../constants.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 export default class IntentEnable extends Command {
-  static description = 'Enable staking on the indexer'
+  static description = 'enable staking on the indexer'
   async run() {
     setup(this, IntentEnable.description, async (wallet: any, metadata: any) => {
       const indexerAddress = indexerDeploys[wallet.provider.network.chainId]

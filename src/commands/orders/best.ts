@@ -9,10 +9,10 @@ import BigNumber from 'bignumber.js'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-export default class BestOrder extends Command {
-  static description = 'get a best order'
+export default class OrdersBest extends Command {
+  static description = 'get the best available order'
   async run() {
-    setup(this, 'Best order', async (wallet: any, metadata: any) => {
+    setup(this, OrdersBest.description, async (wallet: any, metadata: any) => {
       getBest(this, 'Order', metadata, wallet, (request: any, order: any) => {
         this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 

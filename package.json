@@ -68,6 +68,32 @@
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "oclif": {
+    "topics": {
+      "account": {
+        "description": "set, show, and unset the current account"
+      },
+      "balances": {
+        "description": "display balances for the current account"
+      },
+      "intent": {
+        "description": "get, set, and unset intents on the indexer"
+      },
+      "ip": {
+        "description": "display local network addresses"
+      },
+      "network": {
+        "description": "set the active ethereum network"
+      },
+      "orders": {
+        "description": "get and take orders from a single peer or best available"
+      },
+      "quotes": {
+        "description": "get quotes from a single peer or best available"
+      },
+      "tokens": {
+        "description": "approve tokens for trade and update local metadata"
+      }
+    },
     "commands": "./lib/commands",
     "bin": "airswap",
     "hooks": {

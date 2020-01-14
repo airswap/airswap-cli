@@ -9,7 +9,7 @@ const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 export default class IntentGet extends Command {
-  static description = 'Get locators from the indexer'
+  static description = 'get intents from the indexer'
 
   async run() {
     setup(

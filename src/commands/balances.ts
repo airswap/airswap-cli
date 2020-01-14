@@ -10,7 +10,7 @@ const deltaBalancesABI = require('../../deltaBalances.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 export default class Balances extends Command {
-  static description = 'Display token balances'
+  static description = 'display token balances'
   async run() {
     setup(
       this,
