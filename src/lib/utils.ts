@@ -1,8 +1,9 @@
 import { cli } from 'cli-ux'
 import chalk from 'chalk'
 import * as jayson from 'jayson'
-import { ethers } from 'ethers'
-
+import * as keytar from 'keytar'
+import { ethers, Wallet } from 'ethers'
+import * as url from 'url'
 import * as emoji from 'node-emoji'
 
 import * as fs from 'fs-extra'
@@ -15,6 +16,59 @@ import { table } from 'table'
 const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
+
+export function displayDescription(ctx: any, title: string, network?: number) {
+  let networkName = ''
+  if (network) {
+    const selectedNetwork = constants.chainNames[network || '4']
+    networkName = network === 1 ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
+  }
+  ctx.log(`${chalk.white.bold(title)} ${networkName}\n`)
+}
+
+export async function getWallet(ctx: any, requireBalance?: boolean): Promise<Wallet> {
+  return new Promise(async (resolve, reject) => {
+    const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
+    const config = path.join(ctx.config.configDir, 'config.json')
+
+    if (!(await fs.pathExists(config))) {
+      await fs.outputJson(config, {
+        network: '4',
+      })
+    }
+
+    const { network } = await fs.readJson(config)
+    const selectedNetwork = constants.chainNames[network || '4']
+
+    if (!account) {
+      reject(`No account set. Set one with ${chalk.bold('account:set')}`)
+    } else {
+      const signerPrivateKey = Buffer.from(account, 'hex')
+      const provider = ethers.getDefaultProvider(selectedNetwork)
+      const wallet = new ethers.Wallet(signerPrivateKey, provider)
+      const publicAddress = wallet.address
+
+      const balance = await provider.getBalance(publicAddress)
+      if (requireBalance && balance.eq(0)) {
+        reject(`Current account (${publicAddress}) must have some (${selectedNetwork}) ether to execute transactions.`)
+      }
+
+      let balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
+      ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)\n`))
+      resolve(wallet)
+    }
+  })
+}
+
+export async function getMetadata(ctx: any, network: number) {
+  const selectedNetwork = constants.chainNames[network || '4']
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedNetwork}.json`)
+  if (!(await fs.pathExists(metadataPath))) {
+    ctx.log(chalk.yellow('\nLocal metadata not found'))
+    await updateMetadata(ctx)
+  }
+  return require(metadataPath)
+}
 
 export async function promptSide() {
   let side = (await cli.prompt('buy or sell')).toUpperCase()
@@ -156,7 +210,7 @@ export async function printObject(ctx: any, metadata: any, title: string, params
   printTable(ctx, title, data, config)
 }
 
-export function printTable(ctx: any, title: string, data: Array, config: object) {
+export function printTable(ctx: any, title: string, data: Array<any>, config: object) {
   ctx.log(chalk.underline.bold(title))
   ctx.log()
   ctx.log(table(data, config))
@@ -199,8 +253,8 @@ export async function updateMetadata(ctx: any) {
           name: 'WETH',
         })
 
-        const byAddress = {}
-        const bySymbol = {}
+        const byAddress: { [index: string]: any } = {}
+        const bySymbol: { [index: string]: any } = {}
         for (let i in data.tokens) {
           bySymbol[data.tokens[i].name] = data.tokens[i]
           byAddress[data.tokens[i].addr] = data.tokens[i]
@@ -290,29 +344,35 @@ export function indexerCall(wallet: any, signerToken: string, senderToken: strin
 
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
   let client
-  if (locator.includes('https')) {
-    client = jayson.client.https(locator)
-  } else {
-    client = jayson.client.http(locator)
-  }
 
-  setTimeout(() => {
-    callback('timeout')
-    callback = () => {}
-  }, 5000)
-
-  client.request(method, params, function(err: any, error: any, result: any) {
-    if (err) {
-      callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
+  try {
+    const locatorUrl = url.parse(locator)
+    if (locatorUrl.protocol === 'https:') {
+      client = jayson.Client.https(locatorUrl)
     } else {
-      if (error) {
-        callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
-      } else {
-        callback(null, result)
-      }
+      client = jayson.Client.http(locatorUrl)
     }
-    callback = () => {}
-  })
+
+    setTimeout(() => {
+      callback('timeout')
+      callback = () => {}
+    }, 5000)
+
+    client.request(method, params, function(err: any, error: any, result: any) {
+      if (err) {
+        callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
+      } else {
+        if (error) {
+          callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
+        } else {
+          callback(null, result)
+        }
+      }
+      callback = () => {}
+    })
+  } catch (e) {
+    callback('bad locator')
+  }
 }
 
 export function multiPeerCall(wallet: any, method: string, params: any, callback: Function) {

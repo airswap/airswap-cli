@@ -3,14 +3,14 @@ import * as fs from 'fs-extra'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
-import { intro } from '../setup'
+import { displayDescription } from '../lib/utils'
 
-const constants = require('../constants.json')
+const constants = require('../lib/constants.json')
 
 export default class Network extends Command {
   static description = 'set the active network'
   async run() {
-    intro(this, Network.description)
+    displayDescription(this, Network.description)
 
     const config = path.join(this.config.configDir, 'config.json')
     const { network } = await fs.readJson(config)

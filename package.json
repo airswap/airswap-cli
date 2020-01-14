@@ -23,6 +23,7 @@
     "@oclif/plugin-help": "^2",
     "@types/fs-extra": "^8.0.1",
     "@types/node-emoji": "^1.8.1",
+    "@types/table": "^4.0.7",
     "axios": "^0.19.0",
     "cli-ux": "^5.4.1",
     "console.table": "^0.10.0",
@@ -91,10 +92,10 @@
         "description": "approve tokens for trade and update local metadata"
       }
     },
-    "commands": "./lib/commands",
+    "commands": "./src/commands",
     "bin": "airswap",
     "hooks": {
-      "init": "./src/init"
+      "init": "./src/lib/init-hook"
     },
     "plugins": [
       "@oclif/plugin-help"
@@ -102,7 +103,6 @@
   },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"

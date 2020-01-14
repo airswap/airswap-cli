@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
-import { intro } from '../../setup'
+import { displayDescription } from '../../lib/utils'
 import * as keytar from 'keytar'
 import * as emoji from 'node-emoji'
 
@@ -11,8 +11,7 @@ export default class AccountUnset extends Command {
 
   async run() {
     const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')
-
-    intro(this, AccountUnset.description)
+    displayDescription(this, AccountUnset.description)
 
     if (signerPrivateKey) {
       const wallet = new ethers.Wallet(String(signerPrivateKey))
