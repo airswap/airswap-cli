@@ -1,6 +1,6 @@
 {
-  "name": "airswap-maker-kit",
-  "description": "Tools for Makers on the AirSwap Network",
+  "name": "airswap",
+  "description": "AirSwap CLI",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -22,7 +22,6 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "@types/fs-extra": "^8.0.1",
-    "@types/listr": "^0.14.2",
     "@types/node-emoji": "^1.8.1",
     "axios": "^0.19.0",
     "cli-ux": "^5.4.1",
@@ -31,10 +30,8 @@
     "fs-extra": "^8.1.0",
     "jayson": "^3.2.0",
     "keytar": "^5.0.0",
-    "listr": "^0.14.3",
     "node-emoji": "^1.10.0",
-    "table": "^5.4.6",
-    "tslib": "^1"
+    "table": "^5.4.6"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
