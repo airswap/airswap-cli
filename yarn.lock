@@ -28,6 +28,13 @@
     "@airswap/types" "2.4.4"
     openzeppelin-solidity "2.4"
 
+"@airswap/tokens@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@airswap/tokens/-/tokens-0.1.4.tgz#86f2ce399fa9ad2f108c8e21e4272d6a8b81fc05"
+  integrity sha512-ynOrf0StyNGVGQbfw2QoMD5MFmLbynRP2QF0GadOCY54fnIL/iFs3iaZ2jYIu35Pt9LX9FGg5m4ll9K5Uin0rg==
+  dependencies:
+    openzeppelin-solidity "2.4"
+
 "@airswap/types@2.4.4":
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/@airswap/types/-/types-2.4.4.tgz#31d6b70886b5affe6b4be1d6be57a8859beeb0f3"
