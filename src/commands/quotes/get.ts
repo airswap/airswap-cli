@@ -4,7 +4,7 @@ import { cli } from 'cli-ux'
 import setup from '../../setup'
 import { getRequest } from '../../utils'
 
-import { peerCall, printOrder, printObject, confirmTransaction } from '../../utils'
+import { peerCall, printOrder, printObject } from '../../utils'
 import { orders } from '@airswap/order-utils'
 
 export default class QuoteGet extends Command {
@@ -15,7 +15,7 @@ export default class QuoteGet extends Command {
       const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
 
       this.log()
-      printObject(this, `Request: ${request.method}`, request.params)
+      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
       peerCall(locator, request.method, request.params, (err: any, quote: any) => {
         if (quote) {

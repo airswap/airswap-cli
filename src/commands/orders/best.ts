@@ -18,15 +18,16 @@ export default class OrdersBest extends Command {
 
         confirmTransaction(
           this,
+          metadata,
           'swap',
           {
-            signerWallet: `${order.signer.wallet}`,
-            signerToken: `${order.signer.token} (${request.signerToken.name})`,
+            signerWallet: order.signer.wallet,
+            signerToken: order.signer.token,
             signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
               .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
               .toFixed()})`,
             senderWallet: `${order.sender.wallet} (You)`,
-            senderToken: `${order.sender.token} (${request.senderToken.name})`,
+            senderToken: order.sender.token,
             senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
               .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
               .toFixed()})`,

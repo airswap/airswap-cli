@@ -30,26 +30,26 @@ export async function promptSide() {
   return side
 }
 
-export async function promptToken(metadata: any, signerTokenLabel?: string, senderTokenLabel?: string) {
-  const first = (await cli.prompt(signerTokenLabel || 'signerToken')).toUpperCase()
-  if (!(first in metadata.bySymbol)) {
-    throw new Error(`Token ${first} not found in metadata`)
+export async function promptToken(metadata: any, signerTokenLabel?: string) {
+  const value = await cli.prompt(signerTokenLabel || 'signerToken')
+  try {
+    ethers.utils.getAddress(value)
+    if (!(value in metadata.byAddress)) {
+      throw new Error(`Token ${value} not found in metadata`)
+    }
+    return metadata.byAddress[value]
+  } catch (e) {
+    if (!(value.toUpperCase() in metadata.bySymbol)) {
+      throw new Error(`Token ${value} not found in metadata`)
+    }
+    return metadata.bySymbol[value.toUpperCase()]
   }
-  return metadata.bySymbol[first]
 }
 
-export async function promptTokens(metadata: any, signerTokenLabel?: string, senderTokenLabel?: string) {
-  const first = (await cli.prompt(signerTokenLabel || 'signerToken')).toUpperCase()
-  if (!(first in metadata.bySymbol)) {
-    throw new Error(`Token ${first} not found in metadata`)
-  }
-  const second = (await cli.prompt(senderTokenLabel || 'senderToken')).toUpperCase()
-  if (!(second in metadata.bySymbol)) {
-    throw new Error(`Token ${second} not found in metadata`)
-  }
+export async function promptTokens(metadata: any, firstLabel?: string, secondLabel?: string) {
   return {
-    first: metadata.bySymbol[first],
-    second: metadata.bySymbol[second],
+    first: await promptToken(metadata, firstLabel),
+    second: await promptToken(metadata, secondLabel),
   }
 }
 
@@ -125,11 +125,21 @@ export async function printOrder(
   }
 }
 
-export async function printObject(ctx: any, title: string, params: any) {
+export function getData(metadata: any, params: any) {
   const data = [[chalk.bold('Param'), chalk.bold('Value')]]
   for (let key in params) {
-    data.push([key, params[key]])
+    try {
+      ethers.utils.getAddress(params[key])
+      data.push([key, `${params[key]} (${metadata.byAddress[params[key]].name})`])
+    } catch (e) {
+      data.push([key, params[key]])
+    }
   }
+  return data
+}
+
+export async function printObject(ctx: any, metadata: any, title: string, params: any) {
+  const data = getData(metadata, params)
   const config = {
     columns: {
       0: {
@@ -152,11 +162,8 @@ export function printTable(ctx: any, title: string, data: Array, config: object)
   ctx.log(table(data, config))
 }
 
-export async function confirmTransaction(ctx: any, name: String, params: any, callback: Function) {
-  const data = [[chalk.bold('Param'), chalk.bold('Value')]]
-  for (let key in params) {
-    data.push([key, params[key]])
-  }
+export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any, callback: Function) {
+  const data = getData(metadata, params)
   const config = {
     columns: {
       0: {
@@ -429,7 +436,7 @@ export async function getBest(ctx: any, kind: string, metadata: any, wallet: any
   const request = await getRequest(wallet, metadata, kind)
 
   ctx.log()
-  printObject(ctx, `Request: ${request.method}`, request.params)
+  printObject(ctx, metadata, `Request: ${request.method}`, request.params)
 
   multiPeerCall(wallet, request.method, request.params, (order: any, locator: string, errors: Array<any>) => {
     ctx.log()

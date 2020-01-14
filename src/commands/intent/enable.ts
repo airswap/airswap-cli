@@ -1,7 +1,7 @@
+import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import { handleTransaction, handleError } from '../../utils'
-import { cli } from 'cli-ux'
 import setup from '../../setup'
 import { confirmTransaction } from '../../utils'
 
@@ -15,20 +15,34 @@ export default class IntentEnable extends Command {
     setup(this, IntentEnable.description, async (wallet: any, metadata: any) => {
       const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
 
-      confirmTransaction(
-        this,
-        'approve',
-        {
-          token: `${constants.stakingTokenAddresses[wallet.provider.network.chainId]} (AST)`,
-          spender: `${indexerAddress} (Indexer)`,
-        },
-        () => {
-          new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
-            .approve(indexerAddress, constants.APPROVAL_AMOUNT)
-            .then(handleTransaction)
-            .catch(handleError)
-        },
-      )
+      new ethers.Contract(constants.stakingTokenAddresses[wallet.provider.network.chainId], IERC20.abi, wallet)
+        .allowance(wallet.address, indexerAddress)
+        .then(async (allowance: any) => {
+          if (!allowance.eq(0)) {
+            this.log(chalk.yellow('Staking already enabled'))
+            this.log(`Set intent with ${chalk.bold('intent:set')}\n`)
+          } else {
+            confirmTransaction(
+              this,
+              metadata,
+              'approve',
+              {
+                token: `${constants.stakingTokenAddresses[wallet.provider.network.chainId]} (AST)`,
+                spender: `${indexerAddress} (Indexer)`,
+              },
+              () => {
+                new ethers.Contract(
+                  constants.stakingTokenAddresses[wallet.provider.network.chainId],
+                  IERC20.abi,
+                  wallet,
+                )
+                  .approve(indexerAddress, constants.APPROVAL_AMOUNT)
+                  .then(handleTransaction)
+                  .catch(handleError)
+              },
+            )
+          }
+        })
     })
   }
 }

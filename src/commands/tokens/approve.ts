@@ -1,6 +1,5 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
-import { cli } from 'cli-ux'
 import { ethers } from 'ethers'
 import { promptToken, confirmTransaction, handleTransaction, handleError } from '../../utils'
 import setup from '../../setup'
@@ -26,6 +25,7 @@ export default class TokensApprove extends Command {
           } else {
             confirmTransaction(
               this,
+              metadata,
               'approve',
               {
                 token: `${token.addr} (${token.name})`,

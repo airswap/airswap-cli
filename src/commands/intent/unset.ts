@@ -30,6 +30,7 @@ export default class IntentUnset extends Command {
         } else {
           confirmTransaction(
             this,
+            metadata,
             'unsetIntent',
             {
               signerToken: `${first.addr} (${first.name})`,

@@ -27,6 +27,7 @@ export default class CreateIndex extends Command {
         } else {
           confirmTransaction(
             this,
+            metadata,
             'createIndex',
             {
               signerToken: `${first.addr} (${first.name})`,

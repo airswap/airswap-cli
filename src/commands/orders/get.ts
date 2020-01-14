@@ -19,7 +19,7 @@ export default class OrdersGet extends Command {
       const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
 
       this.log()
-      printObject(this, `Request: ${request.method}`, request.params)
+      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
       peerCall(locator, request.method, request.params, (err: any, order: any) => {
         if (order) {
@@ -40,6 +40,7 @@ export default class OrdersGet extends Command {
           } else {
             confirmTransaction(
               this,
+              metadata,
               'swap',
               {
                 signerWallet: `${order.signer.wallet}`,

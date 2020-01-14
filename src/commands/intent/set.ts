@@ -54,6 +54,7 @@ export default class IntentSet extends Command {
                     } else {
                       confirmTransaction(
                         this,
+                        metadata,
                         'setIntent',
                         {
                           signerToken: `${first.addr} (${first.name})`,
