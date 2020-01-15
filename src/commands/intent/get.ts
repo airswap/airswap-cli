@@ -39,7 +39,7 @@ export default class IntentGet extends Command {
       if (!result.locators.length) {
         this.log('No locators found.')
       } else {
-        this.log(chalk.underline(`Top ${constants.DEFAULT_COUNT} peers trading ${first.name}/${second.name}\n`))
+        this.log(chalk.underline(`Top peers trading ${first.name}/${second.name}\n`))
 
         for (let i = 0; i < result.locators.length; i++) {
           try {

@@ -41,7 +41,7 @@ export default class OrdersGet extends Command {
           this.log(chalk.yellow('Order has invalid params or signature'))
         } else if (order.signer.token !== request.signerToken.addr || order.sender.token !== request.senderToken.addr) {
           this.log(chalk.yellow('Order tokens do not match those requested'))
-        } else if (order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
+        } else if (order.signature.validator && order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
           this.log(chalk.yellow('Order is intended for another swap contract'))
         } else {
           if (

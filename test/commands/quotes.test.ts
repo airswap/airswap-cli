@@ -5,7 +5,7 @@ import { StakingTokenContract, getWallet, getMetadata } from '../stubs'
 import { cli } from 'cli-ux'
 import { orders } from '@airswap/order-utils'
 
-describe('orders', () => {
+describe('quotes', () => {
   test
     .stdout()
     .stub(utils, 'getWallet', getWallet)
@@ -28,14 +28,10 @@ describe('orders', () => {
       callback(null, { signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } })
     })
     .stub(utils, 'printOrder', () => true)
-    .stub(orders, 'isValidOrder', () => true)
-    .stub(utils, 'confirmTransaction', () => async () => false)
-    .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'handleTransaction', () => true)
-    .stub(utils, 'handleError', () => true)
-    .command(['orders:get'])
-    .it('gets an order', ctx => {
-      expect(ctx.stdout).to.contain(`get an order from a peer`)
+    .stub(orders, 'isValidquote', () => true)
+    .command(['quotes:get'])
+    .it('gets a quote', ctx => {
+      expect(ctx.stdout).to.contain(`get a quote from a peer`)
     })
 
   test
@@ -51,11 +47,8 @@ describe('orders', () => {
         { signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } },
       )
     })
-    .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'confirmTransaction', () => async () => false)
-    .stub(utils, 'handleTransaction', () => true)
-    .command(['orders:best'])
-    .it('gets best order', ctx => {
-      expect(ctx.stdout).to.contain(`get the best available order`)
+    .command(['quotes:best'])
+    .it('gets best quote', ctx => {
+      expect(ctx.stdout).to.contain(`get the best available quote`)
     })
 })

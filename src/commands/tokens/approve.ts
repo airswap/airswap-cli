@@ -18,7 +18,7 @@ const swapDeploys = require('@airswap/swap/deploys.json')
 export default class TokensApprove extends Command {
   static description = 'approve a token for trading'
   async run() {
-    const wallet = await getWallet(this)
+    const wallet = await getWallet(this, true)
     const chainId = (await wallet.provider.getNetwork()).chainId
     const metadata = await getMetadata(this, chainId)
     displayDescription(this, TokensApprove.description, chainId)
@@ -27,25 +27,24 @@ export default class TokensApprove extends Command {
     const token = await promptToken(metadata, 'token')
     this.log()
 
-    new ethers.Contract(token.addr, IERC20.abi, wallet)
-      .allowance(wallet.address, swapAddress)
-      .then(async (allowance: any) => {
-        if (!allowance.eq(0)) {
-          this.log(chalk.yellow(`${token.name} is already approved`))
-          this.log(`Trading is enabled for this token.\n`)
-        } else {
-          if (
-            await confirmTransaction(this, metadata, 'approve', {
-              token: `${token.addr} (${token.name})`,
-              spender: `${swapAddress} (Swap)`,
-            })
-          ) {
-            new ethers.Contract(token.addr, IERC20.abi, wallet)
-              .approve(swapAddress, constants.APPROVAL_AMOUNT)
-              .then(handleTransaction)
-              .catch(handleError)
-          }
-        }
-      })
+    const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
+    const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+
+    if (!allowance.eq(0)) {
+      this.log(chalk.yellow(`${token.name} is already approved`))
+      this.log(`Trading is enabled for this token.\n`)
+    } else {
+      if (
+        await confirmTransaction(this, metadata, 'approve', {
+          token: `${token.addr} (${token.name})`,
+          spender: `${swapAddress} (Swap)`,
+        })
+      ) {
+        tokenContract
+          .approve(swapAddress, constants.APPROVAL_AMOUNT)
+          .then(handleTransaction)
+          .catch(handleError)
+      }
+    }
   }
 }
