@@ -26,9 +26,13 @@ export function displayDescription(ctx: any, title: string, network?: number) {
   ctx.log(`${chalk.white.bold(title)} ${networkName}\n`)
 }
 
-export async function getWallet(ctx: any, requireBalance?: boolean): Promise<Wallet> {
-  return new Promise(async (resolve, reject) => {
-    const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
+export async function getWallet(ctx: any, requireBalance?: boolean) {
+  const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
+
+  if (!account) {
+    ctx.log(chalk.yellow(`No account set. Set one with ${chalk.bold('account:set')}\n`))
+    process.exit(-1)
+  } else {
     const config = path.join(ctx.config.configDir, 'config.json')
 
     if (!(await fs.pathExists(config))) {
@@ -39,25 +43,21 @@ export async function getWallet(ctx: any, requireBalance?: boolean): Promise<Wal
 
     const { network } = await fs.readJson(config)
     const selectedNetwork = constants.chainNames[network || '4']
+    const signerPrivateKey = Buffer.from(account, 'hex')
+    const provider = ethers.getDefaultProvider(selectedNetwork)
+    const wallet = new ethers.Wallet(signerPrivateKey, provider)
+    const publicAddress = wallet.address
 
-    if (!account) {
-      reject(`No account set. Set one with ${chalk.bold('account:set')}`)
+    const balance = await provider.getBalance(publicAddress)
+    if (requireBalance && balance.eq(0)) {
+      ctx.log(chalk.yellow(`Account (${publicAddress}) must hold (${selectedNetwork}) ETH to execute transactions.\n`))
+      process.exit(-1)
     } else {
-      const signerPrivateKey = Buffer.from(account, 'hex')
-      const provider = ethers.getDefaultProvider(selectedNetwork)
-      const wallet = new ethers.Wallet(signerPrivateKey, provider)
-      const publicAddress = wallet.address
-
-      const balance = await provider.getBalance(publicAddress)
-      if (requireBalance && balance.eq(0)) {
-        reject(`Current account (${publicAddress}) must have some (${selectedNetwork}) ether to execute transactions.`)
-      }
-
       let balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
       ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)\n`))
-      resolve(wallet)
+      return wallet
     }
-  })
+  }
 }
 
 export async function getMetadata(ctx: any, network: number) {

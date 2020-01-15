@@ -42,7 +42,11 @@ export default class Balances extends Command {
       }
       i++
     }
-    this.log(table.getTable(result))
-    this.log(`Balances displayed for ${result.length} of ${i} known tokens.\n`)
+    if (result.length) {
+      this.log(table.getTable(result))
+      this.log(`Balances displayed for ${result.length} of ${i} known tokens.\n`)
+    } else {
+      this.log(`The current account holds no balances in any known tokens.\n`)
+    }
   }
 }
