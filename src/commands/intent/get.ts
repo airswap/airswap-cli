@@ -23,40 +23,33 @@ export default class IntentGet extends Command {
     this.log()
 
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+    const index = indexerContract.indexes(first.addr, second.addr, constants.protocols.HTTP_LATEST)
 
-    indexerContract.indexes(first.addr, second.addr, constants.protocols.HTTP_LATEST).then((index: any) => {
-      if (index === constants.ADDRESS_ZERO) {
-        this.log(chalk.yellow(`Pair ${first.name}/${second.name} does not exist`))
-        this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+    if (index === constants.ADDRESS_ZERO) {
+      this.log(chalk.yellow(`Pair ${first.name}/${second.name} does not exist`))
+      this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+    } else {
+      const result = await indexerContract.getLocators(
+        first.addr,
+        second.addr,
+        constants.protocols.HTTP_LATEST,
+        constants.INDEX_HEAD,
+        constants.DEFAULT_COUNT,
+      )
+      if (!result.locators.length) {
+        this.log('No locators found.')
       } else {
-        indexerContract
-          .getLocators(
-            first.addr,
-            second.addr,
-            constants.protocols.HTTP_LATEST,
-            constants.INDEX_HEAD,
-            constants.DEFAULT_COUNT,
-          )
-          .then((result: any) => {
-            if (!result.locators.length) {
-              this.log('No locators found.')
-            } else {
-              this.log(chalk.underline(`Top ${constants.DEFAULT_COUNT} peers trading ${first.name}/${second.name}\n`))
+        this.log(chalk.underline(`Top ${constants.DEFAULT_COUNT} peers trading ${first.name}/${second.name}\n`))
 
-              for (let i = 0; i < result.locators.length; i++) {
-                try {
-                  this.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
-                } catch (e) {
-                  this.log(`${i + 1}. Could not parse (${result.locators[i]})`)
-                }
-              }
-            }
-            this.log()
-          })
-          .catch((err: Error) => {
-            this.error(err)
-          })
+        for (let i = 0; i < result.locators.length; i++) {
+          try {
+            this.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+          } catch (e) {
+            this.log(`${i + 1}. Could not parse (${result.locators[i]})`)
+          }
+        }
       }
-    })
+      this.log()
+    }
   }
 }

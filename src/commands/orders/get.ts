@@ -2,18 +2,7 @@ import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
-import {
-  getWallet,
-  getMetadata,
-  displayDescription,
-  handleTransaction,
-  handleError,
-  getRequest,
-  peerCall,
-  printOrder,
-  printObject,
-  confirmTransaction,
-} from '../../lib/utils'
+import * as utils from '../../lib/utils'
 import BigNumber from 'bignumber.js'
 import { orders } from '@airswap/order-utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
@@ -22,20 +11,28 @@ const swapDeploys = require('@airswap/swap/deploys.json')
 export default class OrdersGet extends Command {
   static description = 'get an order from a peer'
   async run() {
-    const wallet = await getWallet(this)
+    const wallet = await utils.getWallet(this)
     const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await getMetadata(this, chainId)
-    displayDescription(this, OrdersGet.description, chainId)
+    const metadata = await utils.getMetadata(this, chainId)
+    utils.displayDescription(this, OrdersGet.description, chainId)
 
-    const request = await getRequest(wallet, metadata, 'Order')
+    const request = await utils.getRequest(wallet, metadata, 'Order')
     const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
 
     this.log()
-    printObject(this, metadata, `Request: ${request.method}`, request.params)
+    utils.printObject(this, metadata, `Request: ${request.method}`, request.params)
 
-    peerCall(locator, request.method, request.params, (err: any, order: any) => {
-      if (order) {
-        printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+    utils.peerCall(locator, request.method, request.params, async (err, order) => {
+      if (err) {
+        if (err === 'timeout') {
+          this.log(chalk.yellow('The request timed out.\n'))
+        } else {
+          this.log(err)
+          this.log()
+        }
+        process.exit(0)
+      } else {
+        utils.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
         this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
         const swapAddress = swapDeploys[chainId]
@@ -47,11 +44,8 @@ export default class OrdersGet extends Command {
         } else if (order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
           this.log(chalk.yellow('Order is intended for another swap contract'))
         } else {
-          confirmTransaction(
-            this,
-            metadata,
-            'swap',
-            {
+          if (
+            await utils.confirmTransaction(this, metadata, 'swap', {
               signerWallet: `${order.signer.wallet}`,
               signerToken: `${order.signer.token} (${request.signerToken.name})`,
               signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
@@ -62,24 +56,14 @@ export default class OrdersGet extends Command {
               senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
                 .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
                 .toFixed()})`,
-            },
-            () => {
-              new ethers.Contract(swapAddress, Swap.abi, wallet)
-                .swap(order)
-                .then(handleTransaction)
-                .catch(handleError)
-            },
-          )
+            })
+          ) {
+            new ethers.Contract(swapAddress, Swap.abi, wallet)
+              .swap(order)
+              .then(utils.handleTransaction)
+              .catch(utils.handleError)
+          }
         }
-      }
-      if (err) {
-        if (err === 'timeout') {
-          this.log(chalk.yellow('The request timed out.\n'))
-        } else {
-          this.log(err)
-          this.log()
-        }
-        process.exit(0)
       }
     })
   }

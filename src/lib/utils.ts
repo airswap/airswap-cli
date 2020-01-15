@@ -216,7 +216,7 @@ export function printTable(ctx: any, title: string, data: Array<any>, config: ob
   ctx.log(table(data, config))
 }
 
-export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any, callback: Function) {
+export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any) {
   const data = getData(metadata, params)
   const config = {
     columns: {
@@ -233,8 +233,9 @@ export async function confirmTransaction(ctx: any, metadata: any, name: String, 
 
   printTable(ctx, `Transaction: ${name}`, data, config)
   if (await cli.confirm('Type "yes" to send')) {
-    callback()
+    return true
   }
+  return false
 }
 
 export async function updateMetadata(ctx: any) {
@@ -345,34 +346,24 @@ export function indexerCall(wallet: any, signerToken: string, senderToken: strin
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
   let client
 
-  try {
-    const locatorUrl = url.parse(locator)
-    if (locatorUrl.protocol === 'https:') {
-      client = jayson.Client.https(locatorUrl)
-    } else {
-      client = jayson.Client.http(locatorUrl)
-    }
-
-    setTimeout(() => {
-      callback('timeout')
-      callback = () => {}
-    }, 5000)
-
-    client.request(method, params, function(err: any, error: any, result: any) {
-      if (err) {
-        callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
-      } else {
-        if (error) {
-          callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
-        } else {
-          callback(null, result)
-        }
-      }
-      callback = () => {}
-    })
-  } catch (e) {
-    callback('bad locator')
+  const locatorUrl = url.parse(locator)
+  if (locatorUrl.protocol === 'https:') {
+    client = jayson.Client.https(locatorUrl)
+  } else {
+    client = jayson.Client.http(locatorUrl)
   }
+
+  client.request(method, params, function(err: any, error: any, result: any) {
+    if (err) {
+      callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
+    } else {
+      if (error) {
+        callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
+      } else {
+        callback(null, result)
+      }
+    }
+  })
 }
 
 export function multiPeerCall(wallet: any, method: string, params: any, callback: Function) {

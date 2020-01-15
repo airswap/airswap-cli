@@ -1,6 +1,28 @@
 import BigNumber from 'bignumber.js'
 
+const constants = require('../src/lib/constants.json')
+
 export class StakingTokenContract {
+  async approve() {
+    return true
+  }
+  async indexes() {
+    return constants.ADDRESS_ZERO
+  }
+  async createIndex() {
+    return true
+  }
+  async setIntent() {
+    return true
+  }
+  async getLocators() {
+    return {
+      locators: [],
+    }
+  }
+  async swap() {
+    return true
+  }
   async allowance() {
     return new Promise(resolve => {
       resolve(new BigNumber(0))

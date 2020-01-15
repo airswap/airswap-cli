@@ -2,15 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
-import {
-  getWallet,
-  getMetadata,
-  displayDescription,
-  promptTokens,
-  confirmTransaction,
-  handleTransaction,
-  handleError,
-} from '../../lib/utils'
+import * as utils from '../../lib/utils'
 
 const constants = require('../../lib/constants.json')
 
@@ -21,16 +13,16 @@ const indexerDeploys = require('@airswap/indexer/deploys.json')
 export default class IntentSet extends Command {
   static description = 'set an intent'
   async run() {
-    const wallet = await getWallet(this)
+    const wallet = await utils.getWallet(this)
     const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await getMetadata(this, chainId)
-    displayDescription(this, IntentSet.description, chainId)
+    const metadata = await utils.getMetadata(this, chainId)
+    utils.displayDescription(this, IntentSet.description, chainId)
 
     const indexerAddress = indexerDeploys[chainId]
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await promptTokens(metadata)
+    const { first, second } = await utils.promptTokens(metadata)
     const locator = await cli.prompt('locator')
     const stakeAmount = await cli.prompt('stakeAmount')
 
@@ -59,31 +51,21 @@ export default class IntentSet extends Command {
                     this.log(chalk.yellow('Staking is not enabled'))
                     this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
                   } else {
-                    confirmTransaction(
-                      this,
-                      metadata,
-                      'setIntent',
-                      {
+                    if (
+                      await utils.confirmTransaction(this, metadata, 'setIntent', {
                         signerToken: `${first.addr} (${first.name})`,
                         senderToken: `${second.addr} (${second.name})`,
                         protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
                         locator,
                         stakeAmount: atomicAmount,
-                      },
-                      () => {
-                        const locatorBytes = ethers.utils.formatBytes32String(locator)
-                        new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-                          .setIntent(
-                            first.addr,
-                            second.addr,
-                            constants.protocols.HTTP_LATEST,
-                            atomicAmount,
-                            locatorBytes,
-                          )
-                          .then(handleTransaction)
-                          .catch(handleError)
-                      },
-                    )
+                      })
+                    ) {
+                      const locatorBytes = ethers.utils.formatBytes32String(locator)
+                      new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+                        .setIntent(first.addr, second.addr, constants.protocols.HTTP_LATEST, atomicAmount, locatorBytes)
+                        .then(utils.handleTransaction)
+                        .catch(utils.handleError)
+                    }
                   }
                 })
             }

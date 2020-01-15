@@ -16,14 +16,11 @@ export default class OrdersBest extends Command {
     const metadata = await getMetadata(this, chainId)
     displayDescription(this, OrdersBest.description, chainId)
 
-    getBest(this, 'Order', metadata, wallet, (request: any, order: any) => {
+    getBest(this, 'Order', metadata, wallet, async (request: any, order: any) => {
       this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
-      confirmTransaction(
-        this,
-        metadata,
-        'swap',
-        {
+      if (
+        await confirmTransaction(this, metadata, 'swap', {
           signerWallet: order.signer.wallet,
           signerToken: order.signer.token,
           signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
@@ -34,15 +31,14 @@ export default class OrdersBest extends Command {
           senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
             .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
             .toFixed()})`,
-        },
-        () => {
-          const swapAddress = swapDeploys[chainId]
-          new ethers.Contract(swapAddress, Swap.abi, wallet)
-            .swap(order)
-            .then(handleTransaction)
-            .catch(handleError)
-        },
-      )
+        })
+      ) {
+        const swapAddress = swapDeploys[chainId]
+        new ethers.Contract(swapAddress, Swap.abi, wallet)
+          .swap(order)
+          .then(handleTransaction)
+          .catch(handleError)
+      }
     })
   }
 }

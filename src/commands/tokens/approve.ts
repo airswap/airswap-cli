@@ -34,21 +34,17 @@ export default class TokensApprove extends Command {
           this.log(chalk.yellow(`${token.name} is already approved`))
           this.log(`Trading is enabled for this token.\n`)
         } else {
-          confirmTransaction(
-            this,
-            metadata,
-            'approve',
-            {
+          if (
+            await confirmTransaction(this, metadata, 'approve', {
               token: `${token.addr} (${token.name})`,
               spender: `${swapAddress} (Swap)`,
-            },
-            () => {
-              new ethers.Contract(token.addr, IERC20.abi, wallet)
-                .approve(swapAddress, constants.APPROVAL_AMOUNT)
-                .then(handleTransaction)
-                .catch(handleError)
-            },
-          )
+            })
+          ) {
+            new ethers.Contract(token.addr, IERC20.abi, wallet)
+              .approve(swapAddress, constants.APPROVAL_AMOUNT)
+              .then(handleTransaction)
+              .catch(handleError)
+          }
         }
       })
   }
