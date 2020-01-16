@@ -14,7 +14,7 @@ const constants = require('./constants.json')
 export function displayDescription(ctx: any, title: string, network?: number) {
   let networkName = ''
   if (network) {
-    const selectedNetwork = constants.chainNames[network || '4']
+    const selectedNetwork = constants.chainNames[network || '4'].toUpperCase()
     networkName = network === 1 ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
   }
   ctx.log(`${chalk.white.bold(title)} ${networkName}\n`)
