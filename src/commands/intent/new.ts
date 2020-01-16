@@ -3,8 +3,8 @@ import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
 import * as prompts from '../../lib/prompts'
+import constants from '../../lib/constants.json'
 
-const constants = require('../../lib/constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 

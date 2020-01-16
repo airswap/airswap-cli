@@ -4,8 +4,7 @@ import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
 import * as utils from '../../lib/utils'
 import * as prompts from '../../lib/prompts'
-
-const constants = require('../../lib/constants.json')
+import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
