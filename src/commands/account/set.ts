@@ -23,7 +23,7 @@ export default class AccountSet extends Command {
     } else {
       const wallet = new ethers.Wallet(signerPrivateKey)
       await keytar.setPassword('airswap-maker-kit', 'private-key', signerPrivateKey)
-      this.log(`\n${emoji.get('white_check_mark')} Set account to ${chalk.bold(wallet.address)}\n`)
+      this.log(`\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(wallet.address)}\n`)
     }
   }
 }
