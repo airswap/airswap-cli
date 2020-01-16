@@ -1,36 +1,26 @@
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
-import { cli } from 'cli-ux'
-import {
-  getWallet,
-  getMetadata,
-  displayDescription,
-  promptTokens,
-  confirmTransaction,
-  handleTransaction,
-  handleError,
-} from '../../lib/utils'
+import * as utils from '../../lib/utils'
+import * as prompts from '../../lib/prompts'
 
 const constants = require('../../lib/constants.json')
-
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 export default class IntentUnset extends Command {
   static description = 'unset an intent'
   async run() {
-    const wallet = await getWallet(this)
+    const wallet = await utils.getWallet(this)
     const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await getMetadata(this, chainId)
-    displayDescription(this, IntentUnset.description, chainId)
+    const metadata = await utils.getMetadata(this, chainId)
+    utils.displayDescription(this, IntentUnset.description, chainId)
 
     const indexerAddress = indexerDeploys[chainId]
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await promptTokens(metadata)
+    const { first, second } = await prompts.promptTokens(metadata)
 
     this.log()
 
@@ -40,7 +30,7 @@ export default class IntentUnset extends Command {
       this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
     } else {
       if (
-        await confirmTransaction(this, metadata, 'unsetIntent', {
+        await prompts.confirmTransaction(this, metadata, 'unsetIntent', {
           signerToken: `${first.addr} (${first.name})`,
           senderToken: `${second.addr} (${second.name})`,
           protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
@@ -48,8 +38,8 @@ export default class IntentUnset extends Command {
       ) {
         new ethers.Contract(indexerAddress, Indexer.abi, wallet)
           .unsetIntent(first.addr, second.addr, constants.protocols.HTTP_LATEST)
-          .then(handleTransaction)
-          .catch(handleError)
+          .then(utils.handleTransaction)
+          .catch(utils.handleError)
       }
     }
   }

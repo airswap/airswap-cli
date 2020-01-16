@@ -1,6 +1,7 @@
 import { expect, test } from '@oclif/test'
 import { ethers } from 'ethers'
 import * as utils from '../../src/lib/utils'
+import * as prompts from '../../src/lib/prompts'
 import { StakingTokenContract, getWallet, getMetadata } from '../stubs'
 
 describe('quotes', () => {
@@ -8,13 +9,13 @@ describe('quotes', () => {
     .stdout()
     .stub(utils, 'getWallet', getWallet)
     .stub(utils, 'getMetadata', getMetadata)
-    .stub(utils, 'promptToken', () => {
+    .stub(prompts, 'promptToken', () => {
       return new Promise(resolve => {
         resolve({ addr: '0x0' })
       })
     })
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'confirmTransaction', () => async () => false)
+    .stub(prompts, 'confirmTransaction', () => async () => false)
     .stub(utils, 'handleTransaction', () => true)
     .command(['tokens:approve'])
     .it('approve a token', ctx => {

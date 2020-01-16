@@ -3,6 +3,8 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
 import * as utils from '../../lib/utils'
+import * as prompts from '../../lib/prompts'
+import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
 import { orders } from '@airswap/order-utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
@@ -16,13 +18,13 @@ export default class OrdersGet extends Command {
     const metadata = await utils.getMetadata(this, chainId)
     utils.displayDescription(this, OrdersGet.description, chainId)
 
-    const request = await utils.getRequest(wallet, metadata, 'Order')
+    const request = await requests.getRequest(wallet, metadata, 'Order')
     const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
 
     this.log()
-    utils.printObject(this, metadata, `Request: ${request.method}`, request.params)
+    prompts.printObject(this, metadata, `Request: ${request.method}`, request.params)
 
-    utils.peerCall(locator, request.method, request.params, async (err, order) => {
+    requests.peerCall(locator, request.method, request.params, async (err, order) => {
       if (err) {
         if (err === 'timeout') {
           this.log(chalk.yellow('The request timed out.\n'))
@@ -32,7 +34,7 @@ export default class OrdersGet extends Command {
         }
         process.exit(0)
       } else {
-        utils.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+        prompts.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
         this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
         const swapAddress = swapDeploys[chainId]
@@ -45,7 +47,7 @@ export default class OrdersGet extends Command {
           this.log(chalk.yellow('Order is intended for another swap contract'))
         } else {
           if (
-            await utils.confirmTransaction(this, metadata, 'swap', {
+            await prompts.confirmTransaction(this, metadata, 'swap', {
               signerWallet: `${order.signer.wallet}`,
               signerToken: `${order.signer.token} (${request.signerToken.name})`,
               signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)

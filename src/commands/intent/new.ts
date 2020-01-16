@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
+import * as prompts from '../../lib/prompts'
 
 const constants = require('../../lib/constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -19,7 +20,7 @@ export default class IntentNew extends Command {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await utils.promptTokens(metadata)
+    const { first, second } = await prompts.promptTokens(metadata)
 
     this.log()
 
@@ -29,7 +30,7 @@ export default class IntentNew extends Command {
         this.log(`Set intent on this pair with ${chalk.bold('intent:set')}\n`)
       } else {
         if (
-          await utils.confirmTransaction(this, metadata, 'createIndex', {
+          await prompts.confirmTransaction(this, metadata, 'createIndex', {
             signerToken: `${first.addr} (${first.name})`,
             senderToken: `${second.addr} (${second.name})`,
           })

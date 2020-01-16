@@ -1,8 +1,8 @@
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
-import { promptTokens } from '../../lib/utils'
-import { getWallet, getMetadata, displayDescription, confirmTransaction } from '../../lib/utils'
+import * as utils from '../../lib/utils'
+import * as prompts from '../../lib/prompts'
 
 const constants = require('../../lib/constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -12,14 +12,14 @@ export default class IntentGet extends Command {
   static description = 'get intents from the indexer'
 
   async run() {
-    const wallet = await getWallet(this)
+    const wallet = await utils.getWallet(this)
     const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await getMetadata(this, chainId)
-    displayDescription(this, IntentGet.description, chainId)
+    const metadata = await utils.getMetadata(this, chainId)
+    utils.displayDescription(this, IntentGet.description, chainId)
 
     const indexerAddress = indexerDeploys[chainId]
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
-    const { first, second } = await promptTokens(metadata)
+    const { first, second } = await prompts.promptTokens(metadata)
     this.log()
 
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)

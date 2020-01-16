@@ -1,6 +1,7 @@
 import { expect, test } from '@oclif/test'
 import { ethers } from 'ethers'
 import * as utils from '../../src/lib/utils'
+import * as prompts from '../../src/lib/prompts'
 import { StakingTokenContract, getWallet, getMetadata } from '../stubs'
 import { cli } from 'cli-ux'
 
@@ -8,7 +9,7 @@ describe('intent', () => {
   test
     .stdout()
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'confirmTransaction', () => async () => true)
+    .stub(prompts, 'confirmTransaction', () => async () => true)
     .stub(utils, 'handleTransaction', () => true)
     .command(['intent:enable'])
     .it('enable intent on the indexer', ctx => {
@@ -18,7 +19,7 @@ describe('intent', () => {
   test
     .stdout()
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'promptTokens', () => {
+    .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
         resolve({
           first: { addr: '0x0' },
@@ -34,7 +35,7 @@ describe('intent', () => {
   test
     .stdout()
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'promptTokens', () => {
+    .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
         resolve({
           first: { addr: '0x0' },
@@ -42,7 +43,7 @@ describe('intent', () => {
         })
       })
     })
-    .stub(utils, 'confirmTransaction', () => async () => true)
+    .stub(prompts, 'confirmTransaction', () => async () => true)
     .stub(utils, 'handleTransaction', () => true)
     .command(['intent:new'])
     .it('create a new pair', ctx => {
@@ -52,7 +53,7 @@ describe('intent', () => {
   test
     .stdout()
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'promptTokens', () => {
+    .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
         resolve({
           first: { addr: '0x0' },
@@ -61,7 +62,7 @@ describe('intent', () => {
       })
     })
     .stub(cli, 'prompt', () => async () => null)
-    .stub(utils, 'confirmTransaction', () => async () => true)
+    .stub(prompts, 'confirmTransaction', () => async () => true)
     .stub(utils, 'handleTransaction', () => true)
     .command(['intent:set'])
     .it('set intent', ctx => {
@@ -71,7 +72,7 @@ describe('intent', () => {
   test
     .stdout()
     .stub(ethers, 'Contract', StakingTokenContract)
-    .stub(utils, 'promptTokens', () => {
+    .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
         resolve({
           first: { addr: '0x0' },
@@ -80,7 +81,7 @@ describe('intent', () => {
       })
     })
     .stub(cli, 'prompt', () => async () => null)
-    .stub(utils, 'confirmTransaction', () => async () => true)
+    .stub(prompts, 'confirmTransaction', () => async () => true)
     .stub(utils, 'handleTransaction', () => true)
     .command(['intent:unset'])
     .it('unset intent', ctx => {

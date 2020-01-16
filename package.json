@@ -46,6 +46,7 @@
     "eslint-config-oclif-typescript": "^0.1",
     "globby": "^10",
     "mocha": "^5",
+    "mock-require": "^3.0.3",
     "nyc": "^14",
     "ts-node": "^8",
     "typescript": "^3.3"
@@ -55,7 +56,7 @@
   },
   "files": [
     "/bin",
-    "/lib",
+    "/src",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
@@ -64,7 +65,7 @@
     "airswap"
   ],
   "license": "Apache-2.0",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "oclif": {
     "topics": {
       "account": {

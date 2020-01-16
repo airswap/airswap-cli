@@ -1,6 +1,8 @@
 import { expect, test } from '@oclif/test'
 import { ethers } from 'ethers'
 import * as utils from '../../src/lib/utils'
+import * as prompts from '../../src/lib/prompts'
+import * as requests from '../../src/lib/requests'
 import { StakingTokenContract, getWallet, getMetadata } from '../stubs'
 import { cli } from 'cli-ux'
 import { orders } from '@airswap/order-utils'
@@ -11,7 +13,7 @@ describe('quotes', () => {
     .stub(utils, 'getWallet', getWallet)
     .stub(utils, 'getMetadata', getMetadata)
     .stub(
-      utils,
+      requests,
       'getRequest',
       () =>
         new Promise(resolve => {
@@ -23,11 +25,11 @@ describe('quotes', () => {
         }),
     )
     .stub(cli, 'prompt', () => async () => 'A')
-    .stub(utils, 'printObject', () => true)
-    .stub(utils, 'peerCall', (locator, method, params, callback) => {
+    .stub(prompts, 'printObject', () => true)
+    .stub(requests, 'peerCall', (locator, method, params, callback) => {
       callback(null, { signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } })
     })
-    .stub(utils, 'printOrder', () => true)
+    .stub(prompts, 'printOrder', () => true)
     .stub(orders, 'isValidquote', () => true)
     .command(['quotes:get'])
     .it('gets a quote', ctx => {
@@ -38,14 +40,21 @@ describe('quotes', () => {
     .stdout()
     .stub(utils, 'getWallet', getWallet)
     .stub(utils, 'getMetadata', getMetadata)
-    .stub(utils, 'getBest', (ctx, kind, metadata, wallet, callback) => {
-      callback(
-        {
-          signerToken: {},
-          senderToken: {},
-        },
-        { signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } },
-      )
+    .stub(
+      requests,
+      'getRequest',
+      () =>
+        new Promise(resolve => {
+          resolve({
+            method: 'testRequest',
+            signerToken: {},
+            senderToken: {},
+          })
+        }),
+    )
+    .stub(prompts, 'printObject', () => true)
+    .stub(requests, 'multiPeerCall', (wallet, method, params, callback) => {
+      callback({ signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } }, 'google.com', [])
     })
     .command(['quotes:best'])
     .it('gets best quote', ctx => {

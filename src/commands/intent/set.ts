@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
 import * as utils from '../../lib/utils'
+import * as prompts from '../../lib/prompts'
 
 const constants = require('../../lib/constants.json')
 
@@ -22,7 +23,7 @@ export default class IntentSet extends Command {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await utils.promptTokens(metadata)
+    const { first, second } = await prompts.promptTokens(metadata)
     const locator = await cli.prompt('locator')
     const stakeAmount = await cli.prompt('stakeAmount')
 
@@ -52,7 +53,7 @@ export default class IntentSet extends Command {
                     this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
                   } else {
                     if (
-                      await utils.confirmTransaction(this, metadata, 'setIntent', {
+                      await prompts.confirmTransaction(this, metadata, 'setIntent', {
                         signerToken: `${first.addr} (${first.name})`,
                         senderToken: `${second.addr} (${second.name})`,
                         protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,

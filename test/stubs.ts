@@ -48,6 +48,13 @@ export class DeltaContract {
   }
 }
 
+export class Wallet {
+  provider = {
+    getNetwork: async () => 4,
+    getBalance: async () => new BigNumber(0),
+  }
+}
+
 export const getMetadata = () =>
   new Promise(resolve => {
     resolve({
@@ -64,10 +71,13 @@ export const getMetadata = () =>
 
 export const getWallet = () =>
   new Promise(resolve => {
-    resolve({
-      provider: {
-        getNetwork: async () => 4,
-        getBalance: async () => new BigNumber(0),
-      },
-    })
+    resolve(new Wallet())
   })
+
+export const getDefaultProvider = () => {
+  return {
+    getBalance: async () => {
+      return new BigNumber(0)
+    },
+  }
+}

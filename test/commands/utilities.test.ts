@@ -3,8 +3,18 @@ import { ethers } from 'ethers'
 import { cli } from 'cli-ux'
 import * as fs from 'fs-extra'
 import * as utils from '../../src/lib/utils'
+import * as keytar from 'keytar'
+import * as path from 'path'
 
-import { DeltaContract, getWallet, getMetadata } from '../stubs'
+var mock = require('mock-require')
+
+mock('mock-path', {
+  request: function() {
+    return {}
+  },
+})
+
+import { DeltaContract, getWallet, getMetadata, getDefaultProvider, Wallet } from '../stubs'
 
 describe('utilities', () => {
   test
@@ -31,5 +41,47 @@ describe('utilities', () => {
     .command(['network'])
     .it('network: sets network to rinkeby', ctx => {
       expect(ctx.stdout).to.contain('Set active network to rinkeby')
+    })
+
+  test
+    .stdout()
+    .stub(path, 'join', () => 'mock-path')
+    .stub(keytar, 'getPassword', () => async () => true)
+    .stub(ethers, 'getDefaultProvider', getDefaultProvider)
+    .stub(ethers, 'Wallet', Wallet)
+    .stub(cli, 'action', () => ({
+      start: () => true,
+      stop: () => true,
+    }))
+    .stub(fs, 'outputJson', () => true)
+    .stub(fs, 'pathExists', () => true)
+    .stub(fs, 'readJson', () => async () => {
+      network: '4'
+    })
+    .it('runs handleError, handleTransaction', ctx => {
+      utils.getWallet({
+        log: console.log,
+        config: {},
+      })
+      utils.getWallet(
+        {
+          log: console.log,
+          config: {},
+        },
+        true,
+      )
+      utils.getMetadata(
+        {
+          log: console.log,
+          config: {},
+        },
+        4,
+      )
+      utils.handleError({})
+      utils.handleTransaction({
+        chainId: 4,
+        wait: async () => true,
+      })
+      expect(ctx.stdout).to.contain('Please check your input values')
     })
 })
