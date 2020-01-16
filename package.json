@@ -56,7 +56,7 @@
   },
   "files": [
     "/bin",
-    "/src",
+    "/lib",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
@@ -65,7 +65,7 @@
     "airswap"
   ],
   "license": "Apache-2.0",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "oclif": {
     "topics": {
       "account": {
@@ -93,10 +93,10 @@
         "description": "approve tokens for trade and update local metadata"
       }
     },
-    "commands": "./src/commands",
+    "commands": "./lib/commands",
     "bin": "airswap",
     "hooks": {
-      "init": "./src/lib/init-hook.ts"
+      "init": "./lib/lib/init-hook"
     },
     "plugins": [
       "@oclif/plugin-help"
