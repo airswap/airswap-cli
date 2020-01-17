@@ -20,21 +20,29 @@ export function displayDescription(ctx: any, title: string, network?: number) {
   ctx.log(`${chalk.white.bold(title)} ${networkName}\n`)
 }
 
+export async function getConfig(ctx: any) {
+  const config = path.join(ctx.config.configDir, 'config.json')
+
+  if (!(await fs.pathExists(config))) {
+    await fs.outputJson(config, {
+      network: '4',
+    })
+  }
+  return await fs.readJson(config)
+}
+
+export async function setConfig(ctx: any, config: any) {
+  const configPath = path.join(ctx.config.configDir, 'config.json')
+  await fs.outputJson(configPath, config)
+}
+
 export async function getWallet(ctx: any, requireBalance?: boolean) {
   const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
 
   if (!account) {
     throw new Error(`No account set. Set one with ${chalk.bold('account:set')}`)
   } else {
-    const config = path.join(ctx.config.configDir, 'config.json')
-
-    if (!(await fs.pathExists(config))) {
-      await fs.outputJson(config, {
-        network: '4',
-      })
-    }
-
-    const { network } = await fs.readJson(config)
+    const { network } = await getConfig(ctx)
     const selectedNetwork = constants.chainNames[network || '4']
     const signerPrivateKey = Buffer.from(account, 'hex')
     const provider = ethers.getDefaultProvider(selectedNetwork)

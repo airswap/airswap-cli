@@ -3,17 +3,16 @@ import * as fs from 'fs-extra'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { cli } from 'cli-ux'
-import { displayDescription } from '../lib/utils'
+import * as utils from '../lib/utils'
 
 const constants = require('../lib/constants.json')
 
 export default class Network extends Command {
   static description = 'set the active network'
   async run() {
-    displayDescription(this, Network.description)
+    utils.displayDescription(this, Network.description)
 
-    const config = path.join(this.config.configDir, 'config.json')
-    const { network } = await fs.readJson(config)
+    const { network } = await utils.getConfig(this)
     this.log(`Current network: ${network} (${constants.chainNames[network]})\n`)
 
     const newNetwork = await cli.prompt('network (e.g. 1=mainnet, 4=rinkeby)', { default: network })
@@ -21,7 +20,7 @@ export default class Network extends Command {
     if (!(newNetwork in constants.chainNames)) {
       this.log(chalk.yellow(`\n${newNetwork} is not a supported chain.\n`))
     } else {
-      await fs.outputJson(config, {
+      await utils.setConfig(this, {
         network: newNetwork,
       })
 
