@@ -42,46 +42,4 @@ describe('utilities', () => {
     .it('network: sets network to rinkeby', ctx => {
       expect(ctx.stdout).to.contain('Set active network to rinkeby')
     })
-
-  test
-    .stdout()
-    .stub(path, 'join', () => 'mock-path')
-    .stub(keytar, 'getPassword', () => async () => true)
-    .stub(ethers, 'getDefaultProvider', getDefaultProvider)
-    .stub(ethers, 'Wallet', Wallet)
-    .stub(cli, 'action', () => ({
-      start: () => true,
-      stop: () => true,
-    }))
-    .stub(fs, 'outputJson', () => true)
-    .stub(fs, 'pathExists', () => true)
-    .stub(fs, 'readJson', () => async () => {
-      network: '4'
-    })
-    .it('runs handleError, handleTransaction', ctx => {
-      utils.getWallet({
-        log: console.log,
-        config: {},
-      })
-      utils.getWallet(
-        {
-          log: console.log,
-          config: {},
-        },
-        true,
-      )
-      utils.getMetadata(
-        {
-          log: console.log,
-          config: {},
-        },
-        4,
-      )
-      utils.handleError({})
-      utils.handleTransaction({
-        chainId: 4,
-        wait: async () => true,
-      })
-      expect(ctx.stdout).to.contain('Please check your input values')
-    })
 })

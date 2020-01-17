@@ -32,7 +32,7 @@ describe('account', () => {
     .stub(keytar, 'setPassword', () => async () => true)
     .command(['account:set'])
     .it('sets a valid account', ctx => {
-      expect(ctx.stdout).to.contain(`Set account to ${constants.ADDRESS_ZERO}`)
+      expect(ctx.stdout).to.contain(`Set account to address ${constants.ADDRESS_ZERO}`)
     })
 
   test

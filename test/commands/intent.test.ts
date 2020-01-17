@@ -8,6 +8,8 @@ import { cli } from 'cli-ux'
 describe('intent', () => {
   test
     .stdout()
+    .stub(utils, 'getWallet', getWallet)
+    .stub(utils, 'getMetadata', getMetadata)
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'confirmTransaction', () => async () => true)
     .stub(utils, 'handleTransaction', () => true)
@@ -18,6 +20,8 @@ describe('intent', () => {
 
   test
     .stdout()
+    .stub(utils, 'getWallet', getWallet)
+    .stub(utils, 'getMetadata', getMetadata)
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
@@ -34,6 +38,8 @@ describe('intent', () => {
 
   test
     .stdout()
+    .stub(utils, 'getWallet', getWallet)
+    .stub(utils, 'getMetadata', getMetadata)
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
@@ -52,6 +58,8 @@ describe('intent', () => {
 
   test
     .stdout()
+    .stub(utils, 'getWallet', getWallet)
+    .stub(utils, 'getMetadata', getMetadata)
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
@@ -71,6 +79,8 @@ describe('intent', () => {
 
   test
     .stdout()
+    .stub(utils, 'getWallet', getWallet)
+    .stub(utils, 'getMetadata', getMetadata)
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'promptTokens', () => {
       return new Promise(resolve => {
