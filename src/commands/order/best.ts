@@ -9,13 +9,13 @@ import BigNumber from 'bignumber.js'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
-export default class OrdersBest extends Command {
+export default class OrderBest extends Command {
   static description = 'get the best available order'
   async run() {
     const wallet = await utils.getWallet(this)
     const chainId = (await wallet.provider.getNetwork()).chainId
     const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, OrdersBest.description, chainId)
+    utils.displayDescription(this, OrderBest.description, chainId)
 
     const request = await requests.getRequest(wallet, metadata, 'Order')
 

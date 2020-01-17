@@ -31,7 +31,7 @@ describe('orders', () => {
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'confirmTransaction', () => async () => false)
     .stub(utils, 'handleTransaction', () => true)
-    .command(['orders:best'])
+    .command(['order:best'])
     .it('gets best order', ctx => {
       expect(ctx.stdout).to.contain(`get the best available order`)
     })
@@ -63,7 +63,7 @@ describe('orders', () => {
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(utils, 'handleTransaction', () => true)
     .stub(utils, 'handleError', () => true)
-    .command(['orders:get'])
+    .command(['order:get'])
     .it('gets an order', ctx => {
       expect(ctx.stdout).to.contain(`get an order from a peer`)
     })

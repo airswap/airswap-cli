@@ -21,7 +21,7 @@ export async function promptSide() {
 }
 
 export async function promptToken(metadata: any, signerTokenLabel?: string) {
-  const value = await cli.prompt(signerTokenLabel || 'signerToken')
+  const value = await cli.prompt(signerTokenLabel)
   try {
     ethers.utils.getAddress(value)
     if (!(value in metadata.byAddress)) {
@@ -38,8 +38,8 @@ export async function promptToken(metadata: any, signerTokenLabel?: string) {
 
 export async function promptTokens(metadata: any, firstLabel?: string, secondLabel?: string) {
   return {
-    first: await promptToken(metadata, firstLabel),
-    second: await promptToken(metadata, secondLabel),
+    first: await promptToken(metadata, firstLabel || 'signerToken'),
+    second: await promptToken(metadata, secondLabel || 'senderToken'),
   }
 }
 

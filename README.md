@@ -35,26 +35,27 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 # Commands
 
 <!-- commands -->
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:set`](#airswap-accountset)
-* [`airswap account:show`](#airswap-accountshow)
-* [`airswap account:unset`](#airswap-accountunset)
-* [`airswap balances`](#airswap-balances)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap intent:enable`](#airswap-intentenable)
-* [`airswap intent:get`](#airswap-intentget)
-* [`airswap intent:new`](#airswap-intentnew)
-* [`airswap intent:set`](#airswap-intentset)
-* [`airswap intent:unset`](#airswap-intentunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap network`](#airswap-network)
-* [`airswap orders:best`](#airswap-ordersbest)
-* [`airswap orders:get`](#airswap-ordersget)
-* [`airswap quotes:best`](#airswap-quotesbest)
-* [`airswap quotes:get`](#airswap-quotesget)
-* [`airswap tokens:approve`](#airswap-tokensapprove)
-* [`airswap tokens:update`](#airswap-tokensupdate)
-* [`airswap update [CHANNEL]`](#airswap-update-channel)
+
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:set`](#airswap-accountset)
+- [`airswap account:show`](#airswap-accountshow)
+- [`airswap account:unset`](#airswap-accountunset)
+- [`airswap balances`](#airswap-balances)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap intent:enable`](#airswap-intentenable)
+- [`airswap intent:get`](#airswap-intentget)
+- [`airswap intent:new`](#airswap-intentnew)
+- [`airswap intent:set`](#airswap-intentset)
+- [`airswap intent:unset`](#airswap-intentunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap network`](#airswap-network)
+- [`airswap order:best`](#airswap-ordersbest)
+- [`airswap order:get`](#airswap-ordersget)
+- [`airswap quote:best`](#airswap-quotesbest)
+- [`airswap quote:get`](#airswap-quotesget)
+- [`airswap tokens:approve`](#airswap-tokensapprove)
+- [`airswap tokens:update`](#airswap-tokensupdate)
+- [`airswap update [CHANNEL]`](#airswap-update-channel)
 
 ## `airswap account:generate`
 
@@ -205,46 +206,46 @@ USAGE
 
 _See code: [src/commands/network.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.3/src/commands/network.ts)_
 
-## `airswap orders:best`
+## `airswap order:best`
 
 get the best available order
 
 ```
 USAGE
-  $ airswap orders:best
+  $ airswap order:best
 ```
 
 _See code: [src/commands/orders/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.3/src/commands/orders/best.ts)_
 
-## `airswap orders:get`
+## `airswap order:get`
 
 get an order from a peer
 
 ```
 USAGE
-  $ airswap orders:get
+  $ airswap order:get
 ```
 
 _See code: [src/commands/orders/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.3/src/commands/orders/get.ts)_
 
-## `airswap quotes:best`
+## `airswap quote:best`
 
 get the best available quote
 
 ```
 USAGE
-  $ airswap quotes:best
+  $ airswap quote:best
 ```
 
 _See code: [src/commands/quotes/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.3/src/commands/quotes/best.ts)_
 
-## `airswap quotes:get`
+## `airswap quote:get`
 
 get a quote from a peer
 
 ```
 USAGE
-  $ airswap quotes:get
+  $ airswap quote:get
 ```
 
 _See code: [src/commands/quotes/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.3/src/commands/quotes/get.ts)_
@@ -281,4 +282,5 @@ USAGE
 ```
 
 _See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
+
 <!-- commandsstop -->

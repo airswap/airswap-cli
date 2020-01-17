@@ -31,7 +31,7 @@ describe('quotes', () => {
     })
     .stub(prompts, 'printOrder', () => true)
     .stub(orders, 'isValidquote', () => true)
-    .command(['quotes:get'])
+    .command(['quote:get'])
     .it('gets a quote', ctx => {
       expect(ctx.stdout).to.contain(`get a quote from a peer`)
     })
@@ -56,7 +56,7 @@ describe('quotes', () => {
     .stub(requests, 'multiPeerCall', (wallet, method, params, callback) => {
       callback({ signer: {}, sender: {}, affiliate: {}, signature: { validator: '' } }, 'google.com', [])
     })
-    .command(['quotes:best'])
+    .command(['quote:best'])
     .it('gets best quote', ctx => {
       expect(ctx.stdout).to.contain(`get the best available quote`)
     })
