@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import * as emoji from 'node-emoji'
 import BigNumber from 'bignumber.js'
 import { table } from 'table'
+import constants from './constants.json'
 
 export async function promptSide() {
   let side = (await cli.prompt('buy or sell')).toUpperCase()
@@ -112,6 +113,7 @@ export async function printOrder(
       ),
     )
   }
+  ctx.log()
 }
 
 export function getData(metadata: any, params: any) {
@@ -151,7 +153,7 @@ export function printTable(ctx: any, title: string, data: Array<any>, config: ob
   ctx.log(table(data, config))
 }
 
-export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any) {
+export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any, network: number) {
   const data = getData(metadata, params)
   const config = {
     columns: {
@@ -167,7 +169,8 @@ export async function confirmTransaction(ctx: any, metadata: any, name: String, 
   }
 
   printTable(ctx, `Transaction: ${name}`, data, config)
-  if (await cli.confirm('Type "yes" to send')) {
+  const networkName = constants.chainNames[network || '4'].toUpperCase()
+  if (await cli.confirm(`Type "yes" to send (${networkName})`)) {
     return true
   }
   return false

@@ -24,7 +24,7 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
   const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
 
   if (!account) {
-    ctx.log(chalk.yellow(`No account set. Set one with ${chalk.bold('account:set')}\n`))
+    throw new Error(`No account set. Set one with ${chalk.bold('account:set')}`)
   } else {
     const config = path.join(ctx.config.configDir, 'config.json')
 

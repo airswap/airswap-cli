@@ -47,18 +47,24 @@ export default class OrdersGet extends Command {
           this.log(chalk.yellow('Order is intended for another swap contract'))
         } else {
           if (
-            await prompts.confirmTransaction(this, metadata, 'swap', {
-              signerWallet: `${order.signer.wallet}`,
-              signerToken: `${order.signer.token} (${request.signerToken.name})`,
-              signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
-                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                .toFixed()})`,
-              senderWallet: `${order.sender.wallet} (You)`,
-              senderToken: `${order.sender.token} (${request.senderToken.name})`,
-              senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
-                .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                .toFixed()})`,
-            })
+            await prompts.confirmTransaction(
+              this,
+              metadata,
+              'swap',
+              {
+                signerWallet: `${order.signer.wallet}`,
+                signerToken: `${order.signer.token} (${request.signerToken.name})`,
+                signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
+                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                  .toFixed()})`,
+                senderWallet: `${order.sender.wallet} (You)`,
+                senderToken: `${order.sender.token} (${request.senderToken.name})`,
+                senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
+                  .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                  .toFixed()})`,
+              },
+              chainId,
+            )
           ) {
             new ethers.Contract(swapAddress, Swap.abi, wallet)
               .swap(order)

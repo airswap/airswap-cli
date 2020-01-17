@@ -37,18 +37,24 @@ export default class OrdersBest extends Command {
           this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
           if (
-            await prompts.confirmTransaction(this, metadata, 'swap', {
-              signerWallet: order.signer.wallet,
-              signerToken: order.signer.token,
-              signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
-                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                .toFixed()})`,
-              senderWallet: `${order.sender.wallet} (You)`,
-              senderToken: order.sender.token,
-              senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
-                .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                .toFixed()})`,
-            })
+            await prompts.confirmTransaction(
+              this,
+              metadata,
+              'swap',
+              {
+                signerWallet: order.signer.wallet,
+                signerToken: order.signer.token,
+                signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
+                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                  .toFixed()})`,
+                senderWallet: `${order.sender.wallet} (You)`,
+                senderToken: order.sender.token,
+                senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
+                  .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                  .toFixed()})`,
+              },
+              chainId,
+            )
           ) {
             const swapAddress = swapDeploys[chainId]
             new ethers.Contract(swapAddress, Swap.abi, wallet)

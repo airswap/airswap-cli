@@ -25,10 +25,16 @@ export default class IntentEnable extends Command {
       this.log(`Set intent with ${chalk.bold('intent:set')}\n`)
     } else {
       if (
-        await prompts.confirmTransaction(this, metadata, 'approve', {
-          token: `${constants.stakingTokenAddresses[chainId]} (AST)`,
-          spender: `${indexerAddress} (Indexer)`,
-        })
+        await prompts.confirmTransaction(
+          this,
+          metadata,
+          'approve',
+          {
+            token: `${constants.stakingTokenAddresses[chainId]} (AST)`,
+            spender: `${indexerAddress} (Indexer)`,
+          },
+          chainId,
+        )
       ) {
         stakingTokenContract
           .approve(indexerAddress, constants.APPROVAL_AMOUNT)

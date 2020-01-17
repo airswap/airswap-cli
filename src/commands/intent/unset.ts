@@ -30,11 +30,17 @@ export default class IntentUnset extends Command {
       this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
     } else {
       if (
-        await prompts.confirmTransaction(this, metadata, 'unsetIntent', {
-          signerToken: `${first.addr} (${first.name})`,
-          senderToken: `${second.addr} (${second.name})`,
-          protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
-        })
+        await prompts.confirmTransaction(
+          this,
+          metadata,
+          'unsetIntent',
+          {
+            signerToken: `${first.addr} (${first.name})`,
+            senderToken: `${second.addr} (${second.name})`,
+            protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
+          },
+          chainId,
+        )
       ) {
         new ethers.Contract(indexerAddress, Indexer.abi, wallet)
           .unsetIntent(first.addr, second.addr, constants.protocols.HTTP_LATEST)

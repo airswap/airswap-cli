@@ -30,10 +30,16 @@ export default class IntentNew extends Command {
         this.log(`Set intent on this pair with ${chalk.bold('intent:set')}\n`)
       } else {
         if (
-          await prompts.confirmTransaction(this, metadata, 'createIndex', {
-            signerToken: `${first.addr} (${first.name})`,
-            senderToken: `${second.addr} (${second.name})`,
-          })
+          await prompts.confirmTransaction(
+            this,
+            metadata,
+            'createIndex',
+            {
+              signerToken: `${first.addr} (${first.name})`,
+              senderToken: `${second.addr} (${second.name})`,
+            },
+            chainId,
+          )
         ) {
           indexerContract
             .createIndex(first.addr, second.addr, constants.protocols.HTTP_LATEST)

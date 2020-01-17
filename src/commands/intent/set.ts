@@ -52,13 +52,19 @@ export default class IntentSet extends Command {
                     this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
                   } else {
                     if (
-                      await prompts.confirmTransaction(this, metadata, 'setIntent', {
-                        signerToken: `${first.addr} (${first.name})`,
-                        senderToken: `${second.addr} (${second.name})`,
-                        protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
-                        locator,
-                        stakeAmount: atomicAmount,
-                      })
+                      await prompts.confirmTransaction(
+                        this,
+                        metadata,
+                        'setIntent',
+                        {
+                          signerToken: `${first.addr} (${first.name})`,
+                          senderToken: `${second.addr} (${second.name})`,
+                          protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
+                          locator,
+                          stakeAmount: atomicAmount,
+                        },
+                        chainId,
+                      )
                     ) {
                       const locatorBytes = ethers.utils.formatBytes32String(locator)
                       new ethers.Contract(indexerAddress, Indexer.abi, wallet)

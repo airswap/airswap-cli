@@ -28,10 +28,16 @@ export default class TokensApprove extends Command {
       this.log(`Trading is enabled for this token.\n`)
     } else {
       if (
-        await prompts.confirmTransaction(this, metadata, 'approve', {
-          token: `${token.addr} (${token.name})`,
-          spender: `${swapAddress} (Swap)`,
-        })
+        await prompts.confirmTransaction(
+          this,
+          metadata,
+          'approve',
+          {
+            token: `${token.addr} (${token.name})`,
+            spender: `${swapAddress} (Swap)`,
+          },
+          chainId,
+        )
       ) {
         tokenContract
           .approve(swapAddress, constants.APPROVAL_AMOUNT)
