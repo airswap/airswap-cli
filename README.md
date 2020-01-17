@@ -52,8 +52,8 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 * [`airswap order:get`](#airswap-orderget)
 * [`airswap quote:best`](#airswap-quotebest)
 * [`airswap quote:get`](#airswap-quoteget)
-* [`airswap tokens:approve`](#airswap-tokensapprove)
-* [`airswap tokens:update`](#airswap-tokensupdate)
+* [`airswap token:approve`](#airswap-tokenapprove)
+* [`airswap token:fetch`](#airswap-tokenfetch)
 * [`airswap update [CHANNEL]`](#airswap-update-channel)
 
 ## `airswap account:generate`
@@ -65,7 +65,7 @@ USAGE
   $ airswap account:generate
 ```
 
-_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/account/generate.ts)_
+_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/account/generate.ts)_
 
 ## `airswap account:set`
 
@@ -76,7 +76,7 @@ USAGE
   $ airswap account:set
 ```
 
-_See code: [src/commands/account/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/account/set.ts)_
+_See code: [src/commands/account/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/account/set.ts)_
 
 ## `airswap account:show`
 
@@ -87,7 +87,7 @@ USAGE
   $ airswap account:show
 ```
 
-_See code: [src/commands/account/show.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/account/show.ts)_
+_See code: [src/commands/account/show.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/account/show.ts)_
 
 ## `airswap account:unset`
 
@@ -98,7 +98,7 @@ USAGE
   $ airswap account:unset
 ```
 
-_See code: [src/commands/account/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/account/unset.ts)_
+_See code: [src/commands/account/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/account/unset.ts)_
 
 ## `airswap balances`
 
@@ -109,7 +109,7 @@ USAGE
   $ airswap balances
 ```
 
-_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/balances.ts)_
+_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/balances.ts)_
 
 ## `airswap help [COMMAND]`
 
@@ -137,7 +137,7 @@ USAGE
   $ airswap intent:enable
 ```
 
-_See code: [src/commands/intent/enable.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/intent/enable.ts)_
+_See code: [src/commands/intent/enable.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/enable.ts)_
 
 ## `airswap intent:get`
 
@@ -148,7 +148,7 @@ USAGE
   $ airswap intent:get
 ```
 
-_See code: [src/commands/intent/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/intent/get.ts)_
+_See code: [src/commands/intent/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/get.ts)_
 
 ## `airswap intent:new`
 
@@ -159,7 +159,7 @@ USAGE
   $ airswap intent:new
 ```
 
-_See code: [src/commands/intent/new.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/intent/new.ts)_
+_See code: [src/commands/intent/new.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/new.ts)_
 
 ## `airswap intent:set`
 
@@ -170,7 +170,7 @@ USAGE
   $ airswap intent:set
 ```
 
-_See code: [src/commands/intent/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/intent/set.ts)_
+_See code: [src/commands/intent/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/set.ts)_
 
 ## `airswap intent:unset`
 
@@ -181,7 +181,7 @@ USAGE
   $ airswap intent:unset
 ```
 
-_See code: [src/commands/intent/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/intent/unset.ts)_
+_See code: [src/commands/intent/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/unset.ts)_
 
 ## `airswap ip`
 
@@ -192,7 +192,7 @@ USAGE
   $ airswap ip
 ```
 
-_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/ip.ts)_
+_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/ip.ts)_
 
 ## `airswap network`
 
@@ -203,7 +203,7 @@ USAGE
   $ airswap network
 ```
 
-_See code: [src/commands/network.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/network.ts)_
+_See code: [src/commands/network.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/network.ts)_
 
 ## `airswap order:best`
 
@@ -214,7 +214,7 @@ USAGE
   $ airswap order:best
 ```
 
-_See code: [src/commands/order/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/order/best.ts)_
+_See code: [src/commands/order/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/order/best.ts)_
 
 ## `airswap order:get`
 
@@ -225,7 +225,7 @@ USAGE
   $ airswap order:get
 ```
 
-_See code: [src/commands/order/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/order/get.ts)_
+_See code: [src/commands/order/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/order/get.ts)_
 
 ## `airswap quote:best`
 
@@ -236,7 +236,7 @@ USAGE
   $ airswap quote:best
 ```
 
-_See code: [src/commands/quote/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/quote/best.ts)_
+_See code: [src/commands/quote/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/quote/best.ts)_
 
 ## `airswap quote:get`
 
@@ -247,29 +247,29 @@ USAGE
   $ airswap quote:get
 ```
 
-_See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/quote/get.ts)_
+_See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/quote/get.ts)_
 
-## `airswap tokens:approve`
+## `airswap token:approve`
 
 approve a token for trading
 
 ```
 USAGE
-  $ airswap tokens:approve
+  $ airswap token:approve
 ```
 
-_See code: [src/commands/tokens/approve.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/tokens/approve.ts)_
+_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/token/approve.ts)_
 
-## `airswap tokens:update`
+## `airswap token:fetch`
 
 update local metadata
 
 ```
 USAGE
-  $ airswap tokens:update
+  $ airswap token:fetch
 ```
 
-_See code: [src/commands/tokens/update.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.5/src/commands/tokens/update.ts)_
+_See code: [src/commands/token/fetch.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/token/fetch.ts)_
 
 ## `airswap update [CHANNEL]`
 
