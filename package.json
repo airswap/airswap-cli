@@ -85,14 +85,14 @@
       "network": {
         "description": "set the active ethereum network"
       },
-      "orders": {
+      "order": {
         "description": "get and take orders from a single peer or best available"
       },
-      "quotes": {
+      "quote": {
         "description": "get quotes from a single peer or best available"
       },
-      "tokens": {
-        "description": "approve tokens for trade and update local metadata"
+      "token": {
+        "description": "approve tokens and fetch remote metadata"
       }
     },
     "commands": "./lib/commands",
