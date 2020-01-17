@@ -33,6 +33,7 @@ USAGE
 * [`airswap account:show`](#airswap-accountshow)
 * [`airswap account:unset`](#airswap-accountunset)
 * [`airswap balances`](#airswap-balances)
+* [`airswap help [COMMAND]`](#airswap-help-command)
 * [`airswap intent:enable`](#airswap-intentenable)
 * [`airswap intent:get`](#airswap-intentget)
 * [`airswap intent:new`](#airswap-intentnew)
@@ -46,6 +47,7 @@ USAGE
 * [`airswap quotes:get`](#airswap-quotesget)
 * [`airswap tokens:approve`](#airswap-tokensapprove)
 * [`airswap tokens:update`](#airswap-tokensupdate)
+* [`airswap update [CHANNEL]`](#airswap-update-channel)
 
 ## `airswap account:generate`
 
@@ -101,6 +103,23 @@ USAGE
 ```
 
 _See code: [src/commands/balances.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.0-beta/src/commands/balances.ts)_
+
+## `airswap help [COMMAND]`
+
+display help for airswap
+
+```
+USAGE
+  $ airswap help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
 
 ## `airswap intent:enable`
 
@@ -244,4 +263,15 @@ USAGE
 ```
 
 _See code: [src/commands/tokens/update.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.0-beta/src/commands/tokens/update.ts)_
+
+## `airswap update [CHANNEL]`
+
+update the airswap CLI
+
+```
+USAGE
+  $ airswap update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
 <!-- commandsstop -->
