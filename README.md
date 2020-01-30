@@ -25,13 +25,6 @@ yarn add global airswap
 
 AirSwap CLI uses the native password manager of your system. On macOS, keys are managed by the Keychain, on Linux they are managed by the Secret Service API/libsecret, and on Windows they are managed by Credential Vault.
 
-## Helpful for Testing
-
-- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
-- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
-- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
-
 # Commands
 
 <!-- commands -->
@@ -58,7 +51,7 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 
 ## `airswap account:generate`
 
-generate a new account
+generate a new ethereum account
 
 ```
 USAGE
@@ -69,7 +62,7 @@ _See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap
 
 ## `airswap account:set`
 
-set the current account
+set the current ethereum account
 
 ```
 USAGE
@@ -80,7 +73,7 @@ _See code: [src/commands/account/set.ts](https://github.com/airswap/airswap-make
 
 ## `airswap account:show`
 
-show the current account
+show the current ethereum account
 
 ```
 USAGE
@@ -91,7 +84,7 @@ _See code: [src/commands/account/show.ts](https://github.com/airswap/airswap-mak
 
 ## `airswap account:unset`
 
-unset the current account
+unset the current ethereum account
 
 ```
 USAGE
@@ -282,3 +275,10 @@ USAGE
 
 _See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
 <!-- commandsstop -->
+
+## Helpful for Testing
+
+- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
+- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
+- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
+- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)

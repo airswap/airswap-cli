@@ -5,7 +5,7 @@ import * as keytar from 'keytar'
 import { displayDescription } from '../../lib/utils'
 
 export default class AccountShow extends Command {
-  static description = 'show the current account'
+  static description = 'show the current ethereum account'
 
   async run() {
     const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')

@@ -7,7 +7,7 @@ import * as keytar from 'keytar'
 import * as emoji from 'node-emoji'
 
 export default class AccountSet extends Command {
-  static description = 'set the current account'
+  static description = 'set the current ethereum account'
 
   async run() {
     displayDescription(this, AccountSet.description)

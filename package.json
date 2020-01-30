@@ -71,10 +71,10 @@
   "oclif": {
     "topics": {
       "account": {
-        "description": "set, show, and unset the current account"
+        "description": "set, show, and unset the current ethereum account"
       },
       "balances": {
-        "description": "display balances for the current account"
+        "description": "display balances for the current ethereum account"
       },
       "intent": {
         "description": "get, set, and unset intents on the indexer"

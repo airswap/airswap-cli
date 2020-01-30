@@ -17,7 +17,7 @@ describe('quotes', () => {
     .stub(ethers, 'Contract', StakingTokenContract)
     .stub(prompts, 'confirmTransaction', () => async () => false)
     .stub(utils, 'handleTransaction', () => true)
-    .command(['tokens:approve'])
+    .command(['token:approve'])
     .it('approve a token', ctx => {
       expect(ctx.stdout).to.contain(`approve a token for trading`)
     })
@@ -26,7 +26,7 @@ describe('quotes', () => {
     .stdout()
     .stub(utils, 'getWallet', getWallet)
     .stub(utils, 'updateMetadata', () => true)
-    .command(['tokens:update'])
+    .command(['token:fetch'])
     .it('update token metadata', ctx => {
       expect(ctx.stdout).to.contain(`update local metadata`)
     })
