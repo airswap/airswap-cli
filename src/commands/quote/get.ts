@@ -1,7 +1,6 @@
-import { cli } from 'cli-ux'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { get, printObject, printOrder, confirm } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
@@ -15,10 +14,15 @@ export default class QuotesGet extends Command {
       utils.displayDescription(this, QuotesGet.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
-      const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
+      let { locator }: any = await get({
+        locator: {
+          default: 'http://localhost:3000',
+          type: 'URL',
+        },
+      })
 
       this.log()
-      prompts.printObject(this, metadata, `Request: ${request.method}`, request.params)
+      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
       requests.peerCall(locator, request.method, request.params, async (err, order) => {
         if (err) {
@@ -30,7 +34,7 @@ export default class QuotesGet extends Command {
           }
           process.exit(0)
         } else {
-          prompts.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+          printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
         }
       })
     } catch (e) {

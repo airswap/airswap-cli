@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { getTokens, confirm } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -20,30 +20,33 @@ export default class IntentUnset extends Command {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await prompts.promptTokens(metadata)
+    const { signerToken, senderToken }: any = await getTokens(
+      { signerToken: 'signerToken', senderToken: 'senderToken' },
+      metadata,
+    )
 
     this.log()
 
-    const index = await indexerContract.indexes(first.addr, second.addr, constants.protocols.HTTP_LATEST)
+    const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
     if (index === constants.ADDRESS_ZERO) {
-      this.log(chalk.yellow(`Pair ${first.name}/${second.name} does not exist`))
+      this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
       this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
     } else {
       if (
-        await prompts.confirmTransaction(
+        await confirm(
           this,
           metadata,
           'unsetIntent',
           {
-            signerToken: `${first.addr} (${first.name})`,
-            senderToken: `${second.addr} (${second.name})`,
+            signerToken: signerToken.addr,
+            senderToken: senderToken.addr,
             protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
           },
           chainId,
         )
       ) {
         new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-          .unsetIntent(first.addr, second.addr, constants.protocols.HTTP_LATEST)
+          .unsetIntent(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
           .then(utils.handleTransaction)
           .catch(utils.handleError)
       }

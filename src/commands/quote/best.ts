@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { printObject, printOrder } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
@@ -14,7 +14,7 @@ export default class QuotesBest extends Command {
 
     const request = await requests.getRequest(wallet, metadata, 'Quote')
     this.log()
-    prompts.printObject(this, metadata, `Request: ${request.method}`, request.params)
+    printObject(this, metadata, `Request: ${request.method}`, request.params)
     requests.multiPeerCall(
       wallet,
       request.method,
@@ -24,7 +24,7 @@ export default class QuotesBest extends Command {
         if (!quote) {
           this.log(chalk.yellow('\nNo valid results found.\n'))
         } else {
-          prompts.printOrder(this, request.side, request.signerToken, request.senderToken, locator, quote)
+          printOrder(this, request.side, request.signerToken, request.senderToken, locator, quote)
           this.log()
         }
       },

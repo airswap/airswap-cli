@@ -5,7 +5,7 @@ import { ethers } from 'ethers'
 import * as url from 'url'
 import { orders } from '@airswap/order-utils'
 import BigNumber from 'bignumber.js'
-import * as prompts from './prompts'
+import { get, getTokens } from './prompt'
 
 const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -110,19 +110,22 @@ export function multiPeerCall(wallet: any, method: string, params: any, callback
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  const side = await prompts.promptSide()
-  const amount = await cli.prompt('amount')
+  let { side, amount }: any = await get({
+    side: {
+      description: 'buy or sell',
+      type: 'Side',
+    },
+    amount: {
+      type: 'Number',
+    },
+  })
 
-  if (isNaN(parseInt(amount))) {
-    process.exit(0)
-  }
-
-  const { first, second } = await prompts.promptTokens(metadata, 'of', 'for')
+  const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
 
   let signerToken
   let senderToken
 
-  if (side === 'B') {
+  if (side === 'buy') {
     signerToken = first
     senderToken = second
   } else {
@@ -142,7 +145,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     })
   }
 
-  if (side === 'B') {
+  if (side === 'buy') {
     const signerAmountAtomic = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(first.decimals))
     Object.assign(params, {
       signerAmount: signerAmountAtomic.integerValue(BigNumber.ROUND_FLOOR).toFixed(),

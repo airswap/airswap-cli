@@ -34,11 +34,11 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 * [`airswap account:unset`](#airswap-accountunset)
 * [`airswap balances`](#airswap-balances)
 * [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap intent:enable`](#airswap-intentenable)
-* [`airswap intent:get`](#airswap-intentget)
-* [`airswap intent:new`](#airswap-intentnew)
-* [`airswap intent:set`](#airswap-intentset)
-* [`airswap intent:unset`](#airswap-intentunset)
+* [`airswap indexer:enable`](#airswap-indexerenable)
+* [`airswap indexer:get`](#airswap-indexerget)
+* [`airswap indexer:new`](#airswap-indexernew)
+* [`airswap indexer:set`](#airswap-indexerset)
+* [`airswap indexer:unset`](#airswap-indexerunset)
 * [`airswap ip`](#airswap-ip)
 * [`airswap network`](#airswap-network)
 * [`airswap order:best`](#airswap-orderbest)
@@ -121,60 +121,60 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
 
-## `airswap intent:enable`
+## `airswap indexer:enable`
 
 enable staking on the indexer
 
 ```
 USAGE
-  $ airswap intent:enable
+  $ airswap indexer:enable
 ```
 
-_See code: [src/commands/intent/enable.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/enable.ts)_
+_See code: [src/commands/indexer/enable.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/indexer/enable.ts)_
 
-## `airswap intent:get`
+## `airswap indexer:get`
 
 get intents from the indexer
 
 ```
 USAGE
-  $ airswap intent:get
+  $ airswap indexer:get
 ```
 
-_See code: [src/commands/intent/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/get.ts)_
+_See code: [src/commands/indexer/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/indexer/get.ts)_
 
-## `airswap intent:new`
+## `airswap indexer:new`
 
 create an index for a new token pair
 
 ```
 USAGE
-  $ airswap intent:new
+  $ airswap indexer:new
 ```
 
-_See code: [src/commands/intent/new.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/new.ts)_
+_See code: [src/commands/indexer/new.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/indexer/new.ts)_
 
-## `airswap intent:set`
+## `airswap indexer:set`
 
 set an intent
 
 ```
 USAGE
-  $ airswap intent:set
+  $ airswap indexer:set
 ```
 
-_See code: [src/commands/intent/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/set.ts)_
+_See code: [src/commands/indexer/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/indexer/set.ts)_
 
-## `airswap intent:unset`
+## `airswap indexer:unset`
 
 unset an intent
 
 ```
 USAGE
-  $ airswap intent:unset
+  $ airswap indexer:unset
 ```
 
-_See code: [src/commands/intent/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/intent/unset.ts)_
+_See code: [src/commands/indexer/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/indexer/unset.ts)_
 
 ## `airswap ip`
 

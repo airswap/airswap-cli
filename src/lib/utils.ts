@@ -36,6 +36,12 @@ export async function setConfig(ctx: any, config: any) {
   await fs.outputJson(configPath, config)
 }
 
+export async function getProvider(ctx: any) {
+  const { network } = await getConfig(ctx)
+  const selectedNetwork = constants.chainNames[network || '4']
+  return ethers.getDefaultProvider(selectedNetwork)
+}
+
 export async function getWallet(ctx: any, requireBalance?: boolean) {
   const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
 

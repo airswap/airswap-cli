@@ -1,7 +1,7 @@
 import { expect, test } from '@oclif/test'
 import { ethers } from 'ethers'
 import * as utils from '../../src/lib/utils'
-import * as prompts from '../../src/lib/prompts'
+import * as prompts from '../../src/lib/prompt'
 import { StakingTokenContract, getWallet, getMetadata } from '../stubs'
 import { cli } from 'cli-ux'
 

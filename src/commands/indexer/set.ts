@@ -1,9 +1,8 @@
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
-import { cli } from 'cli-ux'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { get, getTokens, confirm } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
@@ -22,15 +21,29 @@ export default class IntentSet extends Command {
     const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { first, second } = await prompts.promptTokens(metadata)
-    const locator = await cli.prompt('locator')
-    const stakeAmount = await cli.prompt('stakeAmount')
+    const { signerToken, senderToken }: any = await getTokens(
+      { signerToken: 'signerToken', senderToken: 'senderToken' },
+      metadata,
+    )
+    const values: any = await get({
+      locator: {
+        description: 'locator',
+        type: 'URL',
+      },
+      stakeAmount: {
+        description: 'stakeAmount',
+        type: 'Number',
+      },
+    })
+
+    const locator = values.locator
+    const stakeAmount = values.stakeAmount
 
     this.log()
 
-    indexerContract.indexes(first.addr, second.addr, constants.protocols.HTTP_LATEST).then((index: any) => {
+    indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST).then((index: any) => {
       if (index === constants.ADDRESS_ZERO) {
-        this.log(chalk.yellow(`Pair ${first.name}/${second.name} does not exist`))
+        this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
         this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
       } else {
         const atomicAmount = stakeAmount * 10 ** constants.AST_DECIMALS
@@ -52,13 +65,13 @@ export default class IntentSet extends Command {
                     this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
                   } else {
                     if (
-                      await prompts.confirmTransaction(
+                      await confirm(
                         this,
                         metadata,
                         'setIntent',
                         {
-                          signerToken: `${first.addr} (${first.name})`,
-                          senderToken: `${second.addr} (${second.name})`,
+                          signerToken: signerToken.addr,
+                          senderToken: senderToken.addr,
                           protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
                           locator,
                           stakeAmount: atomicAmount,
@@ -68,7 +81,13 @@ export default class IntentSet extends Command {
                     ) {
                       const locatorBytes = ethers.utils.formatBytes32String(locator)
                       new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-                        .setIntent(first.addr, second.addr, constants.protocols.HTTP_LATEST, atomicAmount, locatorBytes)
+                        .setIntent(
+                          signerToken.addr,
+                          senderToken.addr,
+                          constants.protocols.HTTP_LATEST,
+                          atomicAmount,
+                          locatorBytes,
+                        )
                         .then(utils.handleTransaction)
                         .catch(utils.handleError)
                     }

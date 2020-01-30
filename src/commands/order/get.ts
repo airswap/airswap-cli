@@ -1,9 +1,8 @@
 import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
-import { cli } from 'cli-ux'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { get, printObject, printOrder, confirm } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
 import { orders } from '@airswap/order-utils'
@@ -19,10 +18,16 @@ export default class OrderGet extends Command {
     utils.displayDescription(this, OrderGet.description, chainId)
 
     const request = await requests.getRequest(wallet, metadata, 'Order')
-    const locator = await cli.prompt('locator', { default: 'http://localhost:3000' })
+
+    let { locator }: any = await get({
+      locator: {
+        default: 'http://localhost:3000',
+        type: 'URL',
+      },
+    })
 
     this.log()
-    prompts.printObject(this, metadata, `Request: ${request.method}`, request.params)
+    printObject(this, metadata, `Request: ${request.method}`, request.params)
 
     requests.peerCall(locator, request.method, request.params, async (err, order) => {
       if (err) {
@@ -34,7 +39,7 @@ export default class OrderGet extends Command {
         }
         process.exit(0)
       } else {
-        prompts.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+        printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
         this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
         const swapAddress = swapDeploys[chainId]
@@ -47,7 +52,7 @@ export default class OrderGet extends Command {
           this.log(chalk.yellow('Order is intended for another swap contract'))
         } else {
           if (
-            await prompts.confirmTransaction(
+            await confirm(
               this,
               metadata,
               'swap',

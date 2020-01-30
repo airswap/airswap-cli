@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { getTokens, confirm } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
@@ -17,7 +17,7 @@ export default class TokenApprove extends Command {
     utils.displayDescription(this, TokenApprove.description, chainId)
 
     const swapAddress = swapDeploys[chainId]
-    const token = await prompts.promptToken(metadata, 'token')
+    const { token }: any = await getTokens({ token: 'token' }, metadata)
     this.log()
 
     const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
@@ -28,7 +28,7 @@ export default class TokenApprove extends Command {
       this.log(`Trading is enabled for this token.\n`)
     } else {
       if (
-        await prompts.confirmTransaction(
+        await confirm(
           this,
           metadata,
           'approve',

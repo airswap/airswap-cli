@@ -34,6 +34,8 @@
     "jayson": "^3.2.0",
     "keytar": "^5.0.0",
     "node-emoji": "^1.10.0",
+    "ora": "^4.0.3",
+    "prompt": "^1.0.0",
     "table": "^5.4.6"
   },
   "devDependencies": {
@@ -76,7 +78,7 @@
       "balances": {
         "description": "display balances for the current ethereum account"
       },
-      "intent": {
+      "indexer": {
         "description": "get, set, and unset intents on the indexer"
       },
       "ip": {

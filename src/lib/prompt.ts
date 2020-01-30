@@ -1,46 +1,82 @@
-import { cli } from 'cli-ux'
+import prompt from 'prompt'
 import chalk from 'chalk'
-import { ethers } from 'ethers'
 import * as emoji from 'node-emoji'
-import BigNumber from 'bignumber.js'
 import { table } from 'table'
+import BigNumber from 'bignumber.js'
 import constants from './constants.json'
 
-export async function promptSide() {
-  let side = (await cli.prompt('buy or sell')).toUpperCase()
-  if (side.indexOf('B') === 0) {
-    side = 'B'
-  }
-  if (side.indexOf('S') === 0) {
-    side = 'S'
-  }
-  if (side !== 'B' && side !== 'S') {
-    process.exit(0)
-  }
-  return side
+prompt.message = ''
+prompt.start()
+
+const messages = {
+  Address: 'Must be an Ethereum address (0x...)',
+  Token: 'Token not found in local metadata',
+  URL: 'Must be a Web address (URL)',
+  Number: 'Must be a number',
+  Private: 'Private key must be 64 characters long',
+  Side: 'Must be buy or sell',
+}
+const patterns = {
+  Private: /^[a-fA-F0-9]{64}$/,
+  Address: /^0x[a-fA-F0-9]{40}$/,
+  URL: /[a-zA-Z0-9]{0,}/,
+  Number: /^[0-9]+$/,
+  Side: /buy|sell/,
 }
 
-export async function promptToken(metadata: any, signerTokenLabel?: string) {
-  const value = await cli.prompt(signerTokenLabel)
-  try {
-    ethers.utils.getAddress(value)
-    if (!(value in metadata.byAddress)) {
-      throw new Error(`Token ${value} not found in metadata`)
+function generateSchema(fields) {
+  const schema = { properties: {} }
+
+  for (const field in fields) {
+    schema.properties[field] = {
+      description: fields[field].description,
+      pattern: patterns[fields[field].type],
+      message: messages[fields[field].type],
+      default: fields[field].default,
+      required: fields[field].optional ? false : true,
+      conform: fields[field].conform,
+      hidden: fields[field].hidden,
     }
-    return metadata.byAddress[value]
-  } catch (e) {
-    if (!(value.toUpperCase() in metadata.bySymbol)) {
-      throw new Error(`Token ${value} not found in metadata`)
-    }
-    return metadata.bySymbol[value.toUpperCase()]
   }
+  return schema
 }
 
-export async function promptTokens(metadata: any, firstLabel?: string, secondLabel?: string) {
-  return {
-    first: await promptToken(metadata, firstLabel || 'signerToken'),
-    second: await promptToken(metadata, secondLabel || 'senderToken'),
+export async function get(fields) {
+  return new Promise((resolve, reject) => {
+    prompt.get(generateSchema(fields), function(err, result) {
+      if (err) {
+        reject(err)
+      }
+      resolve(result)
+    })
+  })
+}
+
+export async function getTokens(labels, metadata) {
+  const fields = {}
+  for (let label in labels) {
+    fields[label] = {
+      description: labels[label],
+      type: 'Token',
+      conform: value => {
+        if (patterns.Address.test(value)) {
+          return value in metadata.byAddress
+        }
+        return value.toUpperCase() in metadata.bySymbol
+      },
+    }
   }
+
+  const values: any = await get(fields)
+  const tokens = {}
+  for (let val in values) {
+    if (patterns.Address.test(values[val])) {
+      tokens[val] = metadata.byAddress[values[val]]
+    } else {
+      tokens[val] = metadata.bySymbol[values[val].toUpperCase()]
+    }
+  }
+  return tokens
 }
 
 export async function printOrder(
@@ -62,7 +98,7 @@ export async function printOrder(
   ctx.log(chalk.underline.bold(`Response: ${locator}`))
   ctx.log()
 
-  if (side === 'B') {
+  if (side === 'buy') {
     ctx.log(
       emoji.get('sparkles'),
       chalk.bold('Buy'),
@@ -119,10 +155,9 @@ export async function printOrder(
 export function getData(metadata: any, params: any) {
   const data = [[chalk.bold('Param'), chalk.bold('Value')]]
   for (let key in params) {
-    try {
-      ethers.utils.getAddress(params[key])
+    if (patterns.Address.test(params[key]) && params[key] in metadata.byAddress) {
       data.push([key, `${params[key]} (${metadata.byAddress[params[key]].name})`])
-    } catch (e) {
+    } else {
       data.push([key, params[key]])
     }
   }
@@ -153,7 +188,7 @@ export function printTable(ctx: any, title: string, data: Array<any>, config: ob
   ctx.log(table(data, config))
 }
 
-export async function confirmTransaction(ctx: any, metadata: any, name: String, params: any, network: number) {
+export async function confirm(ctx: any, metadata: any, name: String, params: any, network: number): Promise<boolean> {
   const data = getData(metadata, params)
   const config = {
     columns: {
@@ -170,8 +205,20 @@ export async function confirmTransaction(ctx: any, metadata: any, name: String, 
 
   printTable(ctx, `Transaction: ${name}`, data, config)
   const networkName = constants.chainNames[network || '4'].toUpperCase()
-  if (await cli.confirm(`Type "yes" to send (${networkName})`)) {
-    return true
-  }
-  return false
+
+  return new Promise((resolve, reject) => {
+    prompt.get(
+      {
+        properties: {
+          confirm: {
+            description: chalk.white(`Type "yes" to send (${networkName})`),
+          },
+        },
+      },
+      function(err, result) {
+        if (err) reject()
+        if (result && result.confirm === 'yes') resolve(true)
+      },
+    )
+  })
 }

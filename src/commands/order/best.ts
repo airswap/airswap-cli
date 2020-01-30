@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import * as prompts from '../../lib/prompts'
+import { printObject, printOrder, confirm } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
 
@@ -20,7 +20,7 @@ export default class OrderBest extends Command {
     const request = await requests.getRequest(wallet, metadata, 'Order')
 
     this.log()
-    prompts.printObject(this, metadata, `Request: ${request.method}`, request.params)
+    printObject(this, metadata, `Request: ${request.method}`, request.params)
 
     requests.multiPeerCall(
       wallet,
@@ -32,12 +32,12 @@ export default class OrderBest extends Command {
         if (!order) {
           this.log(chalk.yellow('\nNo valid results found.\n'))
         } else {
-          prompts.printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+          printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
 
           this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
           if (
-            await prompts.confirmTransaction(
+            await confirm(
               this,
               metadata,
               'swap',
