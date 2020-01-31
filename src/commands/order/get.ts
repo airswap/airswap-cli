@@ -21,7 +21,6 @@ export default class OrderGet extends Command {
 
     let { locator }: any = await get({
       locator: {
-        default: 'http://localhost:3000',
         type: 'URL',
       },
     })

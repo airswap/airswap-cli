@@ -156,7 +156,7 @@ export function getData(metadata: any, params: any) {
   const data = [[chalk.bold('Param'), chalk.bold('Value')]]
   for (let key in params) {
     if (patterns.Address.test(params[key]) && params[key] in metadata.byAddress) {
-      data.push([key, `${params[key]} (${metadata.byAddress[params[key]].name})`])
+      data.push([key, `${params[key]} (${chalk.cyan(metadata.byAddress[params[key]].name)})`])
     } else {
       data.push([key, params[key]])
     }
@@ -188,7 +188,14 @@ export function printTable(ctx: any, title: string, data: Array<any>, config: ob
   ctx.log(table(data, config))
 }
 
-export async function confirm(ctx: any, metadata: any, name: String, params: any, network: number): Promise<boolean> {
+export async function confirm(
+  ctx: any,
+  metadata: any,
+  name: String,
+  params: any,
+  network: number,
+  verb?: string,
+): Promise<boolean> {
   const data = getData(metadata, params)
   const config = {
     columns: {
@@ -211,7 +218,7 @@ export async function confirm(ctx: any, metadata: any, name: String, params: any
       {
         properties: {
           confirm: {
-            description: chalk.white(`Type "yes" to send (${networkName})`),
+            description: chalk.white(`Type "yes" to ${verb || 'send'} (${networkName})`),
           },
         },
       },

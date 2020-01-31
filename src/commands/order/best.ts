@@ -44,16 +44,21 @@ export default class OrderBest extends Command {
               {
                 signerWallet: order.signer.wallet,
                 signerToken: order.signer.token,
-                signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()})`,
-                senderWallet: `${order.sender.wallet} (You)`,
+                signerAmount: `${order.signer.amount} (${chalk.cyan(
+                  new BigNumber(order.signer.amount)
+                    .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                    .toFixed(),
+                )})`,
+                senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
                 senderToken: order.sender.token,
-                senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
-                  .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                  .toFixed()})`,
+                senderAmount: `${order.sender.amount} (${chalk.cyan(
+                  new BigNumber(order.sender.amount)
+                    .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                    .toFixed(),
+                )})`,
               },
               chainId,
+              'take this order',
             )
           ) {
             const swapAddress = swapDeploys[chainId]
