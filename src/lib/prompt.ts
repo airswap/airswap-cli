@@ -4,6 +4,7 @@ import * as emoji from 'node-emoji'
 import { table } from 'table'
 import BigNumber from 'bignumber.js'
 import constants from './constants.json'
+import { getTable } from 'console.table'
 
 prompt.message = ''
 prompt.start()
@@ -11,7 +12,7 @@ prompt.start()
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
   Token: 'Token not found in local metadata',
-  URL: 'Must be a Web address (URL)',
+  URL: 'Must be a URL. HTTPS is implied if no scheme set (e.g. http://...)',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
@@ -195,6 +196,7 @@ export async function confirm(
   params: any,
   network: number,
   verb?: string,
+  impact?: any,
 ): Promise<boolean> {
   const data = getData(metadata, params)
   const config = {
@@ -212,6 +214,10 @@ export async function confirm(
 
   printTable(ctx, `Transaction: ${name}`, data, config)
   const networkName = constants.chainNames[network || '4'].toUpperCase()
+
+  if (impact) {
+    ctx.log(getTable(impact))
+  }
 
   return new Promise((resolve, reject) => {
     prompt.get(

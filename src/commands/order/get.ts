@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js'
 import { orders } from '@airswap/order-utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export default class OrderGet extends Command {
   static description = 'get an order from a peer'
@@ -57,7 +58,16 @@ export default class OrderGet extends Command {
           ) {
             this.log(chalk.yellow('Order is intended for another swap contract'))
           } else {
-            if (
+            const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
+            const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+
+            if (allowance < order.sender.amount) {
+              this.log(
+                `${chalk.yellow(
+                  `You have not approved ${chalk.bold(request.senderToken.name)} for trading.`,
+                )} Approve it with ${chalk.bold('token:approve')}\n`,
+              )
+            } else if (
               await confirm(
                 this,
                 metadata,
@@ -75,6 +85,7 @@ export default class OrderGet extends Command {
                     .toFixed()})`,
                 },
                 chainId,
+                'take this order',
               )
             ) {
               new ethers.Contract(swapAddress, Swap.abi, wallet)

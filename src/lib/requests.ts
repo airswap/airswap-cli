@@ -62,6 +62,11 @@ export function multiPeerCall(wallet: any, method: string, params: any, callback
   indexerCall(wallet, params.signerToken, params.senderToken, (result: any) => {
     const locators = result.locators
 
+    if (!locators.length) {
+      callback()
+      return
+    }
+
     let requested = 0
     let completed = 0
     let results: any[] = []
