@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { printObject, printOrder, confirm } from '../../lib/prompt'
+import { printObject, printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
 
@@ -13,19 +13,19 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 export default class OrderBest extends Command {
   static description = 'get the best available order'
   async run() {
-    const wallet = await utils.getWallet(this)
-    const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, OrderBest.description, chainId)
-
     try {
+      const wallet = await utils.getWallet(this)
+      const chainId = (await wallet.provider.getNetwork()).chainId
+      const metadata = await utils.getMetadata(this, chainId)
+      utils.displayDescription(this, OrderBest.description, chainId)
+
       const request = await requests.getRequest(wallet, metadata, 'Order')
 
       const swapAddress = swapDeploys[chainId]
       const tokenContract = new ethers.Contract(request.params.senderToken, IERC20.abi, wallet)
       const allowance = await tokenContract.allowance(wallet.address, swapAddress)
 
-      if (allowance.lt(request.params.senderAmount || 0)) {
+      if (allowance.lt(request.params['senderAmount'] || 0)) {
         this.log(
           `${chalk.yellow(
             `\nYou have not approved ${chalk.bold(request.senderToken.name)} for trading.`,
@@ -136,7 +136,7 @@ export default class OrderBest extends Command {
         )
       }
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

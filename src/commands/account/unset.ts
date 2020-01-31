@@ -19,14 +19,14 @@ export default class AccountUnset extends Command {
       this.log(`Private Key: ${signerPrivateKey}`)
       this.log(`Address:     ${wallet.address}\n`)
 
-      if (await cli.confirm('Are you sure you want to delete this private key?')) {
+      if (await cli.confirm('Are you sure you want to delete this private key? (yes/no)')) {
         await keytar.deletePassword('airswap-maker-kit', 'private-key')
         this.log(`\n${emoji.get('white_check_mark')} The account has been unset.\n`)
       } else {
-        this.log(chalk.yellow(`The account was not unset.\n`))
+        this.log(chalk.yellow(`\nThe account was not unset.\n`))
       }
     } else {
-      this.log(`There is no current account stored.\n`)
+      this.log(`There is no ethereum account stored.\n`)
     }
   }
 }

@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, printObject, printOrder, confirm } from '../../lib/prompt'
+import { get, printObject, printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
 import { orders } from '@airswap/order-utils'
@@ -13,12 +13,12 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 export default class OrderGet extends Command {
   static description = 'get an order from a peer'
   async run() {
-    const wallet = await utils.getWallet(this)
-    const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, OrderGet.description, chainId)
-
     try {
+      const wallet = await utils.getWallet(this)
+      const chainId = (await wallet.provider.getNetwork()).chainId
+      const metadata = await utils.getMetadata(this, chainId)
+      utils.displayDescription(this, OrderGet.description, chainId)
+
       const request = await requests.getRequest(wallet, metadata, 'Order')
 
       let { locator }: any = await get({
@@ -97,7 +97,7 @@ export default class OrderGet extends Command {
         }
       })
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

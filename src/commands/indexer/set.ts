@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getTokens, confirm } from '../../lib/prompt'
+import { get, getTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
@@ -12,12 +12,12 @@ const indexerDeploys = require('@airswap/indexer/deploys.json')
 export default class IntentSet extends Command {
   static description = 'set an intent'
   async run() {
-    const wallet = await utils.getWallet(this)
-    const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, IntentSet.description, chainId)
-
     try {
+      const wallet = await utils.getWallet(this)
+      const chainId = (await wallet.provider.getNetwork()).chainId
+      const metadata = await utils.getMetadata(this, chainId)
+      utils.displayDescription(this, IntentSet.description, chainId)
+
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
@@ -101,7 +101,7 @@ export default class IntentSet extends Command {
           }
         })
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

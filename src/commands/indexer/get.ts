@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { getTokens } from '../../lib/prompt'
+import { getTokens, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -12,12 +12,12 @@ export default class IntentGet extends Command {
   static description = 'get intents from the indexer'
 
   async run() {
-    const provider = await utils.getProvider(this)
-    const chainId = (await provider.getNetwork()).chainId
-    const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, IntentGet.description, chainId)
-
     try {
+      const provider = await utils.getProvider(this)
+      const chainId = (await provider.getNetwork()).chainId
+      const metadata = await utils.getMetadata(this, chainId)
+      utils.displayDescription(this, IntentGet.description, chainId)
+
       const indexerAddress = indexerDeploys[chainId]
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
@@ -56,7 +56,7 @@ export default class IntentGet extends Command {
         this.log()
       }
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

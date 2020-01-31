@@ -3,23 +3,22 @@ import * as utils from '../../lib/utils'
 import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
-import { get, printTable, confirm } from '../../lib/prompt'
-import { cli } from 'cli-ux'
+import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 export default class TokenAdd extends Command {
   static description = 'add tokent to local metadata'
   async run() {
-    const provider = await utils.getProvider(this)
-    const chainId = (await provider.getNetwork()).chainId
-    utils.displayDescription(this, TokenAdd.description, chainId)
-
-    let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
-    if (String(chainId) === constants.chainIds.MAINNET) {
-      metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
-    }
-
     try {
+      const provider = await utils.getProvider(this)
+      const chainId = (await provider.getNetwork()).chainId
+      utils.displayDescription(this, TokenAdd.description, chainId)
+
+      let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
+      if (String(chainId) === constants.chainIds.MAINNET) {
+        metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
+      }
+
       let token: any = await get({
         name: {
           description: 'ticker',
@@ -75,7 +74,7 @@ export default class TokenAdd extends Command {
         this.log(chalk.green('Local metadata updated\n'))
       }
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

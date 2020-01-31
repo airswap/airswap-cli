@@ -1,18 +1,18 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { printObject, printOrder } from '../../lib/prompt'
+import { printObject, printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
 export default class QuotesBest extends Command {
   static description = 'get the best available quote'
   async run() {
-    const wallet = await utils.getWallet(this)
-    const chainId = (await wallet.provider.getNetwork()).chainId
-    const metadata = await utils.getMetadata(this, chainId)
-    utils.displayDescription(this, QuotesBest.description, chainId)
-
     try {
+      const wallet = await utils.getWallet(this)
+      const chainId = (await wallet.provider.getNetwork()).chainId
+      const metadata = await utils.getMetadata(this, chainId)
+      utils.displayDescription(this, QuotesBest.description, chainId)
+
       const request = await requests.getRequest(wallet, metadata, 'Quote')
       this.log()
       printObject(this, metadata, `Request: ${request.method}`, request.params)
@@ -31,7 +31,7 @@ export default class QuotesBest extends Command {
         },
       )
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }

@@ -235,3 +235,7 @@ export async function confirm(
     )
   })
 }
+
+export function cancelled(e) {
+  console.log(`\n${e.message}\n`)
+}

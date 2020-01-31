@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, printObject, printOrder, confirm } from '../../lib/prompt'
+import { get, printObject, printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
@@ -37,7 +37,7 @@ export default class QuotesGet extends Command {
         }
       })
     } catch (e) {
-      this.log('\n\nCancelled.\n')
+      cancelled(e)
     }
   }
 }
