@@ -9,10 +9,10 @@
   dependencies:
     openzeppelin-solidity "2.4"
 
-"@airswap/order-utils@0.3.19":
-  version "0.3.19"
-  resolved "https://registry.yarnpkg.com/@airswap/order-utils/-/order-utils-0.3.19.tgz#2bc3de47f51495208c76c0585ab5f24a3ce6a3ba"
-  integrity sha512-LTmjd/S3Ej9XnpHNtxE7he2Sd12qCds0tfOoRmSakZ0pO6PjeNoK2YQeFtxj3DmgI6XHMoYOy64sh/aP/t0GNA==
+"@airswap/order-utils@0.3.20-beta.0":
+  version "0.3.20-beta.0"
+  resolved "https://registry.yarnpkg.com/@airswap/order-utils/-/order-utils-0.3.20-beta.0.tgz#05eb93a9d20762404268cddc87d936787bc2194b"
+  integrity sha512-VgQMiud6hEa4QbGU0S9ZJZkPJcvsc6zfosl983rdRD8eEDwjoJSdNZZpDfAcd3kdeScKJHI7Pg1ixHaEBk3bZA==
   dependencies:
     eth-sig-util "^2.2.0"
     ethereumjs-abi "^0.6.7"
@@ -20,12 +20,13 @@
     web3 "^1.0.0-beta.55"
     web3-eth "1.2.2"
 
-"@airswap/swap@4.3.5":
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-4.3.5.tgz#d73d02b3efc9169920d3976be293916fba22db09"
-  integrity sha512-2B6s0tYucg7d+rhhtqKNijivrQ1ltkMGm922A9SS2oquh36eFFELsYNbGgEZLXK7sCE2odNa0RzlkRBMLnP2Bg==
+"@airswap/swap@5.4.7-beta.0":
+  version "5.4.7-beta.0"
+  resolved "https://registry.yarnpkg.com/@airswap/swap/-/swap-5.4.7-beta.0.tgz#efe2cd8408fef51ff39ba43a78ab3e643abdbe3f"
+  integrity sha512-Asy5qHjnEME2IWHKHnnarq/orSsq5MKRMvsOm3QsJW4FXjcL97B3qdS2VwV6I/yzUfSsghvlx8m3xJRVFp4DzA==
   dependencies:
-    "@airswap/types" "2.4.4"
+    "@airswap/transfers" "1.1.2-beta.0"
+    "@airswap/types" "3.5.5-beta.0"
     openzeppelin-solidity "2.4"
 
 "@airswap/tokens@0.1.4":
@@ -35,10 +36,17 @@
   dependencies:
     openzeppelin-solidity "2.4"
 
-"@airswap/types@2.4.4":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-2.4.4.tgz#31d6b70886b5affe6b4be1d6be57a8859beeb0f3"
-  integrity sha512-IDefnjoW8/vpoZmNAflt7oC2/Nthn2nF4dSoSx3pWks+BmizpmQja6VAkMy1vASml6oUMxag5IIIwC0D4/953A==
+"@airswap/transfers@1.1.2-beta.0":
+  version "1.1.2-beta.0"
+  resolved "https://registry.yarnpkg.com/@airswap/transfers/-/transfers-1.1.2-beta.0.tgz#5563222e3ce5dbcb1a7df3befb638bc78935d655"
+  integrity sha512-DLoYDBvMmSlm64MVlQlk0w7gtB5JX50bvj7UH2fP50kO4igAIKMo6WRwAi/FvR3NisJwFMc2lt4J+dVa0cKQ8A==
+  dependencies:
+    openzeppelin-solidity "2.4"
+
+"@airswap/types@3.5.5-beta.0":
+  version "3.5.5-beta.0"
+  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-3.5.5-beta.0.tgz#741bf2e1f05526e84b390330779aebb2e7feec2a"
+  integrity sha512-1KaBHtob50rFDAtgRP5nlWeg1p1OUcXlyXSD6T0byFud5uHZe+zNY64veHBAM4BZI2jmn6Y3J1za85St065H6g==
   dependencies:
     openzeppelin-solidity "2.4"
 
