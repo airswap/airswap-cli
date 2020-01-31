@@ -90,13 +90,13 @@
         "description": "set the active ethereum network"
       },
       "order": {
-        "description": "get and take orders from a single peer or best available"
+        "description": "get and take orders from a single peer or all peers"
       },
       "quote": {
-        "description": "get quotes from a single peer or best available"
+        "description": "get quotes and maximums from a single peer or all peers"
       },
       "token": {
-        "description": "approve tokens and fetch remote metadata"
+        "description": "approve tokens and manage local metadata"
       }
     },
     "commands": "./lib/commands",
@@ -105,9 +105,7 @@
       "init": "./lib/lib/init-hook"
     },
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-warn-if-update-available",
-      "@oclif/plugin-update"
+      "@oclif/plugin-help"
     ]
   },
   "scripts": {

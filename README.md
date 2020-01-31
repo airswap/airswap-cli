@@ -49,7 +49,6 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 * [`airswap token:add`](#airswap-tokenadd)
 * [`airswap token:approve`](#airswap-tokenapprove)
 * [`airswap token:fetch`](#airswap-tokenfetch)
-* [`airswap update [CHANNEL]`](#airswap-update-channel)
 
 ## `airswap account:generate`
 
@@ -287,17 +286,6 @@ USAGE
 ```
 
 _See code: [src/commands/token/fetch.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.7/src/commands/token/fetch.ts)_
-
-## `airswap update [CHANNEL]`
-
-update the airswap CLI
-
-```
-USAGE
-  $ airswap update [CHANNEL]
-```
-
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
 <!-- commandsstop -->
 
 ## Helpful for Testing
