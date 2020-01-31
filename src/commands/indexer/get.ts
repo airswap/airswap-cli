@@ -17,42 +17,46 @@ export default class IntentGet extends Command {
     const metadata = await utils.getMetadata(this, chainId)
     utils.displayDescription(this, IntentGet.description, chainId)
 
-    const indexerAddress = indexerDeploys[chainId]
-    this.log(chalk.white(`Indexer ${indexerAddress}\n`))
+    try {
+      const indexerAddress = indexerDeploys[chainId]
+      this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { signerToken, senderToken }: any = await getTokens(
-      { signerToken: 'signerToken', senderToken: 'senderToken' },
-      metadata,
-    )
-
-    const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, provider)
-    const index = indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-
-    if (index === constants.ADDRESS_ZERO) {
-      this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-      this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
-    } else {
-      const result = await indexerContract.getLocators(
-        signerToken.addr,
-        senderToken.addr,
-        constants.protocols.HTTP_LATEST,
-        constants.INDEX_HEAD,
-        constants.DEFAULT_COUNT,
+      const { signerToken, senderToken }: any = await getTokens(
+        { signerToken: 'signerToken', senderToken: 'senderToken' },
+        metadata,
       )
-      if (!result.locators.length) {
-        this.log('No locators found.')
-      } else {
-        this.log(chalk.underline(`\nTop Peers for ${signerToken.name}/${senderToken.name}\n`))
 
-        for (let i = 0; i < result.locators.length; i++) {
-          try {
-            this.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
-          } catch (e) {
-            this.log(`${i + 1}. Could not parse (${result.locators[i]})`)
+      const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, provider)
+      const index = indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+
+      if (index === constants.ADDRESS_ZERO) {
+        this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+        this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+      } else {
+        const result = await indexerContract.getLocators(
+          signerToken.addr,
+          senderToken.addr,
+          constants.protocols.HTTP_LATEST,
+          constants.INDEX_HEAD,
+          constants.DEFAULT_COUNT,
+        )
+        if (!result.locators.length) {
+          this.log('\nNo locators found.')
+        } else {
+          this.log(chalk.underline(`\nTop Peers for ${signerToken.name}/${senderToken.name}\n`))
+
+          for (let i = 0; i < result.locators.length; i++) {
+            try {
+              this.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+            } catch (e) {
+              this.log(`${i + 1}. Could not parse (${result.locators[i]})`)
+            }
           }
         }
+        this.log()
       }
-      this.log()
+    } catch (e) {
+      this.log('\n\nCancelled.\n')
     }
   }
 }

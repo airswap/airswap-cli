@@ -12,15 +12,19 @@ export default class AccountSet extends Command {
   async run() {
     displayDescription(this, AccountSet.description)
 
-    let { signerPrivateKey }: any = await get({
-      signerPrivateKey: {
-        type: 'Private',
-        hidden: true,
-      },
-    })
+    try {
+      let { signerPrivateKey }: any = await get({
+        signerPrivateKey: {
+          type: 'Private',
+          hidden: true,
+        },
+      })
 
-    const wallet = new ethers.Wallet(signerPrivateKey)
-    await keytar.setPassword('airswap-maker-kit', 'private-key', signerPrivateKey)
-    this.log(`\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(wallet.address)}\n`)
+      const wallet = new ethers.Wallet(signerPrivateKey)
+      await keytar.setPassword('airswap-maker-kit', 'private-key', signerPrivateKey)
+      this.log(`\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(wallet.address)}\n`)
+    } catch (e) {
+      this.log('\n\nCancelled.\n')
+    }
   }
 }

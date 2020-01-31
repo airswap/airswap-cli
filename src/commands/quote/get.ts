@@ -16,7 +16,6 @@ export default class QuotesGet extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       let { locator }: any = await get({
         locator: {
-          default: 'http://localhost:3000',
           type: 'URL',
         },
       })
@@ -38,7 +37,7 @@ export default class QuotesGet extends Command {
         }
       })
     } catch (e) {
-      this.log(chalk.yellow(e))
+      this.log('\n\nCancelled.\n')
     }
   }
 }

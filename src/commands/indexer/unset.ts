@@ -16,40 +16,44 @@ export default class IntentUnset extends Command {
     const metadata = await utils.getMetadata(this, chainId)
     utils.displayDescription(this, IntentUnset.description, chainId)
 
-    const indexerAddress = indexerDeploys[chainId]
-    const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-    this.log(chalk.white(`Indexer ${indexerAddress}\n`))
+    try {
+      const indexerAddress = indexerDeploys[chainId]
+      const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+      this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-    const { signerToken, senderToken }: any = await getTokens(
-      { signerToken: 'signerToken', senderToken: 'senderToken' },
-      metadata,
-    )
+      const { signerToken, senderToken }: any = await getTokens(
+        { signerToken: 'signerToken', senderToken: 'senderToken' },
+        metadata,
+      )
 
-    this.log()
+      this.log()
 
-    const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-    if (index === constants.ADDRESS_ZERO) {
-      this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-      this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
-    } else {
-      if (
-        await confirm(
-          this,
-          metadata,
-          'unsetIntent',
-          {
-            signerToken: signerToken.addr,
-            senderToken: senderToken.addr,
-            protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
-          },
-          chainId,
-        )
-      ) {
-        new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-          .unsetIntent(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-          .then(utils.handleTransaction)
-          .catch(utils.handleError)
+      const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+      if (index === constants.ADDRESS_ZERO) {
+        this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+        this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+      } else {
+        if (
+          await confirm(
+            this,
+            metadata,
+            'unsetIntent',
+            {
+              signerToken: signerToken.addr,
+              senderToken: senderToken.addr,
+              protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
+            },
+            chainId,
+          )
+        ) {
+          new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+            .unsetIntent(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
+        }
       }
+    } catch (e) {
+      this.log('\n\nCancelled.\n')
     }
   }
 }

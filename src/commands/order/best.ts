@@ -17,58 +17,62 @@ export default class OrderBest extends Command {
     const metadata = await utils.getMetadata(this, chainId)
     utils.displayDescription(this, OrderBest.description, chainId)
 
-    const request = await requests.getRequest(wallet, metadata, 'Order')
+    try {
+      const request = await requests.getRequest(wallet, metadata, 'Order')
 
-    this.log()
-    printObject(this, metadata, `Request: ${request.method}`, request.params)
+      this.log()
+      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
-    requests.multiPeerCall(
-      wallet,
-      request.method,
-      request.params,
-      async (order: any, locator: string, errors: Array<any>) => {
-        this.log()
+      requests.multiPeerCall(
+        wallet,
+        request.method,
+        request.params,
+        async (order: any, locator: string, errors: Array<any>) => {
+          this.log()
 
-        if (!order) {
-          this.log(chalk.yellow('\nNo valid results found.\n'))
-        } else {
-          printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+          if (!order) {
+            this.log(chalk.yellow('\nNo valid results found.\n'))
+          } else {
+            printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
 
-          this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
+            this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
 
-          if (
-            await confirm(
-              this,
-              metadata,
-              'swap',
-              {
-                signerWallet: order.signer.wallet,
-                signerToken: order.signer.token,
-                signerAmount: `${order.signer.amount} (${chalk.cyan(
-                  new BigNumber(order.signer.amount)
-                    .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                    .toFixed(),
-                )})`,
-                senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
-                senderToken: order.sender.token,
-                senderAmount: `${order.sender.amount} (${chalk.cyan(
-                  new BigNumber(order.sender.amount)
-                    .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                    .toFixed(),
-                )})`,
-              },
-              chainId,
-              'take this order',
-            )
-          ) {
-            const swapAddress = swapDeploys[chainId]
-            new ethers.Contract(swapAddress, Swap.abi, wallet)
-              .swap(order)
-              .then(utils.handleTransaction)
-              .catch(utils.handleError)
+            if (
+              await confirm(
+                this,
+                metadata,
+                'swap',
+                {
+                  signerWallet: order.signer.wallet,
+                  signerToken: order.signer.token,
+                  signerAmount: `${order.signer.amount} (${chalk.cyan(
+                    new BigNumber(order.signer.amount)
+                      .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                      .toFixed(),
+                  )})`,
+                  senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
+                  senderToken: order.sender.token,
+                  senderAmount: `${order.sender.amount} (${chalk.cyan(
+                    new BigNumber(order.sender.amount)
+                      .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                      .toFixed(),
+                  )})`,
+                },
+                chainId,
+                'take this order',
+              )
+            ) {
+              const swapAddress = swapDeploys[chainId]
+              new ethers.Contract(swapAddress, Swap.abi, wallet)
+                .swap(order)
+                .then(utils.handleTransaction)
+                .catch(utils.handleError)
+            }
           }
-        }
-      },
-    )
+        },
+      )
+    } catch (e) {
+      this.log('\n\nCancelled.\n')
+    }
   }
 }

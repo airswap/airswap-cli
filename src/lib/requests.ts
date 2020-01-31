@@ -27,10 +27,15 @@ export function indexerCall(wallet: any, signerToken: string, senderToken: strin
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
   let client
 
+  if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {
+    locator = `https://${locator}`
+  }
+
   const locatorUrl = url.parse(locator)
   const options = {
-    protocol: locatorUrl.protocol || 'https:',
-    host: locatorUrl.host || locatorUrl.href,
+    protocol: locatorUrl.protocol,
+    hostname: locatorUrl.hostname,
+    port: locatorUrl.port,
     timeout: constants.REQUEST_TIMEOUT,
   }
 

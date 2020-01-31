@@ -16,34 +16,38 @@ export default class TokenApprove extends Command {
     const metadata = await utils.getMetadata(this, chainId)
     utils.displayDescription(this, TokenApprove.description, chainId)
 
-    const swapAddress = swapDeploys[chainId]
-    const { token }: any = await getTokens({ token: 'token' }, metadata)
-    this.log()
+    try {
+      const swapAddress = swapDeploys[chainId]
+      const { token }: any = await getTokens({ token: 'token' }, metadata)
+      this.log()
 
-    const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
-    const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+      const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
+      const allowance = await tokenContract.allowance(wallet.address, swapAddress)
 
-    if (!allowance.eq(0)) {
-      this.log(chalk.yellow(`${token.name} is already approved`))
-      this.log(`Trading is enabled for this token.\n`)
-    } else {
-      if (
-        await confirm(
-          this,
-          metadata,
-          'approve',
-          {
-            token: `${token.addr} (${token.name})`,
-            spender: `${swapAddress} (Swap)`,
-          },
-          chainId,
-        )
-      ) {
-        tokenContract
-          .approve(swapAddress, constants.APPROVAL_AMOUNT)
-          .then(utils.handleTransaction)
-          .catch(utils.handleError)
+      if (!allowance.eq(0)) {
+        this.log(chalk.yellow(`${token.name} is already approved`))
+        this.log(`Trading is enabled for this token.\n`)
+      } else {
+        if (
+          await confirm(
+            this,
+            metadata,
+            'approve',
+            {
+              token: `${token.addr} (${token.name})`,
+              spender: `${swapAddress} (Swap)`,
+            },
+            chainId,
+          )
+        ) {
+          tokenContract
+            .approve(swapAddress, constants.APPROVAL_AMOUNT)
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
+        }
       }
+    } catch (e) {
+      this.log('\n\nCancelled.\n')
     }
   }
 }
