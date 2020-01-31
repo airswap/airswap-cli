@@ -28,12 +28,16 @@ export function peerCall(locator: string, method: string, params: any, callback:
   let client
 
   const locatorUrl = url.parse(locator)
-  if (locatorUrl.protocol === 'http:') {
-    client = jayson.Client.http(locatorUrl)
-  } else if (locatorUrl.protocol === 'https:') {
-    client = jayson.Client.https(locatorUrl)
-  } else {
-    client = jayson.Client.https(url.parse(`https://${locator}`))
+  const options = {
+    protocol: locatorUrl.protocol || 'https:',
+    host: locatorUrl.host || locatorUrl.href,
+    timeout: constants.REQUEST_TIMEOUT,
+  }
+
+  if (options.protocol === 'http:') {
+    client = jayson.Client.http(options)
+  } else if (options.protocol === 'https:') {
+    client = jayson.Client.https(options)
   }
 
   client.request(method, params, function(err: any, error: any, result: any) {
