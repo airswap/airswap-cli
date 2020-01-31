@@ -8,6 +8,6 @@ export default class TokenFetch extends Command {
     const chainId = (await provider.getNetwork()).chainId
     utils.displayDescription(this, TokenFetch.description, chainId)
 
-    await utils.updateMetadata(this)
+    await utils.updateMetadata(this, chainId)
   }
 }

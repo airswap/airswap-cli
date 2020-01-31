@@ -45,6 +45,7 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 * [`airswap order:get`](#airswap-orderget)
 * [`airswap quote:best`](#airswap-quotebest)
 * [`airswap quote:get`](#airswap-quoteget)
+* [`airswap token:add`](#airswap-tokenadd)
 * [`airswap token:approve`](#airswap-tokenapprove)
 * [`airswap token:fetch`](#airswap-tokenfetch)
 * [`airswap update [CHANNEL]`](#airswap-update-channel)
@@ -241,6 +242,17 @@ USAGE
 ```
 
 _See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/quote/get.ts)_
+
+## `airswap token:add`
+
+add tokent to local metadata
+
+```
+USAGE
+  $ airswap token:add
+```
+
+_See code: [src/commands/token/add.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.0.6/src/commands/token/add.ts)_
 
 ## `airswap token:approve`
 
