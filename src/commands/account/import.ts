@@ -6,15 +6,16 @@ import * as keytar from 'keytar'
 import * as emoji from 'node-emoji'
 import { get } from '../../lib/prompt'
 
-export default class AccountSet extends Command {
-  static description = 'set the current ethereum account'
+export default class AccountImport extends Command {
+  static description = 'import an ethereum account'
 
   async run() {
-    displayDescription(this, AccountSet.description)
+    displayDescription(this, AccountImport.description)
 
     try {
       let { signerPrivateKey }: any = await get({
         signerPrivateKey: {
+          description: 'Private key',
           type: 'Private',
           hidden: true,
         },

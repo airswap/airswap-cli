@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { getTokens, confirm, cancelled } from '../../lib/prompt'
+import { getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -21,10 +21,7 @@ export default class IntentUnset extends Command {
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-      const { signerToken, senderToken }: any = await getTokens(
-        { signerToken: 'signerToken', senderToken: 'senderToken' },
-        metadata,
-      )
+      const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
 
       this.log()
 

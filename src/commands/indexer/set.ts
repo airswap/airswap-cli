@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getTokens, confirm, cancelled } from '../../lib/prompt'
+import { get, getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
@@ -22,10 +22,8 @@ export default class IntentSet extends Command {
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-      const { signerToken, senderToken }: any = await getTokens(
-        { signerToken: 'signerToken', senderToken: 'senderToken' },
-        metadata,
-      )
+      const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
+
       const values: any = await get({
         locator: {
           description: 'locator',

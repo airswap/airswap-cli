@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { getTokens, cancelled } from '../../lib/prompt'
+import { get, getSideAndTokens, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
@@ -21,10 +21,7 @@ export default class IntentGet extends Command {
       const indexerAddress = indexerDeploys[chainId]
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
-      const { signerToken, senderToken }: any = await getTokens(
-        { signerToken: 'signerToken', senderToken: 'senderToken' },
-        metadata,
-      )
+      const { side, first, second, signerToken, senderToken }: any = await getSideAndTokens(metadata)
 
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, provider)
       const index = indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
@@ -43,7 +40,12 @@ export default class IntentGet extends Command {
         if (!result.locators.length) {
           this.log('\nNo locators found.')
         } else {
-          this.log(chalk.underline(`\nTop Peers for ${signerToken.name}/${senderToken.name}\n`))
+          let verb = 'buying'
+          if (side === 'buy') {
+            verb = 'selling'
+          }
+
+          this.log(chalk.underline(`\nPeers ${verb} ${first.name} for ${second.name}\n`))
 
           for (let i = 0; i < result.locators.length; i++) {
             try {

@@ -80,6 +80,36 @@ export async function getTokens(labels, metadata) {
   return tokens
 }
 
+export async function getSideAndTokens(metadata, reversed?) {
+  let { side }: any = await get({
+    side: {
+      description: 'buy or sell',
+      type: 'Side',
+    },
+  })
+
+  const { first, second }: any = await getTokens({ first: 'token', second: 'for' }, metadata)
+
+  let signerToken
+  let senderToken
+
+  if (side === 'buy' || (reversed && side === 'sell')) {
+    signerToken = first
+    senderToken = second
+  } else {
+    signerToken = second
+    senderToken = first
+  }
+
+  return {
+    side,
+    first,
+    second,
+    signerToken,
+    senderToken,
+  }
+}
+
 export async function printOrder(
   ctx: any,
   side: string,
