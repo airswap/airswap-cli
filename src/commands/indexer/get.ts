@@ -2,8 +2,9 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getSideAndTokens, cancelled } from '../../lib/prompt'
+import { getSideAndTokens, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
+import { getTable } from 'console.table'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
@@ -45,17 +46,24 @@ export default class IntentGet extends Command {
             verb = 'selling'
           }
 
-          this.log(chalk.underline(`\nPeers ${verb} ${first.name} for ${second.name}\n`))
+          this.log(chalk.underline(`\nTop peers ${verb} ${first.name} for ${second.name}\n`))
 
+          const rows = []
           for (let i = 0; i < result.locators.length; i++) {
             try {
-              this.log(`${i + 1}. ${ethers.utils.parseBytes32String(result.locators[i])} (${result.scores[i]})`)
+              rows.push({
+                Staked: result.scores[i],
+                Locator: ethers.utils.parseBytes32String(result.locators[i]),
+              })
             } catch (e) {
-              this.log(`${i + 1}. Could not parse (${result.locators[i]})`)
+              rows.push({
+                Staked: result.scores[i],
+                Locator: `(Could not parse (${result.locators[i]}))`,
+              })
             }
           }
+          this.log(getTable(rows))
         }
-        this.log()
       }
     } catch (e) {
       cancelled(e)

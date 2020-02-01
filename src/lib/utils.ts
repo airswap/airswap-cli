@@ -58,7 +58,7 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
     if (requireBalance && balance.eq(0)) {
       ctx.log(chalk.yellow(`Account (${wallet.address}) must hold (${selectedNetwork}) ETH to execute transactions.\n`))
     } else {
-      let balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
+      const balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
       ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)\n`))
       return wallet
     }
@@ -101,7 +101,7 @@ export async function updateMetadata(ctx: any, network: number) {
             metadata = require(metadataMainnetPath)
           }
 
-          for (let i in data.tokens) {
+          for (const i in data.tokens) {
             metadata.bySymbol[data.tokens[i].name] = data.tokens[i]
             metadata.byAddress[data.tokens[i].addr] = data.tokens[i]
           }

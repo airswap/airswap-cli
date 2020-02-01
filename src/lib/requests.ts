@@ -69,8 +69,8 @@ export function multiPeerCall(wallet: any, method: string, params: any, callback
 
     let requested = 0
     let completed = 0
-    let results: any[] = []
-    let errors: any[] = []
+    const results: any[] = []
+    const errors: any[] = []
 
     cli.action.start(`Requesting from ${locators.length} peer${locators.length !== 1 ? 's' : ''}`)
 
@@ -126,7 +126,7 @@ export function multiPeerCall(wallet: any, method: string, params: any, callback
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  let { side, amount }: any = await get({
+  const { side, amount }: any = await get({
     side: {
       description: 'buy or sell',
       type: 'Side',
@@ -150,7 +150,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   let method = 'getSenderSide' + kind
-  let params = {
+  const params = {
     signerToken: signerToken.addr,
     senderToken: senderToken.addr,
   }

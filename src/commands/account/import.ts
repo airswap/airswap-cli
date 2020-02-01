@@ -13,7 +13,7 @@ export default class AccountImport extends Command {
     displayDescription(this, AccountImport.description)
 
     try {
-      let { signerPrivateKey }: any = await get({
+      const { signerPrivateKey }: any = await get({
         signerPrivateKey: {
           description: 'Private key',
           type: 'Private',

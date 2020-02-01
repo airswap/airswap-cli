@@ -35,105 +35,100 @@ export default class OrderBest extends Command {
         this.log()
         printObject(this, metadata, `Request: ${request.method}`, request.params)
 
-        requests.multiPeerCall(
-          wallet,
-          request.method,
-          request.params,
-          async (order: any, locator: string, errors: Array<any>) => {
-            this.log()
+        requests.multiPeerCall(wallet, request.method, request.params, async (order: any, locator: string) => {
+          this.log()
 
-            if (!order) {
-              this.log(chalk.yellow('\nNo peers found.\n'))
+          if (!order) {
+            this.log(chalk.yellow('\nNo peers found.\n'))
+          } else {
+            printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+
+            this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
+
+            const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+
+            if (allowance.lt(order.sender.amount)) {
+              this.log(
+                `${chalk.yellow(
+                  `\nYou have not approved ${chalk.bold(request.senderToken.name)} for trading.`,
+                )} Approve it with ${chalk.bold('token:approve')}\n`,
+              )
             } else {
-              printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+              const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(
+                wallet.address,
+              )
+              const signerTokenBalanceDecimal = new BigNumber(signerTokenBalance.toString())
+                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                .toFixed()
+              const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(
+                wallet.address,
+              )
+              const senderTokenBalanceDecimal = new BigNumber(senderTokenBalance.toString())
+                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                .toFixed()
 
-              this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
+              const newSignerTokenBalance = new BigNumber(signerTokenBalance.add(order.signer.amount))
+                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                .toFixed()
+              const newSenderTokenBalance = new BigNumber(senderTokenBalance.sub(order.sender.amount))
+                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                .toFixed()
 
-              const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+              const signerTokenChangeDecimal = new BigNumber(order.signer.amount)
+                .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                .toFixed()
+              const senderTokenChangeDecimal = new BigNumber(order.sender.amount)
+                .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                .toFixed()
 
-              if (allowance.lt(order.sender.amount)) {
-                this.log(
-                  `${chalk.yellow(
-                    `\nYou have not approved ${chalk.bold(request.senderToken.name)} for trading.`,
-                  )} Approve it with ${chalk.bold('token:approve')}\n`,
-                )
-              } else {
-                const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(
-                  wallet.address,
-                )
-                const signerTokenBalanceDecimal = new BigNumber(signerTokenBalance.toString())
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()
-                const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(
-                  wallet.address,
-                )
-                const senderTokenBalanceDecimal = new BigNumber(senderTokenBalance.toString())
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()
-
-                const newSignerTokenBalance = new BigNumber(signerTokenBalance.add(order.signer.amount))
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()
-                const newSenderTokenBalance = new BigNumber(senderTokenBalance.sub(order.sender.amount))
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()
-
-                const signerTokenChangeDecimal = new BigNumber(order.signer.amount)
-                  .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                  .toFixed()
-                const senderTokenChangeDecimal = new BigNumber(order.sender.amount)
-                  .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                  .toFixed()
-
-                if (
-                  await confirm(
-                    this,
-                    metadata,
-                    'swap',
+              if (
+                await confirm(
+                  this,
+                  metadata,
+                  'swap',
+                  {
+                    signerWallet: order.signer.wallet,
+                    signerToken: order.signer.token,
+                    signerAmount: `${order.signer.amount} (${chalk.cyan(
+                      new BigNumber(order.signer.amount)
+                        .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                        .toFixed(),
+                    )})`,
+                    senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
+                    senderToken: order.sender.token,
+                    senderAmount: `${order.sender.amount} (${chalk.cyan(
+                      new BigNumber(order.sender.amount)
+                        .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                        .toFixed(),
+                    )})`,
+                  },
+                  chainId,
+                  'take this order',
+                  [
                     {
-                      signerWallet: order.signer.wallet,
-                      signerToken: order.signer.token,
-                      signerAmount: `${order.signer.amount} (${chalk.cyan(
-                        new BigNumber(order.signer.amount)
-                          .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                          .toFixed(),
-                      )})`,
-                      senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
-                      senderToken: order.sender.token,
-                      senderAmount: `${order.sender.amount} (${chalk.cyan(
-                        new BigNumber(order.sender.amount)
-                          .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                          .toFixed(),
-                      )})`,
+                      Token: request.signerToken.name,
+                      'Current balance': signerTokenBalanceDecimal,
+                      Change: `+${chalk.bold(signerTokenChangeDecimal)}`,
+                      'New balance': newSignerTokenBalance,
                     },
-                    chainId,
-                    'take this order',
-                    [
-                      {
-                        Token: request.signerToken.name,
-                        'Current balance': signerTokenBalanceDecimal,
-                        Change: `+${chalk.bold(signerTokenChangeDecimal)}`,
-                        'New balance': newSignerTokenBalance,
-                      },
-                      {
-                        Token: request.senderToken.name,
-                        'Current balance': senderTokenBalanceDecimal,
-                        Change: `-${chalk.bold(senderTokenChangeDecimal)}`,
-                        'New balance': newSenderTokenBalance,
-                      },
-                    ],
-                  )
-                ) {
-                  const swapAddress = swapDeploys[chainId]
-                  new ethers.Contract(swapAddress, Swap.abi, wallet)
-                    .swap(order)
-                    .then(utils.handleTransaction)
-                    .catch(utils.handleError)
-                }
+                    {
+                      Token: request.senderToken.name,
+                      'Current balance': senderTokenBalanceDecimal,
+                      Change: `-${chalk.bold(senderTokenChangeDecimal)}`,
+                      'New balance': newSenderTokenBalance,
+                    },
+                  ],
+                )
+              ) {
+                const swapAddress = swapDeploys[chainId]
+                new ethers.Contract(swapAddress, Swap.abi, wallet)
+                  .swap(order)
+                  .then(utils.handleTransaction)
+                  .catch(utils.handleError)
               }
             }
-          },
-        )
+          }
+        })
       }
     } catch (e) {
       cancelled(e)

@@ -14,7 +14,7 @@ export default class Network extends Command {
       const { network } = await utils.getConfig(this)
       this.log(`Current network: ${network} (${constants.chainNames[network]})\n`)
 
-      let { newNetwork }: any = await get({
+      const { newNetwork }: any = await get({
         newNetwork: {
           description: 'network (e.g. 1=mainnet, 4=rinkeby)',
           default: network,

@@ -16,20 +16,15 @@ export default class QuotesBest extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Quote')
       this.log()
       printObject(this, metadata, `Request: ${request.method}`, request.params)
-      requests.multiPeerCall(
-        wallet,
-        request.method,
-        request.params,
-        (quote: any, locator: string, errors: Array<any>) => {
+      requests.multiPeerCall(wallet, request.method, request.params, (quote: any, locator: string) => {
+        this.log()
+        if (!quote) {
+          this.log(chalk.yellow('\nNo valid results found.\n'))
+        } else {
+          printOrder(this, request.side, request.signerToken, request.senderToken, locator, quote)
           this.log()
-          if (!quote) {
-            this.log(chalk.yellow('\nNo valid results found.\n'))
-          } else {
-            printOrder(this, request.side, request.signerToken, request.senderToken, locator, quote)
-            this.log()
-          }
-        },
-      )
+        }
+      })
     } catch (e) {
       cancelled(e)
     }

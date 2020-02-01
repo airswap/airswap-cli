@@ -19,7 +19,7 @@ export default class TokenAdd extends Command {
         metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
       }
 
-      let token: any = await get({
+      const token: any = await get({
         name: {
           description: 'ticker',
           type: 'String',

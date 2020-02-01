@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getTokens, printObject, printOrder, cancelled } from '../../lib/prompt'
+import { get, getTokens, printObject, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 import BigNumber from 'bignumber.js'
@@ -14,7 +14,7 @@ export default class QuotesGet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, QuotesGet.description, chainId)
 
-      let { side }: any = await get({
+      const { side }: any = await get({
         side: {
           description: 'buy or sell',
           type: 'Side',
@@ -23,7 +23,7 @@ export default class QuotesGet extends Command {
 
       const { first, second }: any = await getTokens({ first: 'token', second: 'for' }, metadata)
 
-      let params: any = {}
+      const params: any = {}
 
       if (side === 'buy') {
         params.signerToken = first.addr
@@ -33,7 +33,7 @@ export default class QuotesGet extends Command {
         params.senderToken = first.addr
       }
 
-      let { locator }: any = await get({
+      const { locator }: any = await get({
         locator: {
           type: 'URL',
         },

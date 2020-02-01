@@ -21,7 +21,7 @@ export default class OrderGet extends Command {
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
 
-      let { locator }: any = await get({
+      const { locator }: any = await get({
         locator: {
           type: 'URL',
         },

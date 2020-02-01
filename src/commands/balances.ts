@@ -28,7 +28,7 @@ export default class Balances extends Command {
 
     let i = 0
     const result = []
-    for (let token in metadata.byAddress) {
+    for (const token in metadata.byAddress) {
       if (!balances[i].eq(0)) {
         const balanceDecimal = new BigNumber(balances[i].toString())
           .dividedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))

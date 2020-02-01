@@ -14,7 +14,7 @@ export default class QuotesGet extends Command {
       utils.displayDescription(this, QuotesGet.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
-      let { locator }: any = await get({
+      const { locator }: any = await get({
         locator: {
           type: 'URL',
         },

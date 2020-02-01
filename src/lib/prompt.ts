@@ -55,7 +55,7 @@ export async function get(fields) {
 
 export async function getTokens(labels, metadata) {
   const fields = {}
-  for (let label in labels) {
+  for (const label in labels) {
     fields[label] = {
       description: labels[label],
       type: 'Token',
@@ -70,7 +70,7 @@ export async function getTokens(labels, metadata) {
 
   const values: any = await get(fields)
   const tokens = {}
-  for (let val in values) {
+  for (const val in values) {
     if (patterns.Address.test(values[val])) {
       tokens[val] = metadata.byAddress[values[val]]
     } else {
@@ -81,7 +81,7 @@ export async function getTokens(labels, metadata) {
 }
 
 export async function getSideAndTokens(metadata, reversed?) {
-  let { side }: any = await get({
+  const { side }: any = await get({
     side: {
       description: 'buy or sell',
       type: 'Side',
@@ -185,7 +185,7 @@ export async function printOrder(
 
 export function getData(metadata: any, params: any) {
   const data = [[chalk.bold('Param'), chalk.bold('Value')]]
-  for (let key in params) {
+  for (const key in params) {
     if (patterns.Address.test(params[key]) && params[key] in metadata.byAddress) {
       data.push([key, `${params[key]} (${chalk.cyan(metadata.byAddress[params[key]].name)})`])
     } else {
@@ -213,7 +213,7 @@ export async function printObject(ctx: any, metadata: any, title: string, params
   printTable(ctx, title, data, config)
 }
 
-export function printTable(ctx: any, title: string, data: Array<any>, config: object) {
+export function printTable(ctx: any, title: string, data: Array<any>, config: any) {
   ctx.log(chalk.underline.bold(title))
   ctx.log()
   ctx.log(table(data, config))
