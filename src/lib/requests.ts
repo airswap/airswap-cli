@@ -4,6 +4,7 @@ import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import { orders } from '@airswap/order-utils'
+import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 
@@ -109,14 +110,13 @@ export function multiPeerCall(wallet: any, method: string, params: any, callback
             if (!results.length) {
               callback(null, null, errors)
             } else {
-              let lowest = results[0]
-
-              for (var j = 1; j < results.length; j++) {
-                if (new BigNumber(results[j].order.sender.amount).lt(lowest.order.sender.amount)) {
-                  lowest = results[j]
-                }
+              if (method.indexOf('Signer') !== -1) {
+                const { best, locator } = utils.getByHighestSignerAmount(results)
+                callback(best, locator, results, errors)
+              } else {
+                const { best, locator } = utils.getByLowestSenderAmount(results)
+                callback(best, locator, results, errors)
               }
-              callback(lowest.order, lowest.locator, errors)
             }
           }
         })

@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, printObject, printOrder, cancelled } from '../../lib/prompt'
+import { get, printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
@@ -13,7 +13,7 @@ export default class QuotesGet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, QuotesGet.description, chainId)
 
-      const request = await requests.getRequest(wallet, metadata, 'Order')
+      const request = await requests.getRequest(wallet, metadata, 'Quote')
       const { locator }: any = await get({
         locator: {
           type: 'URL',
@@ -21,9 +21,8 @@ export default class QuotesGet extends Command {
       })
 
       this.log()
-      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
-      requests.peerCall(locator, request.method, request.params, async (err, order) => {
+      requests.peerCall(locator, request.method, request.params, async (err, quote) => {
         if (err) {
           if (err === 'timeout') {
             this.log(chalk.yellow('The request timed out.\n'))
@@ -33,7 +32,7 @@ export default class QuotesGet extends Command {
           }
           process.exit(0)
         } else {
-          printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
+          await printOrder(this, request, locator, quote, wallet, metadata)
         }
       })
     } catch (e) {

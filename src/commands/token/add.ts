@@ -7,11 +7,13 @@ import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 export default class TokenAdd extends Command {
-  static description = 'add tokent to local metadata'
+  static description = 'add token to local metadata'
   async run() {
     try {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
+
+      this.log()
       utils.displayDescription(this, TokenAdd.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')

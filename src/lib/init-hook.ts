@@ -21,8 +21,6 @@ const hook: Hook<'init'> = async function(options) {
       ],
     ]
     console.log(table(data, {}))
-  } else {
-    console.log()
   }
 }
 

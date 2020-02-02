@@ -9,6 +9,9 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
+import { orders } from '@airswap/order-utils'
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+
 const constants = require('./constants.json')
 
 export function displayDescription(ctx: any, title: string, network?: number) {
@@ -154,6 +157,96 @@ export async function updateMetadata(ctx: any, network: number) {
     ctx.log(`Rinkeby saved to: ${metadataRinkeby}`)
     ctx.log(chalk.green('Local metadata updated\n'))
   }
+}
+
+export async function verifyOrder(request, order, swapAddress, wallet, metadata) {
+  const errors = []
+
+  if (!orders.isValidOrder(order)) {
+    errors.push('Order has invalid params or signature')
+  }
+  if (order.signer.token !== request.signerToken.addr || order.sender.token !== request.senderToken.addr) {
+    errors.push('Order tokens do not match those requested')
+  }
+  if (order.signature.validator && order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
+    errors.push('Order is intended for another swap contract')
+  }
+
+  const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
+  const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+
+  if (allowance < order.sender.amount) {
+    errors.push(
+      `Sender (you) has not approved ${chalk.bold(request.senderToken.name)} for trading. Approve it with ${chalk.bold(
+        'token:approve',
+      )}`,
+    )
+  }
+
+  const { newSignerTokenBalance, newSenderTokenBalance } = await getBalanceChanges(order, wallet, metadata)
+
+  if (newSignerTokenBalance.lt(0)) {
+    errors.push('The counterparty (signer) does not have sufficient balance')
+  }
+
+  if (newSenderTokenBalance.lt(0)) {
+    errors.push('You (sender) do not have sufficient balance')
+  }
+
+  return errors
+}
+
+export function getBalanceDecimal(value: string, token: string, metadata: any) {
+  return new BigNumber(value).dividedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
+}
+
+export async function getBalanceChanges(order: any, wallet: any, metadata: any) {
+  const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(wallet.address)
+  const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(wallet.address)
+
+  const signerTokenBalanceDecimal = getBalanceDecimal(signerTokenBalance.toString(), order.signer.token, metadata)
+  const senderTokenBalanceDecimal = getBalanceDecimal(senderTokenBalance.toString(), order.sender.token, metadata)
+  const signerTokenChangeDecimal = getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
+  const senderTokenChangeDecimal = getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
+  const newSignerTokenBalance = getBalanceDecimal(
+    signerTokenBalance.add(order.signer.amount).toString(),
+    order.signer.token,
+    metadata,
+  )
+  const newSenderTokenBalance = getBalanceDecimal(
+    senderTokenBalance.sub(order.sender.amount).toString(),
+    order.sender.token,
+    metadata,
+  )
+
+  return {
+    signerTokenBalanceDecimal,
+    signerTokenChangeDecimal,
+    newSignerTokenBalance,
+    senderTokenBalanceDecimal,
+    senderTokenChangeDecimal,
+    newSenderTokenBalance,
+  }
+}
+
+export function getByLowestSenderAmount(results) {
+  let lowest = results[0]
+  for (var j = 1; j < results.length; j++) {
+    if (new BigNumber(results[j].order.sender.amount).lt(lowest.order.sender.amount)) {
+      lowest = results[j]
+    }
+  }
+  return { best: lowest.order, locator: lowest.locator }
+}
+
+export function getByHighestSignerAmount(results) {
+  let highest = results[0]
+  for (var j = 1; j < results.length; j++) {
+    if (new BigNumber(results[j].order.signer.amount).gt(highest.order.signer.amount)) {
+      highest = results[j]
+    }
+  }
+  return { best: highest.order, locator: highest.locator }
 }
 
 export function handleTransaction(tx: any) {

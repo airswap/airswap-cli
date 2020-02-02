@@ -5,6 +5,7 @@ import { table } from 'table'
 import BigNumber from 'bignumber.js'
 import constants from './constants.json'
 import { getTable } from 'console.table'
+import * as utils from './utils'
 
 prompt.message = ''
 prompt.start()
@@ -21,7 +22,7 @@ const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
   URL: /[a-zA-Z0-9]{0,}/,
-  Number: /^[0-9]+$/,
+  Number: /^\d*(\.\d+)?$/,
   Side: /buy|sell/,
 }
 
@@ -110,34 +111,28 @@ export async function getSideAndTokens(metadata, reversed?) {
   }
 }
 
-export async function printOrder(
-  ctx: any,
-  side: string,
-  signerToken: any,
-  senderToken: any,
-  locator: string,
-  order: any,
-) {
+export async function printOrder(ctx: any, request: any, locator: string, order: any, wallet: any, metadata: any) {
   const signerAmountDecimal = new BigNumber(order.signer.amount)
-    .dividedBy(new BigNumber(10).pow(signerToken.decimals))
+    .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
     .toFixed()
 
   const senderAmountDecimal = new BigNumber(order.sender.amount)
-    .dividedBy(new BigNumber(10).pow(senderToken.decimals))
+    .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
     .toFixed()
 
   ctx.log(chalk.underline.bold(`Response: ${locator}`))
   ctx.log()
 
-  if (side === 'buy') {
+  if (request.side === 'buy') {
     ctx.log(
       emoji.get('sparkles'),
       chalk.bold('Buy'),
       chalk.bold(signerAmountDecimal),
-      signerToken.name,
+      request.signerToken.name,
       'for',
       chalk.bold(senderAmountDecimal),
-      senderToken.name,
+      request.senderToken.name,
+      order.expiry ? `· Expiry ${new Date(order.expiry * 1000).toLocaleTimeString()}` : '',
     )
     ctx.log(
       chalk.gray(
@@ -146,12 +141,12 @@ export async function printOrder(
             .div(senderAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${signerToken.name}/${senderToken.name} (${chalk.white(
+        )} ${request.signerToken.name}/${request.senderToken.name} (${chalk.white(
           new BigNumber(senderAmountDecimal)
             .div(signerAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${senderToken.name}/${signerToken.name})`,
+        )} ${request.senderToken.name}/${request.signerToken.name})`,
       ),
     )
   } else {
@@ -159,10 +154,11 @@ export async function printOrder(
       emoji.get('sparkles'),
       chalk.bold('Sell'),
       chalk.bold(senderAmountDecimal),
-      senderToken.name,
+      request.senderToken.name,
       'for',
       chalk.bold(signerAmountDecimal),
-      signerToken.name,
+      request.signerToken.name,
+      order.expiry ? `· Expiry ${new Date(order.expiry * 1000).toLocaleTimeString()}` : '',
     )
     ctx.log(
       chalk.gray(
@@ -171,16 +167,43 @@ export async function printOrder(
             .div(signerAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${senderToken.name}/${signerToken.name} (${chalk.white(
+        )} ${request.senderToken.name}/${request.signerToken.name} (${chalk.white(
           new BigNumber(signerAmountDecimal)
             .div(senderAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${signerToken.name}/${senderToken.name})`,
+        )} ${request.signerToken.name}/${request.senderToken.name})`,
       ),
     )
   }
+
   ctx.log()
+
+  if (order.signature) {
+    const {
+      signerTokenBalanceDecimal,
+      signerTokenChangeDecimal,
+      newSignerTokenBalance,
+      senderTokenBalanceDecimal,
+      senderTokenChangeDecimal,
+      newSenderTokenBalance,
+    } = await utils.getBalanceChanges(order, wallet, metadata)
+
+    ctx.log(
+      getTable([
+        {
+          Balance: `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.name}`,
+          Change: `+${chalk.bold(signerTokenChangeDecimal.toFixed())}`,
+          'New balance': `${newSignerTokenBalance.toFixed()} ${request.signerToken.name}`,
+        },
+        {
+          Balance: `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.name}`,
+          Change: `-${chalk.bold(senderTokenChangeDecimal.toFixed())}`,
+          'New balance': `${newSenderTokenBalance.toFixed()} ${request.senderToken.name}`,
+        },
+      ]),
+    )
+  }
 }
 
 export function getData(metadata: any, params: any) {
@@ -226,7 +249,6 @@ export async function confirm(
   params: any,
   network: number,
   verb?: string,
-  impact?: any,
 ): Promise<boolean> {
   const data = getData(metadata, params)
   const config = {
@@ -244,10 +266,6 @@ export async function confirm(
 
   printTable(ctx, `Transaction: ${name}`, data, config)
   const networkName = constants.chainNames[network || '4'].toUpperCase()
-
-  if (impact) {
-    ctx.log(getTable(impact))
-  }
 
   return new Promise((resolve, reject) => {
     prompt.get(
@@ -267,5 +285,7 @@ export async function confirm(
 }
 
 export function cancelled(e) {
-  console.log(`\n${e.message}\n`)
+  if (e) {
+    console.log(`\n${e.message}\n`)
+  }
 }

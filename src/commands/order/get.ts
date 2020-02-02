@@ -2,13 +2,11 @@ import { ethers } from 'ethers'
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, printObject, printOrder, confirm, cancelled } from '../../lib/prompt'
+import { get, printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
-import { orders } from '@airswap/order-utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export default class OrderGet extends Command {
   static description = 'get an order from a peer'
@@ -20,15 +18,12 @@ export default class OrderGet extends Command {
       utils.displayDescription(this, OrderGet.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
-
       const { locator }: any = await get({
         locator: {
           type: 'URL',
         },
       })
-
       this.log()
-      printObject(this, metadata, `Request: ${request.method}`, request.params)
 
       requests.peerCall(locator, request.method, request.params, async (err, order) => {
         if (err) {
@@ -40,49 +35,37 @@ export default class OrderGet extends Command {
           }
           process.exit(0)
         } else {
-          printOrder(this, request.side, request.signerToken, request.senderToken, locator, order)
-          this.log(`Expiry ${chalk.green(new Date(order.expiry * 1000).toLocaleTimeString())}\n`)
-
           const swapAddress = swapDeploys[chainId]
+          await printOrder(this, request, locator, order, wallet, metadata)
+          const errors = await utils.verifyOrder(request, order, swapAddress, wallet, metadata)
 
-          if (!orders.isValidOrder(order)) {
-            this.log(chalk.yellow('Order has invalid params or signature'))
-          } else if (
-            order.signer.token !== request.signerToken.addr ||
-            order.sender.token !== request.senderToken.addr
-          ) {
-            this.log(chalk.yellow('Order tokens do not match those requested'))
-          } else if (
-            order.signature.validator &&
-            order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()
-          ) {
-            this.log(chalk.yellow('Order is intended for another swap contract'))
+          if (errors.length) {
+            this.log(chalk.yellow('Unable to take this order.'))
+            for (const e in errors) {
+              this.log(`‣ ${errors[e]}`)
+            }
+            this.log()
           } else {
-            const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
-            const allowance = await tokenContract.allowance(wallet.address, swapAddress)
-
-            if (allowance < order.sender.amount) {
-              this.log(
-                `${chalk.yellow(
-                  `You have not approved ${chalk.bold(request.senderToken.name)} for trading.`,
-                )} Approve it with ${chalk.bold('token:approve')}\n`,
-              )
-            } else if (
+            if (
               await confirm(
                 this,
                 metadata,
                 'swap',
                 {
-                  signerWallet: `${order.signer.wallet}`,
-                  signerToken: `${order.signer.token} (${request.signerToken.name})`,
-                  signerAmount: `${order.signer.amount} (${new BigNumber(order.signer.amount)
-                    .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                    .toFixed()})`,
-                  senderWallet: `${order.sender.wallet} (You)`,
-                  senderToken: `${order.sender.token} (${request.senderToken.name})`,
-                  senderAmount: `${order.sender.amount} (${new BigNumber(order.sender.amount)
-                    .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                    .toFixed()})`,
+                  signerWallet: order.signer.wallet,
+                  signerToken: order.signer.token,
+                  signerAmount: `${order.signer.amount} (${chalk.cyan(
+                    new BigNumber(order.signer.amount)
+                      .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
+                      .toFixed(),
+                  )})`,
+                  senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
+                  senderToken: order.sender.token,
+                  senderAmount: `${order.sender.amount} (${chalk.cyan(
+                    new BigNumber(order.sender.amount)
+                      .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
+                      .toFixed(),
+                  )})`,
                 },
                 chainId,
                 'take this order',

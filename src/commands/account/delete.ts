@@ -6,12 +6,12 @@ import { displayDescription } from '../../lib/utils'
 import * as keytar from 'keytar'
 import * as emoji from 'node-emoji'
 
-export default class AccountUnset extends Command {
-  static description = 'unset the current ethereum account'
+export default class AccountDelete extends Command {
+  static description = 'delete the current ethereum account'
 
   async run() {
     const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')
-    displayDescription(this, AccountUnset.description)
+    displayDescription(this, AccountDelete.description)
 
     if (signerPrivateKey) {
       const wallet = new ethers.Wallet(String(signerPrivateKey))

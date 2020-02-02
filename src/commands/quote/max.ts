@@ -1,6 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getTokens, printObject, cancelled } from '../../lib/prompt'
+import { get, getTokens, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 import BigNumber from 'bignumber.js'
@@ -40,7 +40,6 @@ export default class QuotesGet extends Command {
       })
 
       this.log()
-      printObject(this, metadata, `Request: getMaxQuote`, params)
 
       requests.peerCall(locator, 'getMaxQuote', params, async (err, order) => {
         if (err) {

@@ -2,7 +2,6 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../lib/utils'
-import BigNumber from 'bignumber.js'
 import { getTable } from 'console.table'
 import constants from '../lib/constants.json'
 import deltaBalancesABI from '../lib/deltaBalances.json'
@@ -30,9 +29,7 @@ export default class Balances extends Command {
     const result = []
     for (const token in metadata.byAddress) {
       if (!balances[i].eq(0)) {
-        const balanceDecimal = new BigNumber(balances[i].toString())
-          .dividedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
-          .toFixed()
+        const balanceDecimal = utils.getBalanceDecimal(balances[i], token, metadata)
 
         result.push({
           Token: metadata.byAddress[token].name,

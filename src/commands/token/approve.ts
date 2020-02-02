@@ -25,8 +25,7 @@ export default class TokenApprove extends Command {
       const allowance = await tokenContract.allowance(wallet.address, swapAddress)
 
       if (!allowance.eq(0)) {
-        this.log(chalk.yellow(`${token.name} is already approved`))
-        this.log(`Trading is enabled for this token.\n`)
+        this.log(chalk.yellow(`${token.name} is already approved for trading\n`))
       } else {
         if (
           await confirm(
