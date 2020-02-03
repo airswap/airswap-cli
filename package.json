@@ -1,57 +1,119 @@
 {
-  "name": "@airswap/maker-kit",
-  "version": "1.0.14",
-  "description": "Tools to get started on the AirSwap Network",
+  "name": "airswap",
+  "description": "Command Line Interface (CLI) for the AirSwap Network",
+  "version": "1.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-maker-kit"
   },
-  "license": "Apache-2.0",
-  "main": "handlers.js",
   "contributors": [
-    "Don Mosites <don.mosites@fluidity.io>",
-    "Graham Perich <graham.perich@fluidity.io>"
+    "Don Mosites <don.mosites@fluidity.io>"
   ],
-  "scripts": {
-    "indexer:create": "node scripts/indexer/create.js",
-    "indexer:create-bulk": "node scripts/indexer/create_bulk.js",
-    "indexer:enable": "node scripts/indexer/enable.js",
-    "indexer:get": "node scripts/indexer/get.js",
-    "indexer:set": "node scripts/indexer/set.js",
-    "indexer:set-bulk": "node scripts/indexer/set_bulk.js",
-    "indexer:unset": "node scripts/indexer/unset.js",
-    "peers:get": "node scripts/peers/get.js",
-    "token:approve": "node scripts/token/approve.js",
-    "token:check": "node scripts/token/check.js",
-    "utils:network": "node scripts/util/network.js",
-    "utils:account": "node scripts/util/account.js",
-    "lint": "yarn eslint \"./**/*.js\"",
-    "test": "yarn mocha handlers.test.js"
+  "bin": {
+    "airswap": "./bin/run"
   },
+  "bugs": "https://github.com/airswap/airswap-maker-kit/issues",
   "dependencies": {
-    "@airswap/order-utils": "0.3.18",
+    "@airswap/indexer": "3.6.8",
+    "@airswap/order-utils": "0.3.19",
     "@airswap/swap": "4.3.5",
     "@airswap/tokens": "0.1.4",
-    "bignumber.js": "^9.0.0",
-    "ethers": "^4.0.39"
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2.2.3",
+    "@types/fs-extra": "^8.0.1",
+    "@types/node-emoji": "^1.8.1",
+    "@types/table": "^4.0.7",
+    "available-versions": "^0.13.7",
+    "axios": "^0.19.0",
+    "cli-ux": "^5.4.1",
+    "compare-versions": "^3.5.1",
+    "console.table": "^0.10.0",
+    "ethers": "^4.0.40",
+    "fs-extra": "^8.1.0",
+    "jayson": "^3.2.0",
+    "keytar": "^5.0.0",
+    "node-emoji": "^1.10.0",
+    "ora": "^4.0.3",
+    "prompt": "^1.0.0",
+    "table": "^5.4.6"
   },
   "devDependencies": {
-    "@airswap/indexer": "3.6.7",
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
     "babel-eslint": "^10.0.3",
-    "dotenv": "^8.2.0",
-    "eslint": "^6.5.1",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jayson": "^3.1.2",
-    "mocha": "^6.2.2",
-    "ora": "^4.0.3",
+    "chai": "^4",
+    "eslint": "^5.13",
+    "eslint-config-oclif": "^3.1",
+    "eslint-config-oclif-typescript": "^0.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "globby": "^10",
+    "mocha": "^5",
+    "mock-require": "^3.0.3",
+    "nyc": "^14",
     "prettier": "^1.19.1",
-    "prompt": "^1.0.0",
-    "spinnies": "^0.5.0"
+    "ts-node": "^8",
+    "typescript": "^3.3"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=8.0.0"
   },
-  "resolutions": {
-    "lodash.merge": "^4.6.2"
-  }
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/airswap/airswap-maker-kit",
+  "keywords": [
+    "airswap"
+  ],
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "oclif": {
+    "topics": {
+      "account": {
+        "description": "set, show, and unset the current ethereum account"
+      },
+      "balances": {
+        "description": "display balances for the current ethereum account"
+      },
+      "indexer": {
+        "description": "get, set, and unset intents on the indexer"
+      },
+      "ip": {
+        "description": "display local network addresses"
+      },
+      "network": {
+        "description": "set the active ethereum network"
+      },
+      "order": {
+        "description": "get and take orders from a single peer or all peers"
+      },
+      "quote": {
+        "description": "get quotes and maximums from a single peer or all peers"
+      },
+      "token": {
+        "description": "approve tokens and manage local metadata"
+      }
+    },
+    "commands": "./lib/commands",
+    "bin": "airswap",
+    "hooks": {
+      "init": "./lib/lib/init-hook"
+    },
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md",
+    "lint": "yarn eslint \"./**/*.ts\""
+  },
+  "types": "lib/index.d.ts"
 }

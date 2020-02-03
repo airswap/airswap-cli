@@ -1,9 +1,11 @@
-# AirSwap Maker Kit
+# AirSwap CLI
 
-Maker Kit includes tools and examples to help you get started on the AirSwap Network.
+Command Line Interface (CLI) for the AirSwap Network
 
-[![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)
+[![Version](https://img.shields.io/npm/v/airswap.svg)](https://npmjs.org/package/airswap-maker-kit)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Downloads/week](https://img.shields.io/npm/dw/airswap.svg)](https://npmjs.org/package/airswap)
+[![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)
 ![Twitter Follow](https://img.shields.io/twitter/follow/airswap?style=social)
 
 - Docs → https://docs.airswap.io/
@@ -11,225 +13,310 @@ Maker Kit includes tools and examples to help you get started on the AirSwap Net
 - Blog → https://blog.airswap.io/
 - Support → https://support.airswap.io/
 
-## Introduction
+AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract. AirSwap CLI includes functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
 
-AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract.
+**Concepts**
 
-This package includes a set of `scripts/` and a file `handlers.js` that implements the latest AirSwap protocol, both as an example and a dependency of [AirSwap Maker Kit Examples](https://github.com/airswap/airswap-maker-kit-examples). Scripts available in this package include functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
+- Quotes are indicative prices and orders are signed and executable. Makers should be able to provide both.
+- Makers run as web servers at public URLs. Takers request quotes and orders using JSON-RPC over HTTP.
+- Indexers are used to signal an intent to trade to other peers. Tokens are staked to improve visibility.
 
-### Concepts
+**Key Management**
 
-- **Quotes** are indicative prices and **Orders** are signed and executable for trading. Makers should be able to provide both.
-- **Intent** is an interest in trading including contact information, without pricing. Indexers help you manage intent.
-- **Locators** are public URLs shorter than 32 characters in length including URL scheme. This is where your maker runs.
+AirSwap CLI uses the native password manager of your system. On macOS, keys are managed by the Keychain, on Linux they are managed by the Secret Service API/libsecret, and on Windows they are managed by Credential Vault.
 
-## Using the Commands
+# Quick Start
 
-### Installation
-
-Requires [Node.js](https://nodejs.org) `^10.13.0` and NPM or [Yarn](https://yarnpkg.com/lang/en/docs/install/).
+Install the CLI globally:
 
 ```
-git clone https://github.com/airswap/airswap-maker-kit
-cd airswap-maker-kit
-yarn install
+$ yarn add global airswap
 ```
 
-Environment variables are loaded from a `.env` file in the root directory. The following must be set:
+To create a new account to use for the CLI (recommended):
 
-- `ETHEREUM_ACCOUNT` - The private key of an account to use for staking and trading.
+```
+$ airswap account:generate
+```
 
-There is an example `.env-example` that you can copy to `.env` to start with.
+To import the newly generated or an existing private key:
 
-### Ethereum Account
+```
+$ airswap account:import
+```
 
-To use an existing Ethereum account, set the `ETHEREUM_ACCOUNT` in your `.env` file. Otherwise create a random account using the `yarn utils:account` script. Paste the generated private key into your `.env` file.
+Try the following command when ready:
 
-### Contract Versions
+```
+$ airswap quote:best
+```
 
-The Swap and Indexer contracts used by Maker Kit are specified within their respective packages, `@airswap/swap` and `@airswap/indexer` in the [AirSwap Protocols](https://github.com/airswap/airswap-protocols) repository.
+# Commands
 
-### Selecting a Network
+<!-- commands -->
+* [`airswap account:delete`](#airswap-accountdelete)
+* [`airswap account:export`](#airswap-accountexport)
+* [`airswap account:generate`](#airswap-accountgenerate)
+* [`airswap account:import`](#airswap-accountimport)
+* [`airswap balances`](#airswap-balances)
+* [`airswap help [COMMAND]`](#airswap-help-command)
+* [`airswap indexer:enable`](#airswap-indexerenable)
+* [`airswap indexer:get`](#airswap-indexerget)
+* [`airswap indexer:new`](#airswap-indexernew)
+* [`airswap indexer:set`](#airswap-indexerset)
+* [`airswap indexer:unset`](#airswap-indexerunset)
+* [`airswap ip`](#airswap-ip)
+* [`airswap network`](#airswap-network)
+* [`airswap order:best`](#airswap-orderbest)
+* [`airswap order:get`](#airswap-orderget)
+* [`airswap quote:best`](#airswap-quotebest)
+* [`airswap quote:get`](#airswap-quoteget)
+* [`airswap quote:max`](#airswap-quotemax)
+* [`airswap token:add`](#airswap-tokenadd)
+* [`airswap token:approve`](#airswap-tokenapprove)
+* [`airswap token:fetch`](#airswap-tokenfetch)
 
-By default, Maker Kit will connect to Rinkeby (`4`) for testing. To instead connect to mainnet, set the `CHAIN_ID` in your `.env` file to `1`.
+## `airswap account:delete`
 
-## Commands
+delete the current ethereum account
 
-| Command               | Description                      |
-| :-------------------- | :------------------------------- |
-| `yarn`                | Install dependencies             |
-| `yarn peers:get`      | Get quotes and orders from peers |
-| `yarn indexer:create` | Create a new token pair index    |
-| `yarn indexer:enable` | Enable staking on the indexer    |
-| `yarn indexer:set`    | Set an intent to trade           |
-| `yarn indexer:unset`  | Unset an intent to trade         |
-| `yarn indexer:get`    | Get locators                     |
-| `yarn token:approve`  | Approve a token for trading      |
-| `yarn token:check`    | Check a token approval           |
-| `yarn utils:network`  | Get network addresses            |
-| `yarn utils:account`  | Create a random account          |
+```
+USAGE
+  $ airswap account:delete
+```
 
-## Helpful for Testing on Rinkeby
+_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/account/delete.ts)_
+
+## `airswap account:export`
+
+export the current ethereum account
+
+```
+USAGE
+  $ airswap account:export
+```
+
+_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/account/export.ts)_
+
+## `airswap account:generate`
+
+generate a new ethereum account
+
+```
+USAGE
+  $ airswap account:generate
+```
+
+_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/account/generate.ts)_
+
+## `airswap account:import`
+
+import an ethereum account
+
+```
+USAGE
+  $ airswap account:import
+```
+
+_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/account/import.ts)_
+
+## `airswap balances`
+
+display token balances
+
+```
+USAGE
+  $ airswap balances
+```
+
+_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/balances.ts)_
+
+## `airswap help [COMMAND]`
+
+display help for airswap
+
+```
+USAGE
+  $ airswap help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
+
+## `airswap indexer:enable`
+
+enable staking on the indexer
+
+```
+USAGE
+  $ airswap indexer:enable
+```
+
+_See code: [src/commands/indexer/enable.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/indexer/enable.ts)_
+
+## `airswap indexer:get`
+
+get intents from the indexer
+
+```
+USAGE
+  $ airswap indexer:get
+```
+
+_See code: [src/commands/indexer/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/indexer/get.ts)_
+
+## `airswap indexer:new`
+
+create an index for a new token pair
+
+```
+USAGE
+  $ airswap indexer:new
+```
+
+_See code: [src/commands/indexer/new.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/indexer/new.ts)_
+
+## `airswap indexer:set`
+
+set an intent
+
+```
+USAGE
+  $ airswap indexer:set
+```
+
+_See code: [src/commands/indexer/set.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/indexer/set.ts)_
+
+## `airswap indexer:unset`
+
+unset an intent
+
+```
+USAGE
+  $ airswap indexer:unset
+```
+
+_See code: [src/commands/indexer/unset.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/indexer/unset.ts)_
+
+## `airswap ip`
+
+display local network addresses
+
+```
+USAGE
+  $ airswap ip
+```
+
+_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/ip.ts)_
+
+## `airswap network`
+
+set the active network
+
+```
+USAGE
+  $ airswap network
+```
+
+_See code: [src/commands/network.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/network.ts)_
+
+## `airswap order:best`
+
+get the best available order
+
+```
+USAGE
+  $ airswap order:best
+```
+
+_See code: [src/commands/order/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/order/best.ts)_
+
+## `airswap order:get`
+
+get an order from a peer
+
+```
+USAGE
+  $ airswap order:get
+```
+
+_See code: [src/commands/order/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/order/get.ts)_
+
+## `airswap quote:best`
+
+get the best available quote
+
+```
+USAGE
+  $ airswap quote:best
+```
+
+_See code: [src/commands/quote/best.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/quote/best.ts)_
+
+## `airswap quote:get`
+
+get a quote from a peer
+
+```
+USAGE
+  $ airswap quote:get
+```
+
+_See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/quote/get.ts)_
+
+## `airswap quote:max`
+
+get a max quote from a peer
+
+```
+USAGE
+  $ airswap quote:max
+```
+
+_See code: [src/commands/quote/max.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/quote/max.ts)_
+
+## `airswap token:add`
+
+add token to local metadata
+
+```
+USAGE
+  $ airswap token:add
+```
+
+_See code: [src/commands/token/add.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/token/add.ts)_
+
+## `airswap token:approve`
+
+approve a token for trading
+
+```
+USAGE
+  $ airswap token:approve
+```
+
+_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/token/approve.ts)_
+
+## `airswap token:fetch`
+
+update local metadata
+
+```
+USAGE
+  $ airswap token:fetch
+```
+
+_See code: [src/commands/token/fetch.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.2.0/src/commands/token/fetch.ts)_
+<!-- commandsstop -->
+
+## Helpful for Testing
 
 - **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
 - **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
 - **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
 - **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
-
-## Quick Start: Quoting
-
-[AirSwap Maker Kit Examples](https://github.com/airswap/airswap-maker-kit-examples) has examples available to get started. For the following guide, start up the [Express](https://github.com/airswap/airswap-maker-kit-examples/tree/master/express) example for Node.js on your local machine.
-
-### Get a quote from your maker
-
-In another shell, run the `yarn peers:get` script to test it out. **Use the default values for everything** but provide a `locator` value of `http://0.0.0.0:3000/` to connect to your newly running maker.
-
-```bash
-$ yarn peers:get
-
-AirSwap: Get Quotes and Orders
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
-
-Select a kind (quote, order):  (quote)
-Select a side (buy, sell):  (buy)
-Query a locator (optional):  http://0.0.0.0:3000/
-Token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-Token to pay:  (0xc778417e063141139fce010982780140aa0cd5ab)
-Amount to buy:  (100)
-
-Got a Quote
-
-buy: 100 0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
-pay: 10 0xc778417e063141139fce010982780140aa0cd5ab
-price: 0.1
-```
-
-This succeeds because we have a locator in hand, the URL of your local webserver. However, if we do not have a locator in hand, we need to use an indexer to find other trading parties.
-
-### Set your intent to trade
-
-By default, your maker is running in isolation. Run `peers:get` with default values, which will display `No peers found.`.
-
-```bash
-$ yarn peers:get
-```
-
-To be found, announce your maker to the world by setting your "intent to trade" on the indexer.
-
-```bash
-$ yarn indexer:set
-
-AirSwap: Set Intent to Trade
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
-
-Token address of signerToken (maker side):  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-Token address of senderToken (taker side):  (0xc778417e063141139fce010982780140aa0cd5ab)
-Web address of your server (URL):  (http://10.0.0.169:3000)
-Amount of token to stake (AST):  (0)
-
-Set an Intent
-
-signerToken: 0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea
-senderToken: 0xc778417e063141139fce010982780140aa0cd5ab
-locator: http://10.0.0.169:3000
-stakeAmount: 0
-...
-```
-
-The transaction will be mined and your locator is now on the indexer.
-
-```bash
-$ yarn indexer:get
-
-AirSwap: Get Locators
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2 Rinkeby
-
-Address of signerToken:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-Address of senderToken:  (0xc778417e063141139fce010982780140aa0cd5ab)
-Number of locators to return:  (10)
-1. http://10.0.0.169:3000
-...
-```
-
-### Get quotes from all makers (including yours)
-
-Ensure your maker is still running.
-
-Now run the same `peers:get` with default values, which will display your quote.
-
-```bash
-$ yarn peers:get
-
-AirSwap: Get Quotes and Orders
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
-
-Select a kind (quote, order):  (quote)
-Select a side (buy, sell):  (buy)
-Query a locator (optional):
-Token to buy:  (0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-Token to pay:  (0xc778417e063141139fce010982780140aa0cd5ab)
-Amount to buy:  (100)
-
-✓ Quote from http://10.0.0.169:3000 (cost: 10, price: 0.1)
-```
-
-## Staking and Trading
-
-### Indexer Staking
-
-Run the `yarn indexer:enable` script to enable staking on an Indexer. You'll use AirSwap Tokens (AST) to stake an intent to trade. On Rinkeby, use the [Rinkeby AST Faucet](https://ast-faucet-ui.development.airswap.io/) to pick up some AST for staking.
-
-```bash
-$ yarn indexer:enable
-
-AirSwap: Enable Staking
-Current account 0x1FF808E34E4DF60326a3fc4c2b0F80748A3D60c2
-
-This will approve the Indexer contract to stake your AST.
-...
-```
-
-### Token Approvals
-
-Tokens must be approved for trading on the Swap contract. This is a one-time transaction for each token. To approve the Swap contract to transfer your tokens, use the `yarn token:approve` script for both WETH and DAI addresses above. You can check the approval status of any token with the `yarn token:check` script.
-
-## Using as a Package
-
-### Custom Price and Amounts
-
-Using the package to handle API requests, you can provide either the pricing handlers or the pricing data.
-
-```JavaScript
-const initHandlers = require('@airswap/maker-kit')
-
-const customPrices = {
-  [signerToken]: {
-    [senderToken]: tokenPairPrice
-  },
-  ...
-}
-
-const customAmounts = {
-  [token]: maxAmount,
-  ...
-}
-
-const handlers = initHandlers(PRIVATE_KEY, customPrices, customAmounts)
-const result = handlers.getSignerSideQuote(...)
-```
-
-### Custom Pricing Functions
-
-```JavaScript
-const initHandlers = require('@airswap/maker-kit')
-
-const customPricingFunctions = {
-  isTradingPair: function(params) { ... }, // Returns true or false for a given token pair.
-  priceBuy: function(params) { ... }, // Returns signerAmount: An amount we would send the taker in a buy
-  priceSell: function(params) { ... }, // Returns senderAmount: An amount the taker will send us in a sell
-  getMaxAmount: function(params) { ... }, // Returns maxAmount: A maximum amount we are willing to buy or sell
-}
-
-const handlers = initHandlers(PRIVATE_KEY, false, false, customPricingFunctions)
-const result = handlers.getSignerSideQuote(...)
-```
