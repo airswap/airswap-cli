@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-maker-kit"
