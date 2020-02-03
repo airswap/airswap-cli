@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/airswap/airswap-maker-kit"
+    "url": "https://github.com/airswap/airswap-cli"
   },
   "contributors": [
     "Don Mosites <don.mosites@fluidity.io>"
@@ -12,7 +12,7 @@
   "bin": {
     "airswap": "./bin/run"
   },
-  "bugs": "https://github.com/airswap/airswap-maker-kit/issues",
+  "bugs": "https://github.com/airswap/airswap-cli/issues",
   "dependencies": {
     "@airswap/indexer": "3.6.8",
     "@airswap/order-utils": "0.3.20",
@@ -67,7 +67,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/airswap/airswap-maker-kit",
+  "homepage": "https://github.com/airswap/airswap-cli",
   "keywords": [
     "airswap"
   ],

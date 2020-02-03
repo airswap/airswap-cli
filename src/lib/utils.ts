@@ -46,7 +46,7 @@ export async function getProvider(ctx: any) {
 }
 
 export async function getWallet(ctx: any, requireBalance?: boolean) {
-  const account = await keytar.getPassword('airswap-maker-kit', 'private-key')
+  const account = await keytar.getPassword('airswap-cli', 'private-key')
 
   if (!account) {
     throw new Error(`No account set. Set one with ${chalk.bold('account:set')}`)

@@ -8,7 +8,7 @@ export default class AccountExport extends Command {
   static description = 'export the current ethereum account'
 
   async run() {
-    const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')
+    const signerPrivateKey = await keytar.getPassword('airswap-cli', 'private-key')
     displayDescription(this, AccountExport.description)
 
     if (!signerPrivateKey) {

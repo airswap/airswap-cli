@@ -22,7 +22,7 @@ export default class AccountImport extends Command {
       })
 
       const wallet = new ethers.Wallet(signerPrivateKey)
-      await keytar.setPassword('airswap-maker-kit', 'private-key', signerPrivateKey)
+      await keytar.setPassword('airswap-cli', 'private-key', signerPrivateKey)
       this.log(`\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(wallet.address)}\n`)
     } catch (e) {
       this.log('\n\nCancelled.\n')

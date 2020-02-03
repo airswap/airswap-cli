@@ -10,7 +10,7 @@ export default class AccountDelete extends Command {
   static description = 'delete the current ethereum account'
 
   async run() {
-    const signerPrivateKey = await keytar.getPassword('airswap-maker-kit', 'private-key')
+    const signerPrivateKey = await keytar.getPassword('airswap-cli', 'private-key')
     displayDescription(this, AccountDelete.description)
 
     if (signerPrivateKey) {
@@ -20,7 +20,7 @@ export default class AccountDelete extends Command {
       this.log(`Address:     ${wallet.address}\n`)
 
       if (await cli.confirm('Are you sure you want to delete this private key? (yes/no)')) {
-        await keytar.deletePassword('airswap-maker-kit', 'private-key')
+        await keytar.deletePassword('airswap-cli', 'private-key')
         this.log(`\n${emoji.get('white_check_mark')} The account has been unset.\n`)
       } else {
         this.log(chalk.yellow(`\nThe account was not unset.\n`))
