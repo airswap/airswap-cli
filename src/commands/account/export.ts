@@ -12,7 +12,7 @@ export default class AccountExport extends Command {
     displayDescription(this, AccountExport.description)
 
     if (!signerPrivateKey) {
-      this.log(chalk.yellow(`\nNo account set. Set one with ${chalk.bold('account:set')}\n`))
+      this.log(chalk.yellow(`\nNo account set. Set one with ${chalk.bold('account:import')}\n`))
     } else {
       const wallet = new ethers.Wallet(String(signerPrivateKey))
       this.log(`Private key: ${signerPrivateKey}`)

@@ -49,7 +49,7 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
   const account = await keytar.getPassword('airswap-cli', 'private-key')
 
   if (!account) {
-    throw new Error(`No account set. Set one with ${chalk.bold('account:set')}`)
+    throw new Error(`No account set. Set one with ${chalk.bold('account:import')}`)
   } else {
     const { network } = await getConfig(ctx)
     const selectedNetwork = constants.chainNames[network || '4']
