@@ -20,7 +20,7 @@ export function displayDescription(ctx: any, title: string, network?: number) {
     const selectedNetwork = constants.chainNames[network || '4'].toUpperCase()
     networkName = network === 1 ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
   }
-  ctx.log(`${chalk.white.bold(title)} ${networkName}\n`)
+  ctx.log(`\n${chalk.white.bold(title)} ${networkName}\n`)
 }
 
 export async function getConfig(ctx: any) {
@@ -59,10 +59,10 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
 
     const balance = await provider.getBalance(wallet.address)
     if (requireBalance && balance.eq(0)) {
-      ctx.log(chalk.yellow(`Account (${wallet.address}) must hold (${selectedNetwork}) ETH to execute transactions.\n`))
+      throw new Error(`Current account must hold (${selectedNetwork}) ETH to use this command.`)
     } else {
       const balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
-      ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)\n`))
+      ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)`))
       return wallet
     }
   }

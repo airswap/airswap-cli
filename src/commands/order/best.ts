@@ -24,7 +24,7 @@ export default class OrderBest extends Command {
       requests.multiPeerCall(wallet, request.method, request.params, async (order: any, locator: string) => {
         this.log()
         if (!order) {
-          this.log(chalk.yellow('No peers found.\n'))
+          this.log(chalk.yellow('No valid responses received.\n'))
         } else {
           const swapAddress = swapDeploys[chainId]
           await printOrder(this, request, locator, order, wallet, metadata)

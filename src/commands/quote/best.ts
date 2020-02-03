@@ -18,7 +18,7 @@ export default class QuotesBest extends Command {
       requests.multiPeerCall(wallet, request.method, request.params, async (quote: any, locator: string) => {
         this.log()
         if (!quote) {
-          this.log(chalk.yellow('\nNo valid results found.\n'))
+          this.log(chalk.yellow('No valid responses received.\n'))
         } else {
           await printOrder(this, request, locator, quote, wallet, metadata)
           this.log()

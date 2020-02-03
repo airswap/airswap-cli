@@ -12,7 +12,7 @@ export default class IntentNew extends Command {
   static description = 'create an index for a new token pair'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentNew.description, chainId)

@@ -51,7 +51,7 @@ export function peerCall(locator: string, method: string, params: any, callback:
       callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
     } else {
       if (error) {
-        callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`)
+        callback(`\n${chalk.yellow('Error Response')}: ${error.message}\n`)
       } else {
         callback(null, result)
       }

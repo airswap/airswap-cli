@@ -15,40 +15,67 @@ Command Line Interface (CLI) for the AirSwap Network
 
 AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract. AirSwap CLI includes functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
 
-# Installation
+**Concepts**
 
-```
-yarn add global airswap
-```
+- Quotes are indicative prices and orders are signed and executable. Makers should be able to provide both.
+- Makers run as web servers at public URLs. Takers request quotes and orders using JSON-RPC over HTTP.
+- Indexers are used to signal an intent to trade to other peers. Tokens are staked to improve visibility.
 
-## Key Management
+**Key Management**
 
 AirSwap CLI uses the native password manager of your system. On macOS, keys are managed by the Keychain, on Linux they are managed by the Secret Service API/libsecret, and on Windows they are managed by Credential Vault.
+
+# Quick Start
+
+Install the CLI globally:
+
+```
+$ yarn add global airswap
+```
+
+To create a new account to use for the CLI (recommended):
+
+```
+$ airswap account:generate
+```
+
+To import the newly generated or an existing private key:
+
+```
+$ airswap account:import
+```
+
+Try the following command when ready:
+
+```
+$ airswap quote:best
+```
 
 # Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap indexer:enable`](#airswap-indexerenable)
-* [`airswap indexer:get`](#airswap-indexerget)
-* [`airswap indexer:new`](#airswap-indexernew)
-* [`airswap indexer:set`](#airswap-indexerset)
-* [`airswap indexer:unset`](#airswap-indexerunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap network`](#airswap-network)
-* [`airswap order:best`](#airswap-orderbest)
-* [`airswap order:get`](#airswap-orderget)
-* [`airswap quote:best`](#airswap-quotebest)
-* [`airswap quote:get`](#airswap-quoteget)
-* [`airswap quote:max`](#airswap-quotemax)
-* [`airswap token:add`](#airswap-tokenadd)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:fetch`](#airswap-tokenfetch)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap indexer:enable`](#airswap-indexerenable)
+- [`airswap indexer:get`](#airswap-indexerget)
+- [`airswap indexer:new`](#airswap-indexernew)
+- [`airswap indexer:set`](#airswap-indexerset)
+- [`airswap indexer:unset`](#airswap-indexerunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap network`](#airswap-network)
+- [`airswap order:best`](#airswap-orderbest)
+- [`airswap order:get`](#airswap-orderget)
+- [`airswap quote:best`](#airswap-quotebest)
+- [`airswap quote:get`](#airswap-quoteget)
+- [`airswap quote:max`](#airswap-quotemax)
+- [`airswap token:add`](#airswap-tokenadd)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:fetch`](#airswap-tokenfetch)
 
 ## `airswap account:delete`
 
@@ -286,6 +313,7 @@ USAGE
 ```
 
 _See code: [src/commands/token/fetch.ts](https://github.com/airswap/airswap-maker-kit/blob/v1.1.4/src/commands/token/fetch.ts)_
+
 <!-- commandsstop -->
 
 ## Helpful for Testing

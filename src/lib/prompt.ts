@@ -286,6 +286,10 @@ export async function confirm(
 
 export function cancelled(e) {
   if (e) {
-    console.log(`\n${e.message}\n`)
+    let message = e.message
+    if (message === 'canceled') {
+      message = 'Canceled.'
+    }
+    console.log(chalk.yellow(`\n${message}\n`))
   }
 }

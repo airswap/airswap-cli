@@ -13,7 +13,7 @@ export default class IntentSet extends Command {
   static description = 'set an intent'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentSet.description, chainId)

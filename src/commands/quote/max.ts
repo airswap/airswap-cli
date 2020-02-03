@@ -51,21 +51,24 @@ export default class QuotesGet extends Command {
           }
         } else {
           let maxAmount
+          let maxFor
           if (side === 'buy') {
-            maxAmount = new BigNumber(order.signer.amount)
-              .dividedBy(new BigNumber(10).pow(metadata.byAddress[order.signer.token].decimals))
-              .toFixed()
+            maxAmount = utils.getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
+            maxFor = utils.getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
           } else {
-            maxAmount = new BigNumber(order.sender.amount)
-              .dividedBy(new BigNumber(10).pow(metadata.byAddress[order.sender.token].decimals))
-              .toFixed()
+            maxAmount = utils.getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
+            maxFor = utils.getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
           }
           this.log(chalk.underline.bold(`Response: ${locator}`))
           let verb = 'Buying'
           if (side === 'buy') {
             verb = 'Selling'
           }
-          this.log(`\n${verb} up to ${chalk.bold(maxAmount)} ${chalk.bold(first.name)}\n`)
+          this.log(
+            `\n${verb} up to ${chalk.bold(maxAmount)} ${chalk.bold(first.name)} for ${chalk.bold(maxFor)} ${chalk.bold(
+              second.name,
+            )}\n`,
+          )
         }
       })
     } catch (e) {
