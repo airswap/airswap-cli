@@ -17,6 +17,9 @@ export default class IntentNew extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentNew.description, chainId)
 
+      let { protocol } = await utils.getConfig(this)
+      protocol = protocol || constants.protocols.HTTPS
+
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
@@ -28,32 +31,30 @@ export default class IntentNew extends Command {
 
       this.log()
 
-      indexerContract
-        .indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-        .then(async (index: any) => {
-          if (index !== constants.ADDRESS_ZERO) {
-            this.log(`${chalk.yellow('Pair already exists')}`)
-            this.log(`Set intent on this pair with ${chalk.bold('indexer:set')}\n`)
-          } else {
-            if (
-              await confirm(
-                this,
-                metadata,
-                'createIndex',
-                {
-                  signerToken: `${signerToken.addr} (${signerToken.name})`,
-                  senderToken: `${senderToken.addr} (${senderToken.name})`,
-                },
-                chainId,
-              )
-            ) {
-              indexerContract
-                .createIndex(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-                .then(utils.handleTransaction)
-                .catch(utils.handleError)
-            }
+      indexerContract.indexes(signerToken.addr, senderToken.addr, protocol).then(async (index: any) => {
+        if (index !== constants.ADDRESS_ZERO) {
+          this.log(`${chalk.yellow('Pair already exists')}`)
+          this.log(`Set intent on this pair with ${chalk.bold('indexer:set')}\n`)
+        } else {
+          if (
+            await confirm(
+              this,
+              metadata,
+              'createIndex',
+              {
+                signerToken: `${signerToken.addr} (${signerToken.name})`,
+                senderToken: `${senderToken.addr} (${senderToken.name})`,
+              },
+              chainId,
+            )
+          ) {
+            indexerContract
+              .createIndex(signerToken.addr, senderToken.addr, protocol)
+              .then(utils.handleTransaction)
+              .catch(utils.handleError)
           }
-        })
+        }
+      })
     } catch (e) {
       cancelled(e)
     }

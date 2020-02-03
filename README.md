@@ -2,7 +2,7 @@
 
 Command Line Interface (CLI) for the AirSwap Network
 
-[![Version](https://img.shields.io/npm/v/airswap.svg)](https://npmjs.org/package/airswap-maker-kit)
+[![Version](https://img.shields.io/npm/v/airswap.svg)](https://npmjs.org/package/airswap)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Downloads/week](https://img.shields.io/npm/dw/airswap.svg)](https://npmjs.org/package/airswap)
 [![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)

@@ -18,6 +18,9 @@ export default class IntentSet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentSet.description, chainId)
 
+      let { protocol } = await utils.getConfig(this)
+      protocol = protocol || constants.protocols.HTTPS
+
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
@@ -40,64 +43,56 @@ export default class IntentSet extends Command {
 
       this.log()
 
-      indexerContract
-        .indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-        .then((index: any) => {
-          if (index === constants.ADDRESS_ZERO) {
-            this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-            this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
-          } else {
-            const atomicAmount = stakeAmount * 10 ** constants.AST_DECIMALS
-            new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
-              .balanceOf(wallet.address)
-              .then((balance: any) => {
-                if (balance.toNumber() < atomicAmount) {
-                  this.log(
-                    chalk.red('\n\nError ') +
-                      `The selected account cannot stake ${stakeAmount} AST. Its balance is ${balance.toNumber() /
-                        10 ** constants.AST_DECIMALS}.\n`,
-                  )
-                } else {
-                  new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
-                    .allowance(wallet.address, indexerAddress)
-                    .then(async (allowance: any) => {
-                      if (allowance.lt(atomicAmount)) {
-                        this.log(chalk.yellow('Staking is not enabled'))
-                        this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
-                      } else {
-                        if (
-                          await confirm(
-                            this,
-                            metadata,
-                            'setIntent',
-                            {
-                              signerToken: signerToken.addr,
-                              senderToken: senderToken.addr,
-                              protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
-                              locator,
-                              stakeAmount: atomicAmount,
-                            },
-                            chainId,
-                          )
-                        ) {
-                          const locatorBytes = ethers.utils.formatBytes32String(locator)
-                          new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-                            .setIntent(
-                              signerToken.addr,
-                              senderToken.addr,
-                              constants.protocols.HTTP_LATEST,
-                              atomicAmount,
-                              locatorBytes,
-                            )
-                            .then(utils.handleTransaction)
-                            .catch(utils.handleError)
-                        }
+      indexerContract.indexes(signerToken.addr, senderToken.addr, protocol).then((index: any) => {
+        if (index === constants.ADDRESS_ZERO) {
+          this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+          this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+        } else {
+          const atomicAmount = stakeAmount * 10 ** constants.AST_DECIMALS
+          new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
+            .balanceOf(wallet.address)
+            .then((balance: any) => {
+              if (balance.toNumber() < atomicAmount) {
+                this.log(
+                  chalk.red('\n\nError ') +
+                    `The selected account cannot stake ${stakeAmount} AST. Its balance is ${balance.toNumber() /
+                      10 ** constants.AST_DECIMALS}.\n`,
+                )
+              } else {
+                new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
+                  .allowance(wallet.address, indexerAddress)
+                  .then(async (allowance: any) => {
+                    if (allowance.lt(atomicAmount)) {
+                      this.log(chalk.yellow('Staking is not enabled'))
+                      this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
+                    } else {
+                      if (
+                        await confirm(
+                          this,
+                          metadata,
+                          'setIntent',
+                          {
+                            signerToken: signerToken.addr,
+                            senderToken: senderToken.addr,
+                            protocol: `${protocol} (${constants.protocolNames[protocol]})`,
+                            locator,
+                            stakeAmount: atomicAmount,
+                          },
+                          chainId,
+                        )
+                      ) {
+                        const locatorBytes = ethers.utils.formatBytes32String(locator)
+                        new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+                          .setIntent(signerToken.addr, senderToken.addr, protocol, atomicAmount, locatorBytes)
+                          .then(utils.handleTransaction)
+                          .catch(utils.handleError)
                       }
-                    })
-                }
-              })
-          }
-        })
+                    }
+                  })
+              }
+            })
+        }
+      })
     } catch (e) {
       cancelled(e)
     }

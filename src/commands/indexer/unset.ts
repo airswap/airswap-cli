@@ -17,6 +17,9 @@ export default class IntentUnset extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
+      let { protocol } = await utils.getConfig(this)
+      protocol = protocol || constants.protocols.HTTPS
+
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
@@ -25,7 +28,7 @@ export default class IntentUnset extends Command {
 
       this.log()
 
-      const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+      const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, protocol)
       if (index === constants.ADDRESS_ZERO) {
         this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
         this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
@@ -38,13 +41,13 @@ export default class IntentUnset extends Command {
             {
               signerToken: signerToken.addr,
               senderToken: senderToken.addr,
-              protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
+              protocol: `${protocol} (${constants.protocolNames[protocol]})`,
             },
             chainId,
           )
         ) {
           new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-            .unsetIntent(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+            .unsetIntent(signerToken.addr, senderToken.addr, protocol)
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

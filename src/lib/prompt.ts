@@ -288,7 +288,7 @@ export function cancelled(e) {
   if (e) {
     let message = e.message
     if (message === 'canceled') {
-      message = 'Canceled.'
+      message = 'Cancelled.'
     }
     console.log(chalk.yellow(`\n${message}\n`))
   }

@@ -5,6 +5,7 @@ import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import BigNumber from 'bignumber.js'
+import constants from '../../lib/constants.json'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -18,10 +19,13 @@ export default class OrderBest extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, OrderBest.description, chainId)
 
+      let { protocol } = await utils.getConfig(this)
+      protocol = protocol || constants.protocols.HTTPS
+
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.multiPeerCall(wallet, request.method, request.params, async (order: any, locator: string) => {
+      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (order: any, locator: string) => {
         this.log()
         if (!order) {
           this.log(chalk.yellow('No valid responses received.\n'))

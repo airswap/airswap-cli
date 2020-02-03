@@ -19,13 +19,16 @@ export default class IntentGet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentGet.description, chainId)
 
+      let { protocol } = await utils.getConfig(this)
+      protocol = protocol || constants.protocols.HTTPS
+
       const indexerAddress = indexerDeploys[chainId]
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
 
       const { side, first, second, signerToken, senderToken }: any = await getSideAndTokens(metadata)
 
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, provider)
-      const index = indexerContract.indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
+      const index = indexerContract.indexes(signerToken.addr, senderToken.addr, protocol)
 
       if (index === constants.ADDRESS_ZERO) {
         this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
@@ -34,7 +37,7 @@ export default class IntentGet extends Command {
         const result = await indexerContract.getLocators(
           signerToken.addr,
           senderToken.addr,
-          constants.protocols.HTTP_LATEST,
+          protocol,
           constants.INDEX_HEAD,
           constants.DEFAULT_COUNT,
         )
@@ -46,7 +49,11 @@ export default class IntentGet extends Command {
             verb = 'selling'
           }
 
-          this.log(chalk.underline(`\nTop peers ${verb} ${first.name} for ${second.name}\n`))
+          this.log(
+            chalk.underline.bold(
+              `\nTop peers ${verb} ${first.name} for ${second.name} (${constants.protocolNames[protocol]})\n`,
+            ),
+          )
 
           const rows = []
           for (let i = 0; i < result.locators.length; i++) {
