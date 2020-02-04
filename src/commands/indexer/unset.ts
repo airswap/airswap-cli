@@ -6,6 +6,7 @@ import { getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const Index = require('@airswap/indexer/build/contracts/Index.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 export default class IntentUnset extends Command {
@@ -23,33 +24,36 @@ export default class IntentUnset extends Command {
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
-
       const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
-
       this.log()
 
       const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, protocol)
       if (index === constants.ADDRESS_ZERO) {
         this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-        this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+        this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
       } else {
-        if (
-          await confirm(
-            this,
-            metadata,
-            'unsetIntent',
-            {
-              signerToken: signerToken.addr,
-              senderToken: senderToken.addr,
-              protocol: `${protocol} (${constants.protocolNames[protocol]})`,
-            },
-            chainId,
-          )
-        ) {
-          new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-            .unsetIntent(signerToken.addr, senderToken.addr, protocol)
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+        const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
+        if (existingEntry === constants.LOCATOR_ZERO) {
+          this.log(chalk.yellow('You do not have an existing intent to unset.\n'))
+        } else {
+          if (
+            await confirm(
+              this,
+              metadata,
+              'unsetIntent',
+              {
+                signerToken: signerToken.addr,
+                senderToken: senderToken.addr,
+                protocol: `${protocol} (${chalk.cyan(constants.protocolNames[protocol])})`,
+              },
+              chainId,
+            )
+          ) {
+            new ethers.Contract(indexerAddress, Indexer.abi, wallet)
+              .unsetIntent(signerToken.addr, senderToken.addr, protocol)
+              .then(utils.handleTransaction)
+              .catch(utils.handleError)
+          }
         }
       }
     } catch (e) {

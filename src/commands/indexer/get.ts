@@ -32,7 +32,7 @@ export default class IntentGet extends Command {
 
       if (index === constants.ADDRESS_ZERO) {
         this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-        this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+        this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
       } else {
         const result = await indexerContract.getLocators(
           signerToken.addr,
