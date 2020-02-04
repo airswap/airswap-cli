@@ -5,8 +5,9 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
+import { getTable } from 'console.table'
 
-export default class MetadataAdd extends Command {
+export default class MetadataDelete extends Command {
   static description = 'add token to local metadata'
   async run() {
     try {
@@ -14,33 +15,19 @@ export default class MetadataAdd extends Command {
       const chainId = (await provider.getNetwork()).chainId
 
       this.log()
-      utils.displayDescription(this, MetadataAdd.description, chainId)
+      utils.displayDescription(this, MetadataDelete.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
       if (String(chainId) === constants.chainIds.MAINNET) {
         metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
       }
 
-      const token: any = await get({
-        name: {
-          description: 'ticker',
+      const { needle }: any = await get({
+        needle: {
+          description: 'ticker or address',
           type: 'String',
-        },
-        fullName: {
-          description: 'name',
-          type: 'String',
-        },
-        decimals: {
-          description: 'decimals',
-          type: 'Number',
-        },
-        addr: {
-          description: 'address',
-          type: 'Address',
         },
       })
-
-      token.name = token.name.toUpperCase()
 
       let metadata = {
         byAddress: {},
@@ -51,32 +38,37 @@ export default class MetadataAdd extends Command {
         metadata = require(metadataPath)
       }
 
-      this.log(
-        `\n${token.name} (${token.fullName}) · https://${constants.etherscanDomains[chainId]}/address/${token.addr} · ${token.decimals} decimals`,
-      )
+      let token
 
-      if (metadata.byAddress[token.addr] || metadata.bySymbol[token.name]) {
-        const networkName = constants.chainNames[chainId || '4'].toUpperCase()
+      if (needle.toUpperCase() in metadata.bySymbol) {
+        token = metadata.bySymbol[needle.toUpperCase()]
+      }
+      if (needle in metadata.byAddress) {
+        token = metadata.byAddress[needle]
+      }
+
+      this.log()
+      if (!token) {
+        this.log('Token not found in metadata.\n')
+      } else {
+        this.log(
+          `${token.name} (${token.fullName}) · https://${constants.etherscanDomains[chainId]}/address/${token.addr} · ${token.decimals} decimals`,
+        )
+
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nToken exists in metadata. Type "yes" to overwrite it (${networkName})`),
+            description: chalk.white(`\nType "yes" to remove this token (${token.name}) from local metadata`),
           },
         })
         if (confirm === 'yes') {
-          metadata.byAddress[token.addr] = token
-          metadata.bySymbol[token.name] = token
+          delete metadata.byAddress[token.addr]
+          delete metadata.bySymbol[token.name]
 
           await fs.outputJson(metadataPath, metadata)
           this.log(chalk.green('Local metadata updated\n'))
         } else {
           this.log('\nCancelled.\n')
         }
-      } else {
-        metadata.byAddress[token.addr] = token
-        metadata.bySymbol[token.name] = token
-
-        await fs.outputJson(metadataPath, metadata)
-        this.log(chalk.green('\nLocal metadata updated\n'))
       }
     } catch (e) {
       cancelled(e)
