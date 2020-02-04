@@ -19,7 +19,7 @@ export default class IntentUnset extends Command {
       const tokenContract = new ethers.Contract(WETH.addr, WETH9.abi, wallet)
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
       const balanceDecimal = utils.getDecimalValue(tokenBalance.toString(), WETH.addr, metadata)
-      this.log(`Available to withdraw: ${chalk.bold(balanceDecimal.toFixed())}\n`)
+      this.log(`WETH available to withdraw: ${chalk.bold(balanceDecimal.toFixed())}\n`)
 
       const { amount }: any = await get({
         amount: {

@@ -27,57 +27,104 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 
 # Quick Start
 
-Install the CLI globally:
+Install the CLI globally
 
 ```
 $ yarn add global airswap
 ```
 
-To create a new account to use for the CLI (recommended):
+Create a new account to use for the CLI (recommended)
 
 ```
 $ airswap account:generate
 ```
 
-To import the newly generated or an existing private key:
+Import the newly generated or an existing private key
 
 ```
 $ airswap account:import
 ```
 
-Try the following command when ready:
+# Explore the Network
+
+Set the active network
+
+```
+$ airswap network
+```
+
+Get locators for actively trading peers
+
+```
+$ airswap indexer:get
+```
+
+Get a quote from a specific peer
+
+```
+$ airswap quote:get
+```
+
+Get the best quote from all peers
 
 ```
 $ airswap quote:best
 ```
 
-# Commands
+# Balance Management
+
+Get balances for known tokens
+
+```
+$ airswap balances
+```
+
+Transfer a balance to another account
+
+```
+$ airswap token:transfer
+```
+
+Deposit an ETH balance to WETH
+
+```
+$ airswap weth:deposit
+```
+
+Withdraw an ETH balance from WETH
+
+```
+$ airswap weth:deposit
+```
+
+# All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap indexer:enable`](#airswap-indexerenable)
-* [`airswap indexer:get`](#airswap-indexerget)
-* [`airswap indexer:new`](#airswap-indexernew)
-* [`airswap indexer:set`](#airswap-indexerset)
-* [`airswap indexer:unset`](#airswap-indexerunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap network`](#airswap-network)
-* [`airswap order:best`](#airswap-orderbest)
-* [`airswap order:get`](#airswap-orderget)
-* [`airswap quote:best`](#airswap-quotebest)
-* [`airswap quote:get`](#airswap-quoteget)
-* [`airswap quote:max`](#airswap-quotemax)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap weth:deposit`](#airswap-wethdeposit)
-* [`airswap weth:withdraw`](#airswap-wethwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap indexer:enable`](#airswap-indexerenable)
+- [`airswap indexer:get`](#airswap-indexerget)
+- [`airswap indexer:new`](#airswap-indexernew)
+- [`airswap indexer:set`](#airswap-indexerset)
+- [`airswap indexer:unset`](#airswap-indexerunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap network`](#airswap-network)
+- [`airswap order:best`](#airswap-orderbest)
+- [`airswap order:get`](#airswap-orderget)
+- [`airswap quote:best`](#airswap-quotebest)
+- [`airswap quote:get`](#airswap-quoteget)
+- [`airswap quote:max`](#airswap-quotemax)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap weth:deposit`](#airswap-wethdeposit)
+- [`airswap weth:withdraw`](#airswap-wethwithdraw)
 
 ## `airswap account:delete`
 
@@ -348,6 +395,7 @@ USAGE
 ```
 
 _See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.2.2/src/commands/weth/withdraw.ts)_
+
 <!-- commandsstop -->
 
 ## Helpful for Testing
