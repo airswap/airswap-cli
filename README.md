@@ -94,7 +94,7 @@ $ airswap weth:deposit
 Withdraw an ETH balance from WETH
 
 ```
-$ airswap weth:deposit
+$ airswap weth:withdraw
 ```
 
 # All Commands
