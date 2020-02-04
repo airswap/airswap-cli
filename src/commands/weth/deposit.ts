@@ -15,18 +15,23 @@ export default class IntentUnset extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
+      const WETH = metadata.bySymbol['WETH']
+      const balance = await wallet.provider.getBalance(wallet.address)
+      const balanceDecimal = utils.getDecimalValue(balance.toString(), WETH.addr, metadata)
+      this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal.toFixed())}`)
+      this.log(chalk.gray('Some ETH must be saved to execute the transaction.\n'))
+
       const { amount }: any = await get({
         amount: {
-          description: 'Amount to deposit',
+          description: 'amount to deposit',
           type: 'Number',
         },
       })
-
-      const WETH = metadata.bySymbol['WETH']
-      const balance = await wallet.provider.getBalance(wallet.address)
       const atomicAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
 
-      if (balance.lt(atomicAmount.toString())) {
+      if (atomicAmount.eq(0)) {
+        cancelled('Amount must be greater than zero.')
+      } else if (balance.lt(atomicAmount.toString())) {
         cancelled('Insufficient balance.')
       } else {
         this.log()

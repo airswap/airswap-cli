@@ -15,19 +15,24 @@ export default class IntentUnset extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
+      const WETH = metadata.bySymbol['WETH']
+      const tokenContract = new ethers.Contract(WETH.addr, WETH9.abi, wallet)
+      const tokenBalance = await tokenContract.balanceOf(wallet.address)
+      const balanceDecimal = utils.getDecimalValue(tokenBalance.toString(), WETH.addr, metadata)
+      this.log(`Available to withdraw: ${chalk.bold(balanceDecimal.toFixed())}\n`)
+
       const { amount }: any = await get({
         amount: {
-          description: 'Amount to withdraw',
+          description: 'amount to withdraw',
           type: 'Number',
         },
       })
+      const atomicAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
 
-      const WETH = metadata.bySymbol['WETH']
-      const balance = await wallet.provider.getBalance(wallet.address)
-      const payableAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
-
-      if (balance.lt(payableAmount.toString())) {
-        cancelled('Insufficient balance.')
+      if (atomicAmount.eq(0)) {
+        cancelled('Amount must be greater than zero.')
+      } else if (tokenBalance.lt(atomicAmount.toString())) {
+        cancelled('Insufficient balance to withdraw.')
       } else {
         this.log()
         if (
@@ -36,13 +41,13 @@ export default class IntentUnset extends Command {
             metadata,
             'withdraw',
             {
-              amount: `${payableAmount} (${chalk.cyan(amount)})`,
+              amount: `${atomicAmount} (${chalk.cyan(amount)})`,
             },
             chainId,
           )
         ) {
           new ethers.Contract(WETH.addr, WETH9.abi, wallet)
-            .withdraw(ethers.utils.bigNumberify(payableAmount.toFixed()))
+            .withdraw(ethers.utils.bigNumberify(atomicAmount.toFixed()))
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }
