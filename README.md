@@ -66,15 +66,18 @@ $ airswap quote:best
 * [`airswap indexer:set`](#airswap-indexerset)
 * [`airswap indexer:unset`](#airswap-indexerunset)
 * [`airswap ip`](#airswap-ip)
+* [`airswap metadata:add`](#airswap-metadataadd)
+* [`airswap metadata:update`](#airswap-metadataupdate)
 * [`airswap network`](#airswap-network)
 * [`airswap order:best`](#airswap-orderbest)
 * [`airswap order:get`](#airswap-orderget)
 * [`airswap quote:best`](#airswap-quotebest)
 * [`airswap quote:get`](#airswap-quoteget)
 * [`airswap quote:max`](#airswap-quotemax)
-* [`airswap token:add`](#airswap-tokenadd)
 * [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:fetch`](#airswap-tokenfetch)
+* [`airswap token:transfer`](#airswap-tokentransfer)
+* [`airswap weth:deposit`](#airswap-wethdeposit)
+* [`airswap weth:withdraw`](#airswap-wethwithdraw)
 
 ## `airswap account:delete`
 
@@ -214,6 +217,28 @@ USAGE
 
 _See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/ip.ts)_
 
+## `airswap metadata:add`
+
+add token to local metadata
+
+```
+USAGE
+  $ airswap metadata:add
+```
+
+_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/metadata/add.ts)_
+
+## `airswap metadata:update`
+
+update local metadata
+
+```
+USAGE
+  $ airswap metadata:update
+```
+
+_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/metadata/update.ts)_
+
 ## `airswap network`
 
 set the active network
@@ -280,17 +305,6 @@ USAGE
 
 _See code: [src/commands/quote/max.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/quote/max.ts)_
 
-## `airswap token:add`
-
-add token to local metadata
-
-```
-USAGE
-  $ airswap token:add
-```
-
-_See code: [src/commands/token/add.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/token/add.ts)_
-
 ## `airswap token:approve`
 
 approve a token for trading
@@ -302,16 +316,38 @@ USAGE
 
 _See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/token/approve.ts)_
 
-## `airswap token:fetch`
+## `airswap token:transfer`
 
-update local metadata
+transfer tokens to another account
 
 ```
 USAGE
-  $ airswap token:fetch
+  $ airswap token:transfer
 ```
 
-_See code: [src/commands/token/fetch.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/token/fetch.ts)_
+_See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/token/transfer.ts)_
+
+## `airswap weth:deposit`
+
+deposit eth to weth
+
+```
+USAGE
+  $ airswap weth:deposit
+```
+
+_See code: [src/commands/weth/deposit.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/weth/deposit.ts)_
+
+## `airswap weth:withdraw`
+
+withdraw eth from weth
+
+```
+USAGE
+  $ airswap weth:withdraw
+```
+
+_See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.2.1/src/commands/weth/withdraw.ts)_
 <!-- commandsstop -->
 
 ## Helpful for Testing

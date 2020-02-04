@@ -87,6 +87,9 @@
       "ip": {
         "description": "display local network addresses"
       },
+      "metadata": {
+        "description": "manage local token metadata"
+      },
       "network": {
         "description": "set the active ethereum network"
       },
@@ -97,7 +100,7 @@
         "description": "get quotes and maximums from a single peer or all peers"
       },
       "token": {
-        "description": "approve tokens and manage local metadata"
+        "description": "approve and transfer tokens between accounts"
       }
     },
     "commands": "./lib/commands",

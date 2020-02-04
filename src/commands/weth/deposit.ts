@@ -26,10 +26,7 @@ export default class IntentUnset extends Command {
       const balance = await wallet.provider.getBalance(wallet.address)
       const atomicAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
 
-      const wethContract = new ethers.Contract(WETH.addr, WETH9.abi, wallet)
-      const wethBalance = await wethContract.balanceOf(wallet.address)
-
-      if (wethBalance.lt(atomicAmount.toString())) {
+      if (balance.lt(atomicAmount.toString())) {
         cancelled('Insufficient balance.')
       } else {
         this.log()
@@ -44,7 +41,7 @@ export default class IntentUnset extends Command {
             chainId,
           )
         ) {
-          wethContract
+          new ethers.Contract(WETH.addr, WETH9.abi, wallet)
             .deposit({ value: ethers.utils.bigNumberify(atomicAmount.toFixed()) })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
