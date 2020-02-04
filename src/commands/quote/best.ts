@@ -4,7 +4,7 @@ import { printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
 
-export default class QuotesBest extends Command {
+export default class QuoteBest extends Command {
   static description = 'get the best available quote'
   async run() {
     try {
@@ -12,7 +12,7 @@ export default class QuotesBest extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
-      utils.displayDescription(this, QuotesBest.description, chainId)
+      utils.displayDescription(this, QuoteBest.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Quote')
       this.log()
