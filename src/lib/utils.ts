@@ -159,6 +159,11 @@ export async function updateMetadata(ctx: any, network: number) {
   }
 }
 
+export async function getProtocol(ctx: any) {
+  let { protocol } = await getConfig(ctx)
+  return protocol || constants.protocols.HTTPS
+}
+
 export async function verifyOrder(request, order, swapAddress, wallet, metadata) {
   const errors = []
 
@@ -177,7 +182,7 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
 
   if (allowance < order.sender.amount) {
     errors.push(
-      `Sender (you) has not approved ${chalk.bold(request.senderToken.name)} for trading. Approve it with ${chalk.bold(
+      `You have not approved ${chalk.bold(request.senderToken.name)} for trading. Approve it with ${chalk.bold(
         'token:approve',
       )}`,
     )

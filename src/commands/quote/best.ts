@@ -12,10 +12,8 @@ export default class QuotesBest extends Command {
       const wallet = await utils.getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const protocol = utils.getProtocol(this)
       utils.displayDescription(this, QuotesBest.description, chainId)
-
-      let { protocol } = await utils.getConfig(this)
-      protocol = protocol || constants.protocols.HTTPS
 
       const request = await requests.getRequest(wallet, metadata, 'Quote')
       this.log()
