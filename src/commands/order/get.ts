@@ -17,12 +17,12 @@ export default class OrderGet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, OrderGet.description, chainId)
 
-      const request = await requests.getRequest(wallet, metadata, 'Order')
       const { locator }: any = await get({
         locator: {
-          type: 'URL',
+          type: 'Locator',
         },
       })
+      const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
       requests.peerCall(locator, request.method, request.params, async (err, order) => {

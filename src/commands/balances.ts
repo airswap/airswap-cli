@@ -31,7 +31,7 @@ export default class Balances extends Command {
       const result = []
       for (const token in metadata.byAddress) {
         if (!balances[i].eq(0)) {
-          const balanceDecimal = utils.getBalanceDecimal(balances[i], token, metadata)
+          const balanceDecimal = utils.getDecimalValue(balances[i], token, metadata)
 
           result.push({
             Token: metadata.byAddress[token].name,

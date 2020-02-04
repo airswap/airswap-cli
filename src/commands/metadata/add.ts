@@ -6,7 +6,7 @@ import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
-export default class TokenAdd extends Command {
+export default class MetadataAdd extends Command {
   static description = 'add token to local metadata'
   async run() {
     try {
@@ -14,7 +14,7 @@ export default class TokenAdd extends Command {
       const chainId = (await provider.getNetwork()).chainId
 
       this.log()
-      utils.displayDescription(this, TokenAdd.description, chainId)
+      utils.displayDescription(this, MetadataAdd.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
       if (String(chainId) === constants.chainIds.MAINNET) {

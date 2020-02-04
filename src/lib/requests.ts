@@ -12,16 +12,16 @@ const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
-export function indexerCall(wallet: any, signerToken: string, senderToken: string, callback: Function) {
+export function indexerCall(
+  wallet: any,
+  signerToken: string,
+  senderToken: string,
+  protocol: string,
+  callback: Function,
+) {
   const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
   new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-    .getLocators(
-      signerToken,
-      senderToken,
-      constants.protocols.HTTP_LATEST,
-      constants.INDEX_HEAD,
-      constants.MAX_LOCATORS,
-    )
+    .getLocators(signerToken, senderToken, protocol, constants.INDEX_HEAD, constants.MAX_LOCATORS)
     .then(callback)
 }
 
@@ -59,8 +59,8 @@ export function peerCall(locator: string, method: string, params: any, callback:
   })
 }
 
-export function multiPeerCall(wallet: any, method: string, params: any, callback: Function) {
-  indexerCall(wallet, params.signerToken, params.senderToken, (result: any) => {
+export function multiPeerCall(wallet: any, method: string, params: any, protocol: string, callback: Function) {
+  indexerCall(wallet, params.signerToken, params.senderToken, protocol, (result: any) => {
     const locators = result.locators
 
     if (!locators.length) {
@@ -162,12 +162,12 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   if (side === 'buy') {
-    const signerAmountAtomic = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(first.decimals))
+    const signerAmountAtomic = utils.getAtomicValue(amount, first.addr, metadata)
     Object.assign(params, {
       signerAmount: signerAmountAtomic.integerValue(BigNumber.ROUND_FLOOR).toFixed(),
     })
   } else {
-    const senderAmountAtomic = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(first.decimals))
+    const senderAmountAtomic = utils.getAtomicValue(amount, first.addr, metadata)
     method = 'getSignerSide' + kind
     Object.assign(params, {
       senderAmount: senderAmountAtomic.integerValue(BigNumber.ROUND_FLOOR).toFixed(),

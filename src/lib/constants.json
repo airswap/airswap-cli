@@ -1,12 +1,10 @@
 {
-  "protocols": {
-    "HTTP_LATEST": "0x0000"
-  },
   "AST_DECIMALS": 4,
   "MAX_LOCATORS": 10,
   "APPROVAL_AMOUNT": "90071992547409910000000000",
   "INDEX_HEAD": "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   "ADDRESS_ZERO": "0x0000000000000000000000000000000000000000",
+  "LOCATOR_ZERO": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "DEFAULT_COUNT": 20,
   "DEFAULT_CONFIRMATIONS": 2,
   "DEFAULT_PORT": 3000,
@@ -34,6 +32,13 @@
   "chainNames": {
     "1": "mainnet",
     "4": "rinkeby"
+  },
+  "protocols": {
+    "HTTPS": "0x0000"
+  },
+  "protocolNames": {
+    "0x0000": "HTTPS",
+    "0x0001": "Delegates"
   },
   "etherscanDomains": {
     "1": "etherscan.io",

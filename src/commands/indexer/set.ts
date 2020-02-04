@@ -7,6 +7,7 @@ import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const Index = require('@airswap/indexer/build/contracts/Index.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
 export default class IntentSet extends Command {
@@ -16,6 +17,7 @@ export default class IntentSet extends Command {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, IntentSet.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]
@@ -27,7 +29,7 @@ export default class IntentSet extends Command {
       const values: any = await get({
         locator: {
           description: 'locator',
-          type: 'URL',
+          type: 'Locator',
         },
         stakeAmount: {
           description: 'stakeAmount',
@@ -40,14 +42,19 @@ export default class IntentSet extends Command {
 
       this.log()
 
-      indexerContract
-        .indexes(signerToken.addr, senderToken.addr, constants.protocols.HTTP_LATEST)
-        .then((index: any) => {
-          if (index === constants.ADDRESS_ZERO) {
-            this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
-            this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
+      indexerContract.indexes(signerToken.addr, senderToken.addr, protocol).then(async (index: any) => {
+        if (index === constants.ADDRESS_ZERO) {
+          this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+          this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
+        } else {
+          const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
+          if (existingEntry !== constants.LOCATOR_ZERO) {
+            this.log(
+              chalk.yellow(`You have an existing intent ${chalk.bold(ethers.utils.parseBytes32String(existingEntry))}`),
+            )
+            this.log(`First unset the existing intent with ${chalk.bold('indexer:unset')}\n`)
           } else {
-            const atomicAmount = stakeAmount * 10 ** constants.AST_DECIMALS
+            const atomicAmount = utils.getAtomicValue(stakeAmount, constants.stakingTokenAddresses[chainId], metadata)
             new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
               .balanceOf(wallet.address)
               .then((balance: any) => {
@@ -61,7 +68,7 @@ export default class IntentSet extends Command {
                   new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
                     .allowance(wallet.address, indexerAddress)
                     .then(async (allowance: any) => {
-                      if (allowance.lt(atomicAmount)) {
+                      if (allowance.lt(atomicAmount.toFixed())) {
                         this.log(chalk.yellow('Staking is not enabled'))
                         this.log(`Enable staking with ${chalk.bold('intent:enable')}\n`)
                       } else {
@@ -73,9 +80,9 @@ export default class IntentSet extends Command {
                             {
                               signerToken: signerToken.addr,
                               senderToken: senderToken.addr,
-                              protocol: `${constants.protocols.HTTP_LATEST} (HTTPS)`,
+                              protocol: `${protocol} (${chalk.cyan(constants.protocolNames[protocol])})`,
                               locator,
-                              stakeAmount: atomicAmount,
+                              stakeAmount: `${atomicAmount} (${chalk.cyan(stakeAmount)})`,
                             },
                             chainId,
                           )
@@ -85,8 +92,8 @@ export default class IntentSet extends Command {
                             .setIntent(
                               signerToken.addr,
                               senderToken.addr,
-                              constants.protocols.HTTP_LATEST,
-                              atomicAmount,
+                              protocol,
+                              atomicAmount.toFixed(),
                               locatorBytes,
                             )
                             .then(utils.handleTransaction)
@@ -97,7 +104,8 @@ export default class IntentSet extends Command {
                 }
               })
           }
-        })
+        }
+      })
     } catch (e) {
       cancelled(e)
     }

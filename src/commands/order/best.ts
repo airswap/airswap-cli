@@ -4,7 +4,6 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
-import BigNumber from 'bignumber.js'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -16,12 +15,13 @@ export default class OrderBest extends Command {
       const wallet = await utils.getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, OrderBest.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.multiPeerCall(wallet, request.method, request.params, async (order: any, locator: string) => {
+      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (order: any, locator: string) => {
         this.log()
         if (!order) {
           this.log(chalk.yellow('No valid responses received.\n'))
@@ -46,16 +46,12 @@ export default class OrderBest extends Command {
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(
-                    new BigNumber(order.signer.amount)
-                      .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                      .toFixed(),
+                    utils.getDecimalValue(order.signer.amount, request.signerToken.addr, metadata).toFixed(),
                   )})`,
                   senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
                   senderToken: order.sender.token,
                   senderAmount: `${order.sender.amount} (${chalk.cyan(
-                    new BigNumber(order.sender.amount)
-                      .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                      .toFixed(),
+                    utils.getDecimalValue(order.sender.amount, request.senderToken.addr, metadata).toFixed(),
                   )})`,
                 },
                 chainId,
