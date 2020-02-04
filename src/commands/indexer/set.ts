@@ -30,7 +30,7 @@ export default class IntentSet extends Command {
       const values: any = await get({
         locator: {
           description: 'locator',
-          type: 'URL',
+          type: 'Locator',
         },
         stakeAmount: {
           description: 'stakeAmount',

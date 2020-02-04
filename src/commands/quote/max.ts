@@ -14,6 +14,12 @@ export default class QuotesGet extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, QuotesGet.description, chainId)
 
+      const { locator }: any = await get({
+        locator: {
+          type: 'Locator',
+        },
+      })
+
       const { side }: any = await get({
         side: {
           description: 'buy or sell',
@@ -32,12 +38,6 @@ export default class QuotesGet extends Command {
         params.signerToken = second.addr
         params.senderToken = first.addr
       }
-
-      const { locator }: any = await get({
-        locator: {
-          type: 'URL',
-        },
-      })
 
       this.log()
 

@@ -13,7 +13,7 @@ prompt.start()
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
   Token: 'Token not found in local metadata',
-  URL: 'Must be a URL. HTTPS is implied if no scheme set (e.g. http://...)',
+  Locator: 'Must be a URL. If no scheme provided (e.g. http://...) then HTTPS is implied',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
@@ -21,7 +21,7 @@ const messages = {
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
-  URL: /[a-zA-Z0-9]{0,}/,
+  Locator: /^((http|https):\/\/)?(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)+([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /buy|sell/,
 }
