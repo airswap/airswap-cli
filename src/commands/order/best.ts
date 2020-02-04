@@ -4,7 +4,6 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
-import BigNumber from 'bignumber.js'
 import constants from '../../lib/constants.json'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
@@ -50,16 +49,12 @@ export default class OrderBest extends Command {
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(
-                    new BigNumber(order.signer.amount)
-                      .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
-                      .toFixed(),
+                    utils.getDecimalValue(order.signer.amount, request.signerToken.addr, metadata).toFixed(),
                   )})`,
                   senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
                   senderToken: order.sender.token,
                   senderAmount: `${order.sender.amount} (${chalk.cyan(
-                    new BigNumber(order.sender.amount)
-                      .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
-                      .toFixed(),
+                    utils.getDecimalValue(order.sender.amount, request.senderToken.addr, metadata).toFixed(),
                   )})`,
                 },
                 chainId,

@@ -53,11 +53,11 @@ export default class QuotesGet extends Command {
           let maxAmount
           let maxFor
           if (side === 'buy') {
-            maxAmount = utils.getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
-            maxFor = utils.getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
+            maxAmount = utils.getDecimalValue(order.signer.amount, order.signer.token, metadata)
+            maxFor = utils.getDecimalValue(order.sender.amount, order.sender.token, metadata)
           } else {
-            maxAmount = utils.getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
-            maxFor = utils.getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
+            maxAmount = utils.getDecimalValue(order.sender.amount, order.sender.token, metadata)
+            maxFor = utils.getDecimalValue(order.signer.amount, order.signer.token, metadata)
           }
           this.log(chalk.underline.bold(`Response: ${locator}`))
           let verb = 'Buying'

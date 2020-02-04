@@ -59,12 +59,12 @@ export default class IntentGet extends Command {
           for (let i = 0; i < result.locators.length; i++) {
             try {
               rows.push({
-                Staked: utils.getBalanceDecimal(result.scores[i], constants.stakingTokenAddresses[chainId], metadata),
+                Staked: utils.getDecimalValue(result.scores[i], constants.stakingTokenAddresses[chainId], metadata),
                 Locator: ethers.utils.parseBytes32String(result.locators[i]),
               })
             } catch (e) {
               rows.push({
-                Staked: utils.getBalanceDecimal(result.scores[i], constants.stakingTokenAddresses[chainId], metadata),
+                Staked: utils.getDecimalValue(result.scores[i], constants.stakingTokenAddresses[chainId], metadata),
                 Locator: `(Could not parse (${result.locators[i]}))`,
               })
             }

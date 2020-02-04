@@ -287,6 +287,9 @@ export async function confirm(
 export function cancelled(e) {
   if (e) {
     let message = e.message
+    if (typeof e === 'string') {
+      message = e
+    }
     if (message === 'canceled') {
       message = 'Cancelled.'
     }

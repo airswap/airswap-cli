@@ -196,7 +196,11 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   return errors
 }
 
-export function getBalanceDecimal(value: string, token: string, metadata: any) {
+export function getAtomicValue(value: string, token: string, metadata: any) {
+  return new BigNumber(value).multipliedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
+}
+
+export function getDecimalValue(value: string, token: string, metadata: any) {
   return new BigNumber(value).dividedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
 }
 
@@ -204,16 +208,16 @@ export async function getBalanceChanges(order: any, wallet: any, metadata: any) 
   const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(wallet.address)
   const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(wallet.address)
 
-  const signerTokenBalanceDecimal = getBalanceDecimal(signerTokenBalance.toString(), order.signer.token, metadata)
-  const senderTokenBalanceDecimal = getBalanceDecimal(senderTokenBalance.toString(), order.sender.token, metadata)
-  const signerTokenChangeDecimal = getBalanceDecimal(order.signer.amount, order.signer.token, metadata)
-  const senderTokenChangeDecimal = getBalanceDecimal(order.sender.amount, order.sender.token, metadata)
-  const newSignerTokenBalance = getBalanceDecimal(
+  const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), order.signer.token, metadata)
+  const senderTokenBalanceDecimal = getDecimalValue(senderTokenBalance.toString(), order.sender.token, metadata)
+  const signerTokenChangeDecimal = getDecimalValue(order.signer.amount, order.signer.token, metadata)
+  const senderTokenChangeDecimal = getDecimalValue(order.sender.amount, order.sender.token, metadata)
+  const newSignerTokenBalance = getDecimalValue(
     signerTokenBalance.add(order.signer.amount).toString(),
     order.signer.token,
     metadata,
   )
-  const newSenderTokenBalance = getBalanceDecimal(
+  const newSenderTokenBalance = getDecimalValue(
     senderTokenBalance.sub(order.sender.amount).toString(),
     order.sender.token,
     metadata,

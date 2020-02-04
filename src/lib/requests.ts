@@ -162,12 +162,12 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   if (side === 'buy') {
-    const signerAmountAtomic = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(first.decimals))
+    const signerAmountAtomic = utils.getAtomicValue(amount, first.addr, metadata)
     Object.assign(params, {
       signerAmount: signerAmountAtomic.integerValue(BigNumber.ROUND_FLOOR).toFixed(),
     })
   } else {
-    const senderAmountAtomic = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(first.decimals))
+    const senderAmountAtomic = utils.getAtomicValue(amount, first.addr, metadata)
     method = 'getSignerSide' + kind
     Object.assign(params, {
       senderAmount: senderAmountAtomic.integerValue(BigNumber.ROUND_FLOOR).toFixed(),

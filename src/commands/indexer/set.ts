@@ -48,7 +48,7 @@ export default class IntentSet extends Command {
           this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
           this.log(`Create this pair with ${chalk.bold('new:pair')}\n`)
         } else {
-          const atomicAmount = stakeAmount * 10 ** constants.AST_DECIMALS
+          const atomicAmount = utils.getAtomicValue(stakeAmount, constants.stakingTokenAddresses[chainId], metadata)
           new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
             .balanceOf(wallet.address)
             .then((balance: any) => {
