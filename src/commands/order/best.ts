@@ -4,7 +4,6 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
-import constants from '../../lib/constants.json'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -16,7 +15,7 @@ export default class OrderBest extends Command {
       const wallet = await utils.getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const protocol = utils.getProtocol(this)
+      const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, OrderBest.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')

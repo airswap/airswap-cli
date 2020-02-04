@@ -17,7 +17,7 @@ export default class IntentSet extends Command {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const protocol = utils.getProtocol(this)
+      const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, IntentSet.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]

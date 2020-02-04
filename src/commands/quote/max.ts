@@ -3,8 +3,6 @@ import * as utils from '../../lib/utils'
 import { get, getTokens, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
-import BigNumber from 'bignumber.js'
-
 export default class QuotesGet extends Command {
   static description = 'get a max quote from a peer'
   async run() {

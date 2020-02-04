@@ -17,7 +17,7 @@ export default class IntentGet extends Command {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const protocol = utils.getProtocol(this)
+      const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, IntentGet.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]

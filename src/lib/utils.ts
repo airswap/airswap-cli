@@ -160,7 +160,7 @@ export async function updateMetadata(ctx: any, network: number) {
 }
 
 export async function getProtocol(ctx: any) {
-  let { protocol } = await getConfig(ctx)
+  const { protocol } = await getConfig(ctx)
   return protocol || constants.protocols.HTTPS
 }
 
