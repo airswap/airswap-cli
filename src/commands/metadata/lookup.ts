@@ -32,7 +32,7 @@ export default class MetadataLookup extends Command {
         bySymbol: {},
       }
 
-      if (fs.pathExists(metadataPath)) {
+      if (await fs.pathExists(metadataPath)) {
         metadata = require(metadataPath)
       }
 

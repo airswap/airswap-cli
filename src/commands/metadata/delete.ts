@@ -5,7 +5,6 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
-import { getTable } from 'console.table'
 
 export default class MetadataDelete extends Command {
   static description = 'add token to local metadata'
@@ -34,7 +33,7 @@ export default class MetadataDelete extends Command {
         bySymbol: {},
       }
 
-      if (fs.pathExists(metadataPath)) {
+      if (await fs.pathExists(metadataPath)) {
         metadata = require(metadataPath)
       }
 

@@ -83,39 +83,55 @@ export async function updateMetadata(ctx: any, network: number) {
   const metadataMainnetPath = path.join(ctx.config.configDir, 'metadata-mainnet.json')
 
   if (String(network) === constants.chainIds.MAINNET) {
-    ctx.log('Updating metadata from forkdelta...')
+    ctx.log('Updating metadata from IDEX and ForkDelta...')
 
-    return new Promise((resolve, reject) => {
-      axios('https://forkdelta.app/config/main.json')
-        .then(async ({ data }: any) => {
-          data.tokens.push({
-            addr: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-            fullName: 'Wrapped Ether',
-            decimals: 18,
-            name: 'WETH',
-          })
+    return new Promise(async resolve => {
+      const {
+        data: { tokens },
+      } = await axios('https://forkdelta.app/config/main.json')
+      const idex = await axios('https://api.idex.market/returnCurrencies')
 
-          let metadata = {
-            byAddress: {},
-            bySymbol: {},
+      let metadata = {
+        byAddress: {},
+        bySymbol: {},
+      }
+
+      if (await fs.pathExists(metadataMainnetPath)) {
+        metadata = require(metadataMainnetPath)
+      }
+
+      tokens.push({
+        addr: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        fullName: 'Wrapped Ether',
+        decimals: 18,
+        name: 'WETH',
+      })
+
+      for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i].name !== 'ETH') {
+          metadata.byAddress[tokens[i].addr] = tokens[i]
+          metadata.bySymbol[tokens[i].name] = tokens[i]
+        }
+      }
+
+      for (const ticker in idex.data) {
+        if (ticker !== 'ETH') {
+          const token = {
+            name: ticker,
+            fullName: idex.data[ticker].name,
+            decimals: idex.data[ticker].decimals,
+            addr: idex.data[ticker].address,
           }
+          metadata.bySymbol[ticker] = token
+          metadata.byAddress[idex.data[ticker].address] = token
+        }
+      }
 
-          if (fs.pathExists(metadataMainnetPath)) {
-            metadata = require(metadataMainnetPath)
-          }
-
-          for (const i in data.tokens) {
-            metadata.bySymbol[data.tokens[i].name] = data.tokens[i]
-            metadata.byAddress[data.tokens[i].addr] = data.tokens[i]
-          }
-
-          await fs.outputJson(metadataMainnetPath, metadata)
-          ctx.log(`Mainnet saved to: ${metadataMainnetPath}`)
-          ctx.log(chalk.green('Local metadata updated\n'))
-          cli.action.stop()
-          resolve()
-        })
-        .catch((error: any) => reject(error))
+      await fs.outputJson(metadataMainnetPath, metadata)
+      ctx.log(`Mainnet saved to: ${metadataMainnetPath}`)
+      ctx.log(chalk.green('Local metadata updated\n'))
+      cli.action.stop()
+      resolve()
     })
   } else {
     await fs.outputJson(metadataRinkeby, {
@@ -123,16 +139,19 @@ export async function updateMetadata(ctx: any, network: number) {
         DAI: {
           addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
           name: 'DAI',
+          fullName: 'DAI Stablecoin - Rinkeby',
           decimals: 18,
         },
         WETH: {
           addr: '0xc778417e063141139fce010982780140aa0cd5ab',
           name: 'WETH',
+          fullName: 'Wrapped Ether - Rinkeby',
           decimals: 18,
         },
         AST: {
           addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
           name: 'AST',
+          fullName: 'AirSwap - Rinkeby',
           decimals: 4,
         },
       },
@@ -140,16 +159,19 @@ export async function updateMetadata(ctx: any, network: number) {
         '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
           addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
           name: 'DAI',
+          fullName: 'DAI Stablecoin - Rinkeby',
           decimals: 18,
         },
         '0xc778417e063141139fce010982780140aa0cd5ab': {
           addr: '0xc778417e063141139fce010982780140aa0cd5ab',
           name: 'WETH',
+          fullName: 'Wrapped Ether - Rinkeby',
           decimals: 18,
         },
         '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8': {
           addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
           name: 'AST',
+          fullName: 'AirSwap - Rinkeby',
           decimals: 4,
         },
       },

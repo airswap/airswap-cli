@@ -45,7 +45,7 @@ export default class Balances extends Command {
         this.log(getTable(result))
         this.log(`Balances displayed for ${result.length} of ${i} known tokens.\n`)
       } else {
-        this.log(`The current account holds no balances in any known tokens.\n`)
+        this.log(`The current account holds no balances in any of ${i} known tokens.\n`)
       }
     } catch (e) {
       cancelled(e)
