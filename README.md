@@ -47,7 +47,7 @@ $ airswap account:import
 
 # Explore the Network
 
-Set the active network
+Set the active network (1=mainnet, 4=rinkeby)
 
 ```
 $ airswap network
