@@ -201,6 +201,12 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   if (order.signer.wallet === order.sender.wallet) {
     errors.push('Counterparties (signer and sender) must use separate accounts')
   }
+  if (request.params.signerAmount && order.signer.amount < request.params.signerAmount) {
+    errors.push('Amount received (signerAmount) would be less than amount specified in request')
+  }
+  if (request.params.senderAmount && order.sender.amount > request.params.senderAmount) {
+    errors.push('Amount sent (senderAmount) would be more than amount specified in request')
+  }
 
   const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
   const allowance = await tokenContract.allowance(wallet.address, swapAddress)
