@@ -30,7 +30,7 @@ AirSwap CLI uses the native password manager of your system. On macOS, keys are 
 Install the CLI globally
 
 ```
-$ yarn add global airswap
+$ yarn global add airswap
 ```
 
 Create a new account to use for the CLI (recommended)
