@@ -139,16 +139,19 @@ export async function updateMetadata(ctx: any, network: number) {
         DAI: {
           addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
           name: 'DAI',
+          fullName: 'DAI Stablecoin - Rinkeby',
           decimals: 18,
         },
         WETH: {
           addr: '0xc778417e063141139fce010982780140aa0cd5ab',
           name: 'WETH',
+          fullName: 'Wrapped Ether - Rinkeby',
           decimals: 18,
         },
         AST: {
           addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
           name: 'AST',
+          fullName: 'AirSwap - Rinkeby',
           decimals: 4,
         },
       },
@@ -156,16 +159,19 @@ export async function updateMetadata(ctx: any, network: number) {
         '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
           addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
           name: 'DAI',
+          fullName: 'DAI Stablecoin - Rinkeby',
           decimals: 18,
         },
         '0xc778417e063141139fce010982780140aa0cd5ab': {
           addr: '0xc778417e063141139fce010982780140aa0cd5ab',
           name: 'WETH',
+          fullName: 'Wrapped Ether - Rinkeby',
           decimals: 18,
         },
         '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8': {
           addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
           name: 'AST',
+          fullName: 'AirSwap - Rinkeby',
           decimals: 4,
         },
       },
