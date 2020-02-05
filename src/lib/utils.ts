@@ -205,7 +205,7 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
   const allowance = await tokenContract.allowance(wallet.address, swapAddress)
 
-  if (allowance < order.sender.amount) {
+  if (allowance.lt(order.sender.amount)) {
     errors.push(
       `You have not approved ${chalk.bold(request.senderToken.name)} for trading. Approve it with ${chalk.bold(
         'token:approve',
