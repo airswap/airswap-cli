@@ -4,7 +4,6 @@ import * as emoji from 'node-emoji'
 import { table } from 'table'
 import BigNumber from 'bignumber.js'
 import constants from './constants.json'
-import { getTable } from 'console.table'
 import * as utils from './utils'
 
 prompt.message = ''
@@ -189,20 +188,39 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
       newSenderTokenBalance,
     } = await utils.getBalanceChanges(order, wallet, metadata)
 
-    ctx.log(
-      getTable([
-        {
-          Balance: `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.name}`,
-          Change: `+${chalk.bold(signerTokenChangeDecimal.toFixed())}`,
-          'New balance': `${newSignerTokenBalance.toFixed()} ${request.signerToken.name}`,
+    const config = {
+      columns: {
+        0: {
+          alignment: 'left',
         },
-        {
-          Balance: `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.name}`,
-          Change: `-${chalk.bold(senderTokenChangeDecimal.toFixed())}`,
-          'New balance': `${newSenderTokenBalance.toFixed()} ${request.senderToken.name}`,
+        1: {
+          alignment: 'right',
         },
-      ]),
-    )
+        2: {
+          alignment: 'right',
+        },
+      },
+    }
+
+    const data = [
+      [
+        'current',
+        `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.name}`,
+        `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.name}`,
+      ],
+      [
+        'impact',
+        chalk.greenBright(`+${signerTokenChangeDecimal.toFixed()} ${request.signerToken.name}`),
+        chalk.redBright(`-${senderTokenChangeDecimal.toFixed()} ${request.senderToken.name}`),
+      ],
+      [
+        'new',
+        `${chalk.bold(newSignerTokenBalance.toFixed())} ${request.signerToken.name}`,
+        `${chalk.bold(newSenderTokenBalance.toFixed())} ${request.senderToken.name}`,
+      ],
+    ]
+
+    printTable(ctx, null, data, config)
   }
 }
 
@@ -237,8 +255,10 @@ export async function printObject(ctx: any, metadata: any, title: string, params
 }
 
 export function printTable(ctx: any, title: string, data: Array<any>, config: any) {
-  ctx.log(chalk.underline.bold(title))
-  ctx.log()
+  if (title) {
+    ctx.log(chalk.underline.bold(title))
+    ctx.log()
+  }
   ctx.log(table(data, config))
 }
 
