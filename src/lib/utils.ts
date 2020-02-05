@@ -198,6 +198,9 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   if (order.signature.validator && order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
     errors.push('Order is intended for another swap contract')
   }
+  if (order.signer.wallet === order.sender.wallet) {
+    errors.push('Counterparties (signer and sender) must use separate accounts')
+  }
 
   const tokenContract = new ethers.Contract(order.sender.token, IERC20.abi, wallet)
   const allowance = await tokenContract.allowance(wallet.address, swapAddress)
@@ -213,11 +216,11 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   const { newSignerTokenBalance, newSenderTokenBalance } = await getBalanceChanges(order, wallet, metadata)
 
   if (newSignerTokenBalance.lt(0)) {
-    errors.push('The counterparty (signer) does not have sufficient balance')
+    errors.push('The counterparty does not have sufficient balance')
   }
 
   if (newSenderTokenBalance.lt(0)) {
-    errors.push('You (sender) do not have sufficient balance')
+    errors.push('You do not have sufficient balance')
   }
 
   return errors
