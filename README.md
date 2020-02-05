@@ -97,7 +97,7 @@ Withdraw an ETH balance from WETH
 $ airswap weth:withdraw
 ```
 
-## Rinkeby Resources
+# Rinkeby Resources
 
 - **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
 - **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
