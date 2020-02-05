@@ -97,35 +97,43 @@ Withdraw an ETH balance from WETH
 $ airswap weth:withdraw
 ```
 
+## Rinkeby Resources
+
+- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
+- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
+- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
+- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
+
 # All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap indexer:enable`](#airswap-indexerenable)
-* [`airswap indexer:get`](#airswap-indexerget)
-* [`airswap indexer:new`](#airswap-indexernew)
-* [`airswap indexer:set`](#airswap-indexerset)
-* [`airswap indexer:unset`](#airswap-indexerunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:delete`](#airswap-metadatadelete)
-* [`airswap metadata:lookup`](#airswap-metadatalookup)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap network`](#airswap-network)
-* [`airswap order:best`](#airswap-orderbest)
-* [`airswap order:get`](#airswap-orderget)
-* [`airswap quote:best`](#airswap-quotebest)
-* [`airswap quote:get`](#airswap-quoteget)
-* [`airswap quote:max`](#airswap-quotemax)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap weth:deposit`](#airswap-wethdeposit)
-* [`airswap weth:withdraw`](#airswap-wethwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap indexer:enable`](#airswap-indexerenable)
+- [`airswap indexer:get`](#airswap-indexerget)
+- [`airswap indexer:new`](#airswap-indexernew)
+- [`airswap indexer:set`](#airswap-indexerset)
+- [`airswap indexer:unset`](#airswap-indexerunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:delete`](#airswap-metadatadelete)
+- [`airswap metadata:lookup`](#airswap-metadatalookup)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap network`](#airswap-network)
+- [`airswap order:best`](#airswap-orderbest)
+- [`airswap order:get`](#airswap-orderget)
+- [`airswap quote:best`](#airswap-quotebest)
+- [`airswap quote:get`](#airswap-quoteget)
+- [`airswap quote:max`](#airswap-quotemax)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap weth:deposit`](#airswap-wethdeposit)
+- [`airswap weth:withdraw`](#airswap-wethwithdraw)
 
 ## `airswap account:delete`
 
@@ -418,11 +426,5 @@ USAGE
 ```
 
 _See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.2.6/src/commands/weth/withdraw.ts)_
+
 <!-- commandsstop -->
-
-## Helpful for Testing
-
-- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
-- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
-- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
