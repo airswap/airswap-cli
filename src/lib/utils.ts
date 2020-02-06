@@ -81,7 +81,7 @@ export async function getMetadata(ctx: any, network: number) {
 export async function updateMetadata(ctx: any, network: number) {
   const metadataRinkeby = path.join(ctx.config.configDir, 'metadata-rinkeby.json')
   const metadataMainnetPath = path.join(ctx.config.configDir, 'metadata-mainnet.json')
-  const startTime = new Date().getTime()
+  const startTime = Date.now()
 
   if (String(network) === constants.chainIds.MAINNET) {
     ctx.log('Updating metadata from IDEX and ForkDelta...')
@@ -131,7 +131,7 @@ export async function updateMetadata(ctx: any, network: number) {
       await fs.outputJson(metadataMainnetPath, metadata)
       ctx.log(`Mainnet saved to: ${metadataMainnetPath}`)
 
-      ctx.log(chalk.green(`\nLocal metadata updated. (${new Date().getTime() - startTime}ms)\n`))
+      ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
       cli.action.stop()
       resolve()
     })
@@ -179,7 +179,7 @@ export async function updateMetadata(ctx: any, network: number) {
       },
     })
     ctx.log(`Rinkeby saved to: ${metadataRinkeby}`)
-    ctx.log(chalk.green(`\nLocal metadata updated. (${new Date().getTime() - startTime}ms)\n`))
+    ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
   }
 }
 
