@@ -7,7 +7,7 @@ import { get, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 export default class MetadataDelete extends Command {
-  static description = 'add token to local metadata'
+  static description = 'delete token from local metadata'
   async run() {
     try {
       const provider = await utils.getProvider(this)
