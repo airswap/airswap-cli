@@ -18,6 +18,7 @@ export default class Balances extends Command {
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, Balances.description, chainId)
 
+      const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
       const balancesContract = new ethers.Contract(constants.deltaBalances[chainId], deltaBalancesABI, wallet)
       const balances = await balancesContract.walletBalances(wallet.address, Object.keys(metadata.byAddress))
@@ -41,9 +42,10 @@ export default class Balances extends Command {
         }
         i++
       }
+
       if (result.length) {
         this.log(getTable(result))
-        this.log(`Balances displayed for ${result.length} of ${i} known tokens.\n`)
+        this.log(`Balances displayed for ${result.length} of ${i} known tokens. (${Date.now() - startTime}ms)\n`)
       } else {
         this.log(`The current account holds no balances in any of ${i} known tokens.\n`)
       }
