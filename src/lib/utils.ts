@@ -243,8 +243,12 @@ export function getDecimalValue(value: string, token: string, metadata: any) {
 }
 
 export async function getBalanceChanges(order: any, wallet: any, metadata: any) {
-  const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(wallet.address)
-  const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(wallet.address)
+  const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(
+    order.signer.wallet,
+  )
+  const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(
+    order.sender.wallet,
+  )
 
   const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), order.signer.token, metadata)
   const senderTokenBalanceDecimal = getDecimalValue(senderTokenBalance.toString(), order.sender.token, metadata)
