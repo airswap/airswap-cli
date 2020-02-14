@@ -13,6 +13,7 @@ export default class TokenTransfer extends Command {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenTransfer.description, chainId)
 
       const { token }: any = await getTokens({ token: 'token' }, metadata)
@@ -48,7 +49,7 @@ export default class TokenTransfer extends Command {
           )
         ) {
           tokenContract
-            .transfer(recipient, atomicAmount.toFixed())
+            .transfer(recipient, atomicAmount.toFixed(), { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

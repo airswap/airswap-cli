@@ -16,6 +16,7 @@ export default class OrderBest extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, OrderBest.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
@@ -59,7 +60,7 @@ export default class OrderBest extends Command {
               )
             ) {
               new ethers.Contract(swapAddress, Swap.abi, wallet)
-                .swap(order)
+                .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)
             }

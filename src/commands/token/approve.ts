@@ -15,6 +15,7 @@ export default class TokenApprove extends Command {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenApprove.description, chainId)
 
       const swapAddress = swapDeploys[chainId]
@@ -40,7 +41,7 @@ export default class TokenApprove extends Command {
           )
         ) {
           tokenContract
-            .approve(swapAddress, constants.APPROVAL_AMOUNT)
+            .approve(swapAddress, constants.APPROVAL_AMOUNT, { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

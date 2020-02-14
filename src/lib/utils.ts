@@ -183,6 +183,22 @@ export async function updateMetadata(ctx: any, network: number) {
   }
 }
 
+export async function getCurrentGasPrices() {
+  const {
+    data: { fast, fastest, safeLow },
+  } = await axios(constants.ETH_GAS_STATION_URL)
+  return {
+    fast: fast / 10,
+    fastest: fastest / 10,
+    safeLow: safeLow / 10,
+  }
+}
+
+export async function getGasPrice(ctx: any) {
+  const { gasPrice } = await getConfig(ctx)
+  return gasPrice || constants.DEFAULT_GAS_PRICE
+}
+
 export async function getProtocol(ctx: any) {
   const { protocol } = await getConfig(ctx)
   return protocol || constants.protocols.HTTPS
