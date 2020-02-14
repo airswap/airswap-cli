@@ -11,7 +11,7 @@ prompt.start()
 
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
-  Token: 'Token not found in local metadata',
+  Token: `Token not found. Manage local metadata with the ${chalk.bold('metadata')} command`,
   Locator: 'Must be a URL. If no scheme provided (e.g. http://...) then HTTPS is implied',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
