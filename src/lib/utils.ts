@@ -79,11 +79,10 @@ export async function getMetadata(ctx: any, network: number) {
 }
 
 export async function updateMetadata(ctx: any, network: number) {
-  const metadataRinkeby = path.join(ctx.config.configDir, 'metadata-rinkeby.json')
-  const metadataMainnetPath = path.join(ctx.config.configDir, 'metadata-mainnet.json')
   const startTime = Date.now()
 
   if (String(network) === constants.chainIds.MAINNET) {
+    const metadataMainnetPath = path.join(ctx.config.configDir, 'metadata-mainnet.json')
     ctx.log('Updating metadata from IDEX and ForkDelta...')
 
     return new Promise(async resolve => {
@@ -129,14 +128,17 @@ export async function updateMetadata(ctx: any, network: number) {
       }
 
       await fs.outputJson(metadataMainnetPath, metadata)
-      ctx.log(`Mainnet saved to: ${metadataMainnetPath}`)
+      ctx.log(`${Object.keys(metadata.bySymbol).length} tokens saved to: ${metadataMainnetPath}`)
 
       ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
       cli.action.stop()
       resolve()
     })
   } else {
-    await fs.outputJson(metadataRinkeby, {
+    const metadataRinkebyPath = path.join(ctx.config.configDir, 'metadata-rinkeby.json')
+    ctx.log('Restoring hardcoded Rinkeby metadata...')
+
+    const metadata = {
       bySymbol: {
         DAI: {
           addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
@@ -177,8 +179,10 @@ export async function updateMetadata(ctx: any, network: number) {
           decimals: 4,
         },
       },
-    })
-    ctx.log(`Rinkeby saved to: ${metadataRinkeby}`)
+    }
+    await fs.outputJson(metadataRinkebyPath, metadata)
+    ctx.log(`${Object.keys(metadata.bySymbol).length} tokens saved to: ${metadataRinkebyPath}`)
+
     ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
   }
 }

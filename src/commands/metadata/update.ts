@@ -2,7 +2,7 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 
 export default class MetadataUpdate extends Command {
-  static description = 'update local metadata'
+  static description = 'update local metadata from remote sources'
   async run() {
     const provider = await utils.getProvider(this)
     const chainId = (await provider.getNetwork()).chainId
