@@ -17,6 +17,7 @@ export default class IntentUnset extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]
@@ -48,7 +49,7 @@ export default class IntentUnset extends Command {
             )
           ) {
             new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-              .unsetIntent(signerToken.addr, senderToken.addr, protocol)
+              .unsetIntent(signerToken.addr, senderToken.addr, protocol, { gasPrice })
               .then(utils.handleTransaction)
               .catch(utils.handleError)
           }

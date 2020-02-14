@@ -15,6 +15,7 @@ export default class IntentEnable extends Command {
       const wallet = await utils.getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentEnable.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]
@@ -38,7 +39,7 @@ export default class IntentEnable extends Command {
           )
         ) {
           stakingTokenContract
-            .approve(indexerAddress, constants.APPROVAL_AMOUNT)
+            .approve(indexerAddress, constants.APPROVAL_AMOUNT, { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

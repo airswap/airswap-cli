@@ -15,6 +15,7 @@ export default class OrderGet extends Command {
       const wallet = await utils.getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, OrderGet.description, chainId)
 
       const { locator }: any = await get({
@@ -72,7 +73,7 @@ export default class OrderGet extends Command {
               )
             ) {
               new ethers.Contract(swapAddress, Swap.abi, wallet)
-                .swap(order)
+                .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)
             }

@@ -16,6 +16,7 @@ export default class IntentNew extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentNew.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]
@@ -44,7 +45,7 @@ export default class IntentNew extends Command {
             )
           ) {
             indexerContract
-              .createIndex(signerToken.addr, senderToken.addr, protocol)
+              .createIndex(signerToken.addr, senderToken.addr, protocol, { gasPrice })
               .then(utils.handleTransaction)
               .catch(utils.handleError)
           }

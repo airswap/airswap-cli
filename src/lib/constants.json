@@ -8,6 +8,8 @@
   "DEFAULT_COUNT": 20,
   "DEFAULT_CONFIRMATIONS": 2,
   "DEFAULT_PORT": 3000,
+  "DEFAULT_GAS_PRICE": 5,
+  "ETH_GAS_STATION_URL": "https://ethgasstation.info/json/ethgasAPI.json",
   "REQUEST_TIMEOUT": 4000,
   "rinkebyTokens": {
     "DAI": "0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea",

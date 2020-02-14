@@ -13,6 +13,7 @@ export default class IntentUnset extends Command {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
+      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
       const WETH = metadata.bySymbol['WETH']
@@ -47,7 +48,7 @@ export default class IntentUnset extends Command {
           )
         ) {
           new ethers.Contract(WETH.addr, WETH9.abi, wallet)
-            .deposit({ value: ethers.utils.bigNumberify(atomicAmount.toFixed()) })
+            .deposit({ value: ethers.utils.bigNumberify(atomicAmount.toFixed()), gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }
