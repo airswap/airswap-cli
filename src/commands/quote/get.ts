@@ -32,8 +32,10 @@ export default class QuoteGet extends Command {
             this.log()
           }
           process.exit(0)
-        } else {
+        } else if (quote) {
           await printOrder(this, request, locator, quote, wallet, metadata)
+        } else {
+          this.log('No valid response received.\n')
         }
       })
     } catch (e) {
