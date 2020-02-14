@@ -48,13 +48,13 @@ export function peerCall(locator: string, method: string, params: any, callback:
 
   client.request(method, params, function(err: any, error: any, result: any) {
     if (err) {
-      callback(`\n${chalk.yellow('Connection Error')}: ${locator} \n ${err}`)
+      callback(`\n${chalk.yellow('Server Error')}: ${locator} \n ${err}`, null)
+    } else if (error) {
+      callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`, null)
+    } else if (result) {
+      callback(null, result)
     } else {
-      if (error) {
-        callback(`\n${chalk.yellow('Error Response')}: ${error.message}\n`)
-      } else {
-        callback(null, result)
-      }
+      callback(null, null)
     }
   })
 }
