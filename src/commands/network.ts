@@ -24,7 +24,7 @@ export default class Network extends Command {
       if (!(newNetwork in constants.chainNames)) {
         this.log(chalk.yellow(`\n${newNetwork} is not a supported chain.\n`))
       } else {
-        await utils.setConfig(this, {
+        await utils.updateConfig(this, {
           network: newNetwork,
         })
 
