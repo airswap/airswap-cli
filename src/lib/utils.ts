@@ -25,7 +25,6 @@ export function displayDescription(ctx: any, title: string, network?: number) {
 
 export async function getConfig(ctx: any) {
   const config = path.join(ctx.config.configDir, 'config.json')
-
   if (!(await fs.pathExists(config))) {
     await fs.outputJson(config, {
       network: '4',
@@ -34,9 +33,13 @@ export async function getConfig(ctx: any) {
   return await fs.readJson(config)
 }
 
-export async function setConfig(ctx: any, config: any) {
+export async function updateConfig(ctx: any, config: any) {
   const configPath = path.join(ctx.config.configDir, 'config.json')
-  await fs.outputJson(configPath, config)
+  const existingConfig = await getConfig(ctx)
+  await fs.outputJson(configPath, {
+    ...existingConfig,
+    ...config,
+  })
 }
 
 export async function getProvider(ctx: any) {
@@ -198,9 +201,12 @@ export async function getCurrentGasPrices() {
   }
 }
 
-export async function getGasPrice(ctx: any) {
+export async function getGasPrice(ctx: any, asGwei?: boolean) {
   const { gasPrice } = await getConfig(ctx)
-  return gasPrice || constants.DEFAULT_GAS_PRICE
+  if (asGwei) {
+    return gasPrice || constants.DEFAULT_GAS_PRICE
+  }
+  return ethers.utils.parseUnits(gasPrice || constants.DEFAULT_GAS_PRICE, 'gwei')
 }
 
 export async function getProtocol(ctx: any) {

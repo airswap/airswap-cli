@@ -14,7 +14,7 @@ export default class Gas extends Command {
     try {
       const { fastest, fast, average } = await utils.getCurrentGasPrices()
 
-      const gasPrice = await utils.getGasPrice(this)
+      const gasPrice = await utils.getGasPrice(this, true)
 
       this.log(`Current gas price: ${gasPrice}\n`)
 
@@ -26,7 +26,7 @@ export default class Gas extends Command {
         },
       })
 
-      await utils.setConfig(this, {
+      await utils.updateConfig(this, {
         gasPrice: newGasPrice,
       })
 
