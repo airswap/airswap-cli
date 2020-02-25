@@ -2,6 +2,7 @@ import { cli } from 'cli-ux'
 import chalk from 'chalk'
 import * as keytar from 'keytar'
 import { ethers } from 'ethers'
+import { bigNumberify } from 'ethers/utils'
 import * as emoji from 'node-emoji'
 
 import * as fs from 'fs-extra'
@@ -204,9 +205,9 @@ export async function getCurrentGasPrices() {
 export async function getGasPrice(ctx: any, asGwei?: boolean) {
   const { gasPrice } = await getConfig(ctx)
   if (asGwei) {
-    return gasPrice || constants.DEFAULT_GAS_PRICE
+    return bigNumberify(gasPrice || constants.DEFAULT_GAS_PRICE)
   }
-  return ethers.utils.parseUnits(gasPrice || constants.DEFAULT_GAS_PRICE, 'gwei')
+  return ethers.utils.parseUnits(String(gasPrice || constants.DEFAULT_GAS_PRICE), 'gwei')
 }
 
 export async function getProtocol(ctx: any) {
