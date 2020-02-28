@@ -5,7 +5,7 @@ export default class MetadataUpdate extends Command {
   static description = 'update local metadata from remote sources'
   async run() {
     const provider = await utils.getProvider(this)
-    const chainId = (await provider.getNetwork()).chainId
+    const chainId = String((await provider.getNetwork()).chainId)
     utils.displayDescription(this, MetadataUpdate.description, chainId)
 
     await utils.updateMetadata(this, chainId)

@@ -9,7 +9,7 @@ export default class QuoteGet extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, QuoteGet.description, chainId)
 
