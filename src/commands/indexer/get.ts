@@ -15,7 +15,7 @@ export default class IntentGet extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = (await provider.getNetwork()).chainId
+      const chainId = String((await provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, IntentGet.description, chainId)
@@ -26,15 +26,15 @@ export default class IntentGet extends Command {
       const { side, first, second, signerToken, senderToken }: any = await getSideAndTokens(metadata)
 
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, provider)
-      const index = indexerContract.indexes(signerToken.addr, senderToken.addr, protocol)
+      const index = indexerContract.indexes(signerToken.address, senderToken.address, protocol)
 
       if (index === constants.ADDRESS_ZERO) {
-        this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+        this.log(chalk.yellow(`Pair ${signerToken.symbol}/${senderToken.symbol} does not exist`))
         this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
       } else {
         const result = await indexerContract.getLocators(
-          signerToken.addr,
-          senderToken.addr,
+          signerToken.address,
+          senderToken.address,
           protocol,
           constants.INDEX_HEAD,
           constants.DEFAULT_COUNT,

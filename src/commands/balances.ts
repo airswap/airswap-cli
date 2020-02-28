@@ -7,6 +7,7 @@ import constants from '../lib/constants.json'
 import deltaBalancesABI from '../lib/deltaBalances.json'
 import { cancelled } from '../lib/prompt'
 
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
 export default class Balances extends Command {
@@ -14,42 +15,47 @@ export default class Balances extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, Balances.description, chainId)
 
       const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
       const balancesContract = new ethers.Contract(constants.deltaBalances[chainId], deltaBalancesABI, wallet)
-      const balances = await balancesContract.walletBalances(wallet.address, Object.keys(metadata.byAddress))
-      const allowances = await balancesContract.walletAllowances(
-        wallet.address,
-        swapAddress,
-        Object.keys(metadata.byAddress),
-      )
 
-      let i = 0
+      const addresses = Object.keys(metadata.byAddress)
+      const balances = await balancesContract.walletBalances(wallet.address, addresses)
+
       const result = []
-      for (const token in metadata.byAddress) {
+      for (let i = 0; i < addresses.length; i++) {
+        const token = metadata.byAddress[addresses[i]]
         if (!balances[i].eq(0)) {
-          const balanceDecimal = utils.getDecimalValue(balances[i], token, metadata)
-
-          result.push({
-            Token: metadata.byAddress[token].name,
-            Balance: balanceDecimal,
-            Approved: allowances[i].eq(0) ? 'No' : chalk.green('Yes'),
-          })
+          const balanceDecimal = utils.getDecimalValue(balances[i], token.address, metadata)
+          try {
+            const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
+            const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+            result.push({
+              Token: token.symbol,
+              Balance: balanceDecimal,
+              Approved: allowance.eq(0) ? 'No' : chalk.green('Yes'),
+            })
+          } catch {
+            continue
+          }
         }
-        i++
       }
 
       if (result.length) {
         this.log(getTable(result))
-        this.log(`Balances displayed for ${result.length} of ${i} known tokens. (${Date.now() - startTime}ms)\n`)
+        this.log(
+          `Balances displayed for ${result.length} of ${addresses.length} known tokens. (${Date.now() -
+            startTime}ms)\n`,
+        )
       } else {
-        this.log(`The current account holds no balances in any of ${i} known tokens.\n`)
+        this.log(`The current account holds no balances in any of ${addresses.length} known tokens.\n`)
       }
     } catch (e) {
+      console.log(e)
       cancelled(e)
     }
   }

@@ -10,16 +10,18 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
+import { chainNames } from '@airswap/constants'
+import TokenMetadata from '@airswap/metadata'
+
 import { orders } from '@airswap/order-utils'
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-
 const constants = require('./constants.json')
 
-export function displayDescription(ctx: any, title: string, network?: number) {
+export function displayDescription(ctx: any, title: string, network?: string) {
   let networkName = ''
   if (network) {
     const selectedNetwork = constants.chainNames[network || '4'].toUpperCase()
-    networkName = network === 1 ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
+    networkName = network === '1' ? chalk.green(selectedNetwork) : chalk.cyan(selectedNetwork)
   }
   ctx.log(`\n${chalk.white.bold(title)} ${networkName}\n`)
 }
@@ -72,123 +74,47 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
   }
 }
 
-export async function getMetadata(ctx: any, network: number) {
+export async function getMetadata(ctx: any, network: string) {
   const selectedNetwork = constants.chainNames[network]
   const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedNetwork}.json`)
   if (!(await fs.pathExists(metadataPath))) {
-    ctx.log(chalk.yellow('\nLocal metadata not found'))
+    ctx.log(chalk.yellow('\nFetching remote metadata'))
     await updateMetadata(ctx, network)
   }
-  return require(metadataPath)
+  let metadata = require(metadataPath)
+
+  if (metadata.version !== ctx.config.version) {
+    ctx.log(chalk.yellow('\nUpdating metadata version'))
+    metadata = await updateMetadata(ctx, network)
+  }
+  return metadata
 }
 
-export async function updateMetadata(ctx: any, network: number) {
+export async function updateMetadata(ctx: any, network: string) {
   const startTime = Date.now()
 
-  if (String(network) === constants.chainIds.MAINNET) {
-    const metadataMainnetPath = path.join(ctx.config.configDir, 'metadata-mainnet.json')
-    ctx.log('Updating metadata from IDEX and ForkDelta...')
+  const tokenMetadata = new TokenMetadata(network)
+  const tokens = await tokenMetadata.fetchKnownTokens()
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[network]}.json`)
 
-    return new Promise(async resolve => {
-      const {
-        data: { tokens },
-      } = await axios('https://forkdelta.app/config/main.json')
-      const idex = await axios('https://api.idex.market/returnCurrencies')
-
-      let metadata = {
-        byAddress: {},
-        bySymbol: {},
-      }
-
-      if (await fs.pathExists(metadataMainnetPath)) {
-        metadata = require(metadataMainnetPath)
-      }
-
-      tokens.push({
-        addr: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-        fullName: 'Wrapped Ether',
-        decimals: 18,
-        name: 'WETH',
-      })
-
-      for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].name !== 'ETH') {
-          metadata.byAddress[tokens[i].addr] = tokens[i]
-          metadata.bySymbol[tokens[i].name] = tokens[i]
-        }
-      }
-
-      for (const ticker in idex.data) {
-        if (ticker !== 'ETH') {
-          const token = {
-            name: ticker,
-            fullName: idex.data[ticker].name,
-            decimals: idex.data[ticker].decimals,
-            addr: idex.data[ticker].address,
-          }
-          metadata.bySymbol[ticker] = token
-          metadata.byAddress[idex.data[ticker].address] = token
-        }
-      }
-
-      await fs.outputJson(metadataMainnetPath, metadata)
-      ctx.log(`${Object.keys(metadata.bySymbol).length} tokens saved to: ${metadataMainnetPath}`)
-
-      ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
-      cli.action.stop()
-      resolve()
-    })
-  } else {
-    const metadataRinkebyPath = path.join(ctx.config.configDir, 'metadata-rinkeby.json')
-    ctx.log('Restoring hardcoded Rinkeby metadata...')
-
-    const metadata = {
-      bySymbol: {
-        DAI: {
-          addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
-          name: 'DAI',
-          fullName: 'DAI Stablecoin - Rinkeby',
-          decimals: 18,
-        },
-        WETH: {
-          addr: '0xc778417e063141139fce010982780140aa0cd5ab',
-          name: 'WETH',
-          fullName: 'Wrapped Ether - Rinkeby',
-          decimals: 18,
-        },
-        AST: {
-          addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
-          name: 'AST',
-          fullName: 'AirSwap - Rinkeby',
-          decimals: 4,
-        },
-      },
-      byAddress: {
-        '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea': {
-          addr: '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
-          name: 'DAI',
-          fullName: 'DAI Stablecoin - Rinkeby',
-          decimals: 18,
-        },
-        '0xc778417e063141139fce010982780140aa0cd5ab': {
-          addr: '0xc778417e063141139fce010982780140aa0cd5ab',
-          name: 'WETH',
-          fullName: 'Wrapped Ether - Rinkeby',
-          decimals: 18,
-        },
-        '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8': {
-          addr: '0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8',
-          name: 'AST',
-          fullName: 'AirSwap - Rinkeby',
-          decimals: 4,
-        },
-      },
-    }
-    await fs.outputJson(metadataRinkebyPath, metadata)
-    ctx.log(`${Object.keys(metadata.bySymbol).length} tokens saved to: ${metadataRinkebyPath}`)
-
-    ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
+  const bySymbol: any = {}
+  for (const token of tokens) {
+    bySymbol[token.symbol] = token
   }
+
+  const byAddress = tokenMetadata.getTokensByAddress()
+
+  const metadata = {
+    version: ctx.config.version,
+    byAddress,
+    bySymbol,
+  }
+  await fs.outputJson(metadataPath, metadata)
+
+  ctx.log(`${Object.keys(byAddress).length} tokens saved to: ${metadataPath}`)
+  ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
+
+  return metadata
 }
 
 export async function getCurrentGasPrices() {
@@ -221,7 +147,7 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
   if (!orders.isValidOrder(order)) {
     errors.push('Order has invalid params or signature')
   }
-  if (order.signer.token !== request.signerToken.addr || order.sender.token !== request.senderToken.addr) {
+  if (order.signer.token !== request.signerToken.address || order.sender.token !== request.senderToken.address) {
     errors.push('Order tokens do not match those requested')
   }
   if (order.signature.validator && order.signature.validator.toLowerCase() !== swapAddress.toLowerCase()) {
@@ -242,7 +168,7 @@ export async function verifyOrder(request, order, swapAddress, wallet, metadata)
 
   if (allowance.lt(order.sender.amount)) {
     errors.push(
-      `You have not approved ${chalk.bold(request.senderToken.name)} for trading. Approve it with ${chalk.bold(
+      `You have not approved ${chalk.bold(request.senderToken.symbol)} for trading. Approve it with ${chalk.bold(
         'token:approve',
       )}`,
     )

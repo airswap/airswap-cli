@@ -1,10 +1,7 @@
 import chalk from 'chalk'
-import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import { get, cancelled } from '../lib/prompt'
 import * as utils from '../lib/utils'
-
-const constants = require('../lib/constants.json')
 
 export default class Gas extends Command {
   static description = 'set gas price for transactions'

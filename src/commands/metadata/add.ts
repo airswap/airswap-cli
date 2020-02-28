@@ -11,7 +11,7 @@ export default class MetadataAdd extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = (await provider.getNetwork()).chainId
+      const chainId = String((await provider.getNetwork()).chainId)
 
       this.log()
       utils.displayDescription(this, MetadataAdd.description, chainId)
@@ -22,11 +22,11 @@ export default class MetadataAdd extends Command {
       }
 
       const token: any = await get({
-        name: {
+        symbol: {
           description: 'ticker',
           type: 'String',
         },
-        fullName: {
+        name: {
           description: 'name',
           type: 'String',
         },
@@ -34,13 +34,13 @@ export default class MetadataAdd extends Command {
           description: 'decimals',
           type: 'Number',
         },
-        addr: {
+        address: {
           description: 'address',
           type: 'Address',
         },
       })
 
-      token.name = token.name.toUpperCase()
+      token.symbol = token.symbol.toUpperCase()
 
       let metadata = {
         byAddress: {},
@@ -52,19 +52,19 @@ export default class MetadataAdd extends Command {
       }
 
       this.log(
-        `\n${token.name} (${token.fullName}) · https://${constants.etherscanDomains[chainId]}/address/${token.addr} · ${token.decimals} decimals`,
+        `\n${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
       )
 
-      if (metadata.byAddress[token.addr] || metadata.bySymbol[token.name]) {
+      if (metadata.byAddress[token.address] || metadata.bySymbol[token.symbol]) {
         const networkName = constants.chainNames[chainId || '4'].toUpperCase()
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nToken exists in metadata. Type "yes" to overwrite it (${networkName})`),
+            description: chalk.white(`\nToken already exists in metadata. Type "yes" to overwrite it (${networkName})`),
           },
         })
         if (confirm === 'yes') {
-          metadata.byAddress[token.addr] = token
-          metadata.bySymbol[token.name] = token
+          metadata.byAddress[token.address] = token
+          metadata.bySymbol[token.symbol] = token
 
           await fs.outputJson(metadataPath, metadata)
           this.log(chalk.green('Local metadata updated\n'))
@@ -72,8 +72,8 @@ export default class MetadataAdd extends Command {
           this.log('\nCancelled.\n')
         }
       } else {
-        metadata.byAddress[token.addr] = token
-        metadata.bySymbol[token.name] = token
+        metadata.byAddress[token.address] = token
+        metadata.bySymbol[token.symbol] = token
 
         await fs.outputJson(metadataPath, metadata)
         this.log(chalk.green('\nLocal metadata updated\n'))

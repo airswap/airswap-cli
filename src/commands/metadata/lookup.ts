@@ -11,7 +11,7 @@ export default class MetadataLookup extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = (await provider.getNetwork()).chainId
+      const chainId = String((await provider.getNetwork()).chainId)
 
       this.log()
       utils.displayDescription(this, MetadataLookup.description, chainId)
@@ -52,7 +52,7 @@ export default class MetadataLookup extends Command {
         this.log(`Add a new token with ${chalk.bold('metadata:add')}\n`)
       } else {
         this.log(
-          `${token.name} (${token.fullName}) · https://${constants.etherscanDomains[chainId]}/address/${token.addr} · ${token.decimals} decimals\n`,
+          `${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
         )
       }
     } catch (e) {

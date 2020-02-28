@@ -13,7 +13,7 @@ export default class IntentNew extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)
@@ -27,7 +27,7 @@ export default class IntentNew extends Command {
 
       this.log()
 
-      indexerContract.indexes(signerToken.addr, senderToken.addr, protocol).then(async (index: any) => {
+      indexerContract.indexes(signerToken.address, senderToken.address, protocol).then(async (index: any) => {
         if (index !== constants.ADDRESS_ZERO) {
           this.log(`${chalk.yellow('Pair already exists')}`)
           this.log(`Set intent on this pair with ${chalk.bold('indexer:set')}\n`)
@@ -38,14 +38,14 @@ export default class IntentNew extends Command {
               metadata,
               'createIndex',
               {
-                signerToken: `${signerToken.addr} (${signerToken.name})`,
-                senderToken: `${senderToken.addr} (${senderToken.name})`,
+                signerToken: `${signerToken.address} (${signerToken.symbol})`,
+                senderToken: `${senderToken.address} (${senderToken.symbol})`,
               },
               chainId,
             )
           ) {
             indexerContract
-              .createIndex(signerToken.addr, senderToken.addr, protocol, { gasPrice })
+              .createIndex(signerToken.address, senderToken.address, protocol, { gasPrice })
               .then(utils.handleTransaction)
               .catch(utils.handleError)
           }

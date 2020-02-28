@@ -151,8 +151,8 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
 
   let method = 'getSenderSide' + kind
   const params = {
-    signerToken: signerToken.addr,
-    senderToken: senderToken.addr,
+    signerToken: signerToken.address,
+    senderToken: senderToken.address,
   }
 
   if (kind === 'Order') {

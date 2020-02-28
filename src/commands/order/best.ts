@@ -13,7 +13,7 @@ export default class OrderBest extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)
@@ -47,12 +47,12 @@ export default class OrderBest extends Command {
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(
-                    utils.getDecimalValue(order.signer.amount, request.signerToken.addr, metadata).toFixed(),
+                    utils.getDecimalValue(order.signer.amount, request.signerToken.address, metadata).toFixed(),
                   )})`,
                   senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
                   senderToken: order.sender.token,
                   senderAmount: `${order.sender.amount} (${chalk.cyan(
-                    utils.getDecimalValue(order.sender.amount, request.senderToken.addr, metadata).toFixed(),
+                    utils.getDecimalValue(order.sender.amount, request.senderToken.address, metadata).toFixed(),
                   )})`,
                 },
                 chainId,
