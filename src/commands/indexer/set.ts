@@ -24,16 +24,17 @@ export default class IntentSet extends Command {
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
+      this.log("As a maker, I intend to:\n")
 
       const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
 
       const values: any = await get({
         locator: {
-          description: 'locator',
+          description: 'locator (url)',
           type: 'Locator',
         },
         stakeAmount: {
-          description: 'stakeAmount',
+          description: 'amount to stake',
           type: 'Number',
         },
       })
@@ -45,8 +46,8 @@ export default class IntentSet extends Command {
 
       indexerContract.indexes(signerToken.address, senderToken.address, protocol).then(async (index: any) => {
         if (index === constants.ADDRESS_ZERO) {
-          this.log(chalk.yellow(`Pair ${signerToken.symbol}/${senderToken.symbol} does not exist`))
-          this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
+          this.log(chalk.yellow(`${signerToken.symbol}/${senderToken.symbol} does not exist`))
+          this.log(`Create this index with ${chalk.bold('indexer:new')}\n`)
         } else {
           const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
           if (existingEntry !== constants.LOCATOR_ZERO) {

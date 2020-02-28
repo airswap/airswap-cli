@@ -18,7 +18,7 @@ export default class IntentUnset extends Command {
 
       const WETH = metadata.bySymbol['WETH']
       const balance = await wallet.provider.getBalance(wallet.address)
-      const balanceDecimal = utils.getDecimalValue(balance.toString(), WETH.addr, metadata)
+      const balanceDecimal = utils.getDecimalValue(balance.toString(), WETH.address, metadata)
       this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal.toFixed())}`)
       this.log(chalk.gray('Some ETH must be saved to execute the transaction.\n'))
 
@@ -28,7 +28,7 @@ export default class IntentUnset extends Command {
           type: 'Number',
         },
       })
-      const atomicAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
+      const atomicAmount = utils.getAtomicValue(amount, WETH.address, metadata)
 
       if (atomicAmount.eq(0)) {
         cancelled('Amount must be greater than zero.')
@@ -47,7 +47,7 @@ export default class IntentUnset extends Command {
             chainId,
           )
         ) {
-          new ethers.Contract(WETH.addr, WETH9.abi, wallet)
+          new ethers.Contract(WETH.address, WETH9.abi, wallet)
             .deposit({ value: ethers.utils.bigNumberify(atomicAmount.toFixed()), gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)

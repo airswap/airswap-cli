@@ -17,9 +17,9 @@ export default class IntentUnset extends Command {
       utils.displayDescription(this, IntentUnset.description, chainId)
 
       const WETH = metadata.bySymbol['WETH']
-      const tokenContract = new ethers.Contract(WETH.addr, WETH9.abi, wallet)
+      const tokenContract = new ethers.Contract(WETH.address, WETH9.abi, wallet)
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
-      const balanceDecimal = utils.getDecimalValue(tokenBalance.toString(), WETH.addr, metadata)
+      const balanceDecimal = utils.getDecimalValue(tokenBalance.toString(), WETH.address, metadata)
       this.log(`WETH available to withdraw: ${chalk.bold(balanceDecimal.toFixed())}\n`)
 
       const { amount }: any = await get({
@@ -28,7 +28,7 @@ export default class IntentUnset extends Command {
           type: 'Number',
         },
       })
-      const atomicAmount = utils.getAtomicValue(amount, WETH.addr, metadata)
+      const atomicAmount = utils.getAtomicValue(amount, WETH.address, metadata)
 
       if (atomicAmount.eq(0)) {
         cancelled('Amount must be greater than zero.')
@@ -47,7 +47,7 @@ export default class IntentUnset extends Command {
             chainId,
           )
         ) {
-          new ethers.Contract(WETH.addr, WETH9.abi, wallet)
+          new ethers.Contract(WETH.address, WETH9.abi, wallet)
             .withdraw(ethers.utils.bigNumberify(atomicAmount.toFixed()), { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
