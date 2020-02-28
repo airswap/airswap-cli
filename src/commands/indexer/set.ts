@@ -15,7 +15,7 @@ export default class IntentSet extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)
@@ -43,9 +43,9 @@ export default class IntentSet extends Command {
 
       this.log()
 
-      indexerContract.indexes(signerToken.addr, senderToken.addr, protocol).then(async (index: any) => {
+      indexerContract.indexes(signerToken.address, senderToken.address, protocol).then(async (index: any) => {
         if (index === constants.ADDRESS_ZERO) {
-          this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+          this.log(chalk.yellow(`Pair ${signerToken.symbol}/${senderToken.symbol} does not exist`))
           this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
         } else {
           const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
@@ -79,8 +79,8 @@ export default class IntentSet extends Command {
                             metadata,
                             'setIntent',
                             {
-                              signerToken: signerToken.addr,
-                              senderToken: senderToken.addr,
+                              signerToken: signerToken.address,
+                              senderToken: senderToken.address,
                               protocol: `${protocol} (${chalk.cyan(constants.protocolNames[protocol])})`,
                               locator,
                               stakeAmount: `${atomicAmount} (${chalk.cyan(stakeAmount)})`,
@@ -91,8 +91,8 @@ export default class IntentSet extends Command {
                           const locatorBytes = ethers.utils.formatBytes32String(locator)
                           new ethers.Contract(indexerAddress, Indexer.abi, wallet)
                             .setIntent(
-                              signerToken.addr,
-                              senderToken.addr,
+                              signerToken.address,
+                              senderToken.address,
                               protocol,
                               atomicAmount.toFixed(),
                               locatorBytes,

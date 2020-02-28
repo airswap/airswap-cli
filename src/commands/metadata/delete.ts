@@ -11,7 +11,7 @@ export default class MetadataDelete extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = (await provider.getNetwork()).chainId
+      const chainId = String((await provider.getNetwork()).chainId)
 
       this.log()
       utils.displayDescription(this, MetadataDelete.description, chainId)
@@ -51,17 +51,17 @@ export default class MetadataDelete extends Command {
         this.log('Token not found in metadata.\n')
       } else {
         this.log(
-          `${token.name} (${token.fullName}) · https://${constants.etherscanDomains[chainId]}/address/${token.addr} · ${token.decimals} decimals`,
+          `${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
         )
 
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nType "yes" to remove this token (${token.name}) from local metadata`),
+            description: chalk.white(`\nType "yes" to remove this token (${token.symbol}) from local metadata`),
           },
         })
         if (confirm === 'yes') {
-          delete metadata.byAddress[token.addr]
-          delete metadata.bySymbol[token.name]
+          delete metadata.byAddress[token.address]
+          delete metadata.bySymbol[token.symbol]
 
           await fs.outputJson(metadataPath, metadata)
           this.log(chalk.green('Local metadata updated\n'))

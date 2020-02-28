@@ -127,10 +127,10 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
       emoji.get('sparkles'),
       chalk.bold('Buy'),
       chalk.bold(signerAmountDecimal),
-      request.signerToken.name,
+      request.signerToken.symbol,
       'for',
       chalk.bold(senderAmountDecimal),
-      request.senderToken.name,
+      request.senderToken.symbol,
       order.expiry ? `· Expiry ${new Date(order.expiry * 1000).toLocaleTimeString()}` : '',
     )
     ctx.log(
@@ -140,12 +140,12 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
             .div(senderAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${request.signerToken.name}/${request.senderToken.name} (${chalk.white(
+        )} ${request.signerToken.symbol}/${request.senderToken.symbol} (${chalk.white(
           new BigNumber(senderAmountDecimal)
             .div(signerAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${request.senderToken.name}/${request.signerToken.name})`,
+        )} ${request.senderToken.symbol}/${request.signerToken.symbol})`,
       ),
     )
   } else {
@@ -153,10 +153,10 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
       emoji.get('sparkles'),
       chalk.bold('Sell'),
       chalk.bold(senderAmountDecimal),
-      request.senderToken.name,
+      request.senderToken.symbol,
       'for',
       chalk.bold(signerAmountDecimal),
-      request.signerToken.name,
+      request.signerToken.symbol,
       order.expiry ? `· Expiry ${new Date(order.expiry * 1000).toLocaleTimeString()}` : '',
     )
     ctx.log(
@@ -166,12 +166,12 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
             .div(signerAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${request.senderToken.name}/${request.signerToken.name} (${chalk.white(
+        )} ${request.senderToken.symbol}/${request.signerToken.symbol} (${chalk.white(
           new BigNumber(signerAmountDecimal)
             .div(senderAmountDecimal)
             .decimalPlaces(6)
             .toFixed(),
-        )} ${request.signerToken.name}/${request.senderToken.name})`,
+        )} ${request.signerToken.symbol}/${request.senderToken.symbol})`,
       ),
     )
   }
@@ -205,18 +205,18 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
     const data = [
       [
         'current',
-        `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.name}`,
-        `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.name}`,
+        `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.symbol}`,
+        `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.symbol}`,
       ],
       [
         'impact',
-        chalk.greenBright(`+${signerTokenChangeDecimal.toFixed()} ${request.signerToken.name}`),
-        chalk.redBright(`-${senderTokenChangeDecimal.toFixed()} ${request.senderToken.name}`),
+        chalk.greenBright(`+${signerTokenChangeDecimal.toFixed()} ${request.signerToken.symbol}`),
+        chalk.redBright(`-${senderTokenChangeDecimal.toFixed()} ${request.senderToken.symbol}`),
       ],
       [
         'new',
-        `${chalk.bold(newSignerTokenBalance.toFixed())} ${request.signerToken.name}`,
-        `${chalk.bold(newSenderTokenBalance.toFixed())} ${request.senderToken.name}`,
+        `${chalk.bold(newSignerTokenBalance.toFixed())} ${request.signerToken.symbol}`,
+        `${chalk.bold(newSenderTokenBalance.toFixed())} ${request.senderToken.symbol}`,
       ],
     ]
 
@@ -267,7 +267,7 @@ export async function confirm(
   metadata: any,
   name: String,
   params: any,
-  network: number,
+  network: string,
   verb?: string,
 ): Promise<boolean> {
   const data = getData(metadata, params)

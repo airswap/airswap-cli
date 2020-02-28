@@ -11,7 +11,7 @@ export default class TokenTransfer extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenTransfer.description, chainId)
@@ -28,8 +28,8 @@ export default class TokenTransfer extends Command {
         },
       })
 
-      const atomicAmount = utils.getAtomicValue(amount, token.addr, metadata)
-      const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
+      const atomicAmount = utils.getAtomicValue(amount, token.address, metadata)
+      const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
 
       if (tokenBalance.lt(atomicAmount.toString())) {

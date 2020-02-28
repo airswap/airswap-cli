@@ -14,7 +14,7 @@ export default class IntentUnset extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)
@@ -26,9 +26,9 @@ export default class IntentUnset extends Command {
       const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
       this.log()
 
-      const index = await indexerContract.indexes(signerToken.addr, senderToken.addr, protocol)
+      const index = await indexerContract.indexes(signerToken.address, senderToken.address, protocol)
       if (index === constants.ADDRESS_ZERO) {
-        this.log(chalk.yellow(`Pair ${signerToken.name}/${senderToken.name} does not exist`))
+        this.log(chalk.yellow(`Pair ${signerToken.symbol}/${senderToken.symbol} does not exist`))
         this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
       } else {
         const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
@@ -41,15 +41,15 @@ export default class IntentUnset extends Command {
               metadata,
               'unsetIntent',
               {
-                signerToken: signerToken.addr,
-                senderToken: senderToken.addr,
+                signerToken: signerToken.address,
+                senderToken: senderToken.address,
                 protocol: `${protocol} (${chalk.cyan(constants.protocolNames[protocol])})`,
               },
               chainId,
             )
           ) {
             new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-              .unsetIntent(signerToken.addr, senderToken.addr, protocol, { gasPrice })
+              .unsetIntent(signerToken.address, senderToken.address, protocol, { gasPrice })
               .then(utils.handleTransaction)
               .catch(utils.handleError)
           }

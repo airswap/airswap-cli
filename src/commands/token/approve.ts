@@ -13,7 +13,7 @@ export default class TokenApprove extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = (await wallet.provider.getNetwork()).chainId
+      const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenApprove.description, chainId)
@@ -22,11 +22,11 @@ export default class TokenApprove extends Command {
       const { token }: any = await getTokens({ token: 'token' }, metadata)
       this.log()
 
-      const tokenContract = new ethers.Contract(token.addr, IERC20.abi, wallet)
+      const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
       const allowance = await tokenContract.allowance(wallet.address, swapAddress)
 
       if (!allowance.eq(0)) {
-        this.log(chalk.yellow(`${token.name} is already approved for trading\n`))
+        this.log(chalk.yellow(`${token.symbol} is already approved for trading\n`))
       } else {
         if (
           await confirm(
@@ -34,7 +34,7 @@ export default class TokenApprove extends Command {
             metadata,
             'approve',
             {
-              token: `${token.addr} (${token.name})`,
+              token: `${token.address} (${token.symbol})`,
               spender: `${swapAddress} (Swap)`,
             },
             chainId,
