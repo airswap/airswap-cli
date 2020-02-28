@@ -29,8 +29,8 @@ export default class IntentNew extends Command {
 
       indexerContract.indexes(signerToken.address, senderToken.address, protocol).then(async (index: any) => {
         if (index !== constants.ADDRESS_ZERO) {
-          this.log(`${chalk.yellow('Pair already exists')}`)
-          this.log(`Set intent on this pair with ${chalk.bold('indexer:set')}\n`)
+          this.log(`${chalk.yellow('Index already exists')}`)
+          this.log(`Set intent on this index with ${chalk.bold('indexer:set')}\n`)
         } else {
           if (
             await confirm(

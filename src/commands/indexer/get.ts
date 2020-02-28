@@ -22,6 +22,7 @@ export default class IntentGet extends Command {
 
       const indexerAddress = indexerDeploys[chainId]
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
+      this.log("As a taker, I intend to:\n")
 
       const { side, first, second, signerToken, senderToken }: any = await getSideAndTokens(metadata)
 
@@ -29,8 +30,8 @@ export default class IntentGet extends Command {
       const index = indexerContract.indexes(signerToken.address, senderToken.address, protocol)
 
       if (index === constants.ADDRESS_ZERO) {
-        this.log(chalk.yellow(`Pair ${signerToken.symbol}/${senderToken.symbol} does not exist`))
-        this.log(`Create this pair with ${chalk.bold('indexer:new')}\n`)
+        this.log(chalk.yellow(`${signerToken.symbol}/${senderToken.symbol} does not exist`))
+        this.log(`Create this index with ${chalk.bold('indexer:new')}\n`)
       } else {
         const result = await indexerContract.getLocators(
           signerToken.address,
@@ -49,7 +50,7 @@ export default class IntentGet extends Command {
 
           this.log(
             chalk.underline.bold(
-              `\nTop peers ${verb} ${first.name} for ${second.name} (${constants.protocolNames[protocol]})\n`,
+              `\nTop peers ${verb} ${first.symbol} for ${second.symbol} (${constants.protocolNames[protocol]})\n`,
             ),
           )
 

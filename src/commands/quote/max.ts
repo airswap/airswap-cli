@@ -30,11 +30,11 @@ export default class QuoteMax extends Command {
       const params: any = {}
 
       if (side === 'buy') {
-        params.signerToken = first.addr
-        params.senderToken = second.addr
+        params.signerToken = first.address
+        params.senderToken = second.address
       } else {
-        params.signerToken = second.addr
-        params.senderToken = first.addr
+        params.signerToken = second.address
+        params.senderToken = first.address
       }
 
       this.log()
@@ -63,9 +63,9 @@ export default class QuoteMax extends Command {
             verb = 'Selling'
           }
           this.log(
-            `\n${verb} up to ${chalk.bold(maxAmount)} ${chalk.bold(first.name)} for ${chalk.bold(maxFor)} ${chalk.bold(
-              second.name,
-            )}\n`,
+            `\n${verb} up to ${chalk.bold(maxAmount)} ${chalk.bold(first.symbol)} for ${chalk.bold(
+              maxFor,
+            )} ${chalk.bold(second.symbol)}\n`,
           )
         }
       })

@@ -228,7 +228,7 @@ export function getData(metadata: any, params: any) {
   const data = [[chalk.bold('Param'), chalk.bold('Value')]]
   for (const key in params) {
     if (patterns.Address.test(params[key]) && params[key] in metadata.byAddress) {
-      data.push([key, `${params[key]} (${chalk.cyan(metadata.byAddress[params[key]].name)})`])
+      data.push([key, `${params[key]} (${chalk.cyan(metadata.byAddress[params[key]].symbol)})`])
     } else {
       data.push([key, params[key]])
     }
