@@ -4,6 +4,8 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { get, printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
+import { isValidOrder } from '@airswap/utils'
+import { Validator } from '@airswap/protocols'
 import BigNumber from 'bignumber.js'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -35,15 +37,16 @@ export default class OrderGet extends Command {
             this.log()
           }
           process.exit(0)
-        } else {
+        } else if (isValidOrder(order)) {
+          const errors = await new Validator(chainId).checkSwap(order)
+
           const swapAddress = swapDeploys[chainId]
           await printOrder(this, request, locator, order, wallet, metadata)
-          const errors = await utils.verifyOrder(request, order, swapAddress, wallet, metadata)
 
           if (errors.length) {
-            this.log(chalk.yellow('Unable to take this order.'))
+            this.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
             for (const e in errors) {
-              this.log(`‣ ${errors[e]}`)
+              this.log(`‣ ${Validator.getReason(errors[e])}`)
             }
             this.log()
           } else {
@@ -78,6 +81,10 @@ export default class OrderGet extends Command {
                 .catch(utils.handleError)
             }
           }
+        } else {
+          this.log(chalk.yellow('Received an invalid or improperly signed order.\n'))
+          this.log(order)
+          this.log()
         }
       })
     } catch (e) {

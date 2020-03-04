@@ -22,7 +22,7 @@ export default class IntentGet extends Command {
 
       const indexerAddress = indexerDeploys[chainId]
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
-      this.log("As a taker, I intend to:\n")
+      this.log('As a taker, I intend to:\n')
 
       const { side, first, second, signerToken, senderToken }: any = await getSideAndTokens(metadata)
 

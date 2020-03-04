@@ -9,6 +9,22 @@
   dependencies:
     "@airswap/types" "3.5.9"
 
+"@airswap/constants@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.4.tgz#1fac7ce623098f5a49160293dd48097534d8c7b4"
+  integrity sha512-n7ZP1f301cy5SoWp1q4kTBx+P4f+M2yamU/aVZJ8q8BDJYnVCvstdQ+fc7jIiDr1Oj9/Q95a6zeI+/gMLYqZiQ==
+  dependencies:
+    "@airswap/types" "3.5.9"
+
+"@airswap/delegate@2.6.8":
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/@airswap/delegate/-/delegate-2.6.8.tgz#9c2fee42ea6837903a0963a63cc1ec7eb95aafbc"
+  integrity sha512-GHz014c0doLNPoBHnXj+KRcc/hS/8wGzXZX3C/bXD4fodkjz6ArprMvlyz48B34VGReoaiAAEX3RGY8YDFFefw==
+  dependencies:
+    "@airswap/indexer" "3.6.8"
+    "@airswap/swap" "5.4.7"
+    openzeppelin-solidity "2.4"
+
 "@airswap/indexer@3.6.8":
   version "3.6.8"
   resolved "https://registry.yarnpkg.com/@airswap/indexer/-/indexer-3.6.8.tgz#45b58acec00a79028d2803c8bc8719798bdc4186"
@@ -37,6 +53,23 @@
     ethereumjs-util "^6.1.0"
     web3 "^1.0.0-beta.55"
     web3-eth "1.2.2"
+
+"@airswap/protocols@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@airswap/protocols/-/protocols-0.4.5.tgz#fe08b05b260dfc0e60a60074156dfeffc20a36c1"
+  integrity sha512-433qeoByXImE9rznYTHa7qs43E3D2toIv+eQ5PGz9uXpTfZ2Z/gCuhKbtpqmT+6A4KDN0eqIWb6ylvsm7BIa7Q==
+  dependencies:
+    "@airswap/constants" "0.3.4"
+    "@airswap/delegate" "2.6.8"
+    "@airswap/indexer" "3.6.8"
+    "@airswap/swap" "5.4.7"
+    "@airswap/tokens" "0.1.4"
+    "@airswap/types" "3.5.9"
+    "@airswap/utils" "0.3.10"
+    "@airswap/validator" "1.2.5"
+    bignumber.js "^9.0.0"
+    ethers "^4.0.45"
+    jayson "^3.2.0"
 
 "@airswap/swap@5.4.7":
   version "5.4.7"
@@ -73,6 +106,31 @@
   resolved "https://registry.yarnpkg.com/@airswap/types/-/types-3.5.9.tgz#b2e3ec2e4ac3ad7fe28ce7023597087b10e42a42"
   integrity sha512-Zz7WVLB77YxNPpVoys8FRSR/9B97VmUesaNYkzpOQ60AFgjOflxefM+9LNh6nUeY5q4Nup33M/l6BREFIJ0dOA==
   dependencies:
+    openzeppelin-solidity "2.4"
+
+"@airswap/utils@0.3.10", "@airswap/utils@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@airswap/utils/-/utils-0.3.10.tgz#435fe5d3ad355906512eb70cddf019363c0bd815"
+  integrity sha512-UAOANayV8lOhNfuBpCr7tgVHmzEVvl+1DjpaGzbOvJW9FHXAeF0keav6i3Z0QDRTaT+/Ndu06iECZrJi/kOS0g==
+  dependencies:
+    "@airswap/constants" "0.3.4"
+    "@airswap/types" "3.5.9"
+    "@types/ethereumjs-abi" "^0.6.3"
+    "@types/ethereumjs-util" "^6.1.0"
+    ethereumjs-abi "^0.6.8"
+    ethereumjs-util "^6.2.0"
+    ethers "^4.0.45"
+
+"@airswap/validator@1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@airswap/validator/-/validator-1.2.5.tgz#ee8a052b03fb0b1449fe5dc9afae45b92fe182e0"
+  integrity sha512-gzFscF2bo8+13/AtvhBdTW1BhLcsFN5YekSrfyam9sps+sqx5CwNbrGiFdPvPMm/ORgML0occe832ZQ60J2iiQ==
+  dependencies:
+    "@airswap/delegate" "2.6.8"
+    "@airswap/swap" "5.4.7"
+    "@airswap/tokens" "0.1.4"
+    "@airswap/transfers" "1.1.2"
+    "@airswap/types" "3.5.9"
     openzeppelin-solidity "2.4"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
@@ -407,6 +465,20 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
+
+"@types/ethereumjs-abi@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@types/ethereumjs-abi/-/ethereumjs-abi-0.6.3.tgz#eb5ed09fd86b9e2b1c0eb75d1e9bc29c50715c86"
+  integrity sha512-DnHvqPkrJS5w4yZexTa5bdPNb8IyKPYciou0+zZCIg5fpzvGtyptTvshy0uZKzti2/k/markwjlxWRBWt7Mjuw==
+  dependencies:
+    "@types/node" "*"
+
+"@types/ethereumjs-util@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@types/ethereumjs-util/-/ethereumjs-util-6.1.0.tgz#9dabd7302ec9728a7d99be15f4143977c33cd5ac"
+  integrity sha512-5N0RJldhKCKwDksdnuNHbEJuwO5pjEdtwdHj/kZLxaS84s5R1NLgYfAuDF/VZ4whYABJJvv+o0O8TXLm+F/Byw==
+  dependencies:
+    ethereumjs-util "*"
 
 "@types/events@*":
   version "3.0.0"
@@ -2286,7 +2358,7 @@ ethereumjs-abi@0.6.5:
     bn.js "^4.10.0"
     ethereumjs-util "^4.3.0"
 
-ethereumjs-abi@^0.6.7:
+ethereumjs-abi@^0.6.7, ethereumjs-abi@^0.6.8:
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz#71bc152db099f70e62f108b7cdfca1b362c6fcae"
   integrity sha512-Tx0r/iXI6r+lRsdvkFDlut0N08jWMnKRZ6Gkq+Nmw75lZe4e6o3EkSnkaBP5NF6+m5PTGAr9JP43N3LyeoglsA==
@@ -2306,6 +2378,19 @@ ethereumjs-tx@^2.1.1:
   dependencies:
     ethereumjs-common "^1.3.1"
     ethereumjs-util "^6.0.0"
+
+ethereumjs-util@*, ethereumjs-util@^6.0.0, ethereumjs-util@^6.1.0, ethereumjs-util@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-6.2.0.tgz#23ec79b2488a7d041242f01e25f24e5ad0357960"
+  integrity sha512-vb0XN9J2QGdZGIEKG2vXM+kUdEivUfU6Wmi5y0cg+LRhDYKnXIZ/Lz7XjFbHRR9VIKq2lVGLzGBkA++y2nOdOQ==
+  dependencies:
+    "@types/bn.js" "^4.11.3"
+    bn.js "^4.11.0"
+    create-hash "^1.1.2"
+    ethjs-util "0.1.6"
+    keccak "^2.0.0"
+    rlp "^2.2.3"
+    secp256k1 "^3.0.1"
 
 ethereumjs-util@^4.3.0:
   version "4.5.0"
@@ -2329,19 +2414,6 @@ ethereumjs-util@^5.1.1:
     keccak "^1.0.2"
     rlp "^2.0.0"
     safe-buffer "^5.1.1"
-    secp256k1 "^3.0.1"
-
-ethereumjs-util@^6.0.0, ethereumjs-util@^6.1.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-6.2.0.tgz#23ec79b2488a7d041242f01e25f24e5ad0357960"
-  integrity sha512-vb0XN9J2QGdZGIEKG2vXM+kUdEivUfU6Wmi5y0cg+LRhDYKnXIZ/Lz7XjFbHRR9VIKq2lVGLzGBkA++y2nOdOQ==
-  dependencies:
-    "@types/bn.js" "^4.11.3"
-    bn.js "^4.11.0"
-    create-hash "^1.1.2"
-    ethjs-util "0.1.6"
-    keccak "^2.0.0"
-    rlp "^2.2.3"
     secp256k1 "^3.0.1"
 
 ethers@4.0.0-beta.3:
