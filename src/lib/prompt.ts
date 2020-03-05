@@ -110,7 +110,7 @@ export async function getSideAndTokens(metadata, reversed?) {
   }
 }
 
-export async function printOrder(ctx: any, request: any, locator: string, order: any, wallet: any, metadata: any) {
+export async function printOrder(ctx: any, request: any, order: any, wallet: any, metadata: any) {
   const signerAmountDecimal = new BigNumber(order.signer.amount)
     .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
     .toFixed()
@@ -118,9 +118,6 @@ export async function printOrder(ctx: any, request: any, locator: string, order:
   const senderAmountDecimal = new BigNumber(order.sender.amount)
     .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
     .toFixed()
-
-  ctx.log(chalk.underline.bold(`Response: ${locator}`))
-  ctx.log()
 
   if (request.side === 'buy') {
     ctx.log(

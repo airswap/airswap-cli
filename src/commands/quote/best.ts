@@ -16,12 +16,13 @@ export default class QuoteBest extends Command {
 
       const request = await requests.getRequest(wallet, metadata, 'Quote')
       this.log()
-      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (quote: any, locator: string) => {
+      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (quote: any) => {
         this.log()
         if (!quote) {
           this.log(chalk.yellow('No valid responses received.\n'))
         } else {
-          await printOrder(this, request, locator, quote, wallet, metadata)
+          this.log(chalk.underline.bold(`Quote from ${quote.locator}\n`))
+          await printOrder(this, request, quote, wallet, metadata)
           this.log()
         }
       })

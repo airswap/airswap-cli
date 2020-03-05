@@ -35,7 +35,8 @@ export default class QuoteGet extends Command {
           process.exit(0)
         } else if (quote) {
           if (isValidQuote(quote)) {
-            await printOrder(this, request, locator, quote, wallet, metadata)
+            this.log(chalk.underline.bold(`Quote from ${locator}\n`))
+            await printOrder(this, request, quote, wallet, metadata)
           } else {
             this.log(chalk.yellow('Received an invalid quote.\n'))
             this.log(quote)

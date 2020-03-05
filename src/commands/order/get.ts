@@ -38,10 +38,9 @@ export default class OrderGet extends Command {
           }
           process.exit(0)
         } else if (isValidOrder(order)) {
+          this.log(chalk.underline.bold(`Signer: ${order.signer.wallet}\n`))
+          await printOrder(this, request, order, wallet, metadata)
           const errors = await new Validator(chainId).checkSwap(order)
-
-          const swapAddress = swapDeploys[chainId]
-          await printOrder(this, request, locator, order, wallet, metadata)
 
           if (errors.length) {
             this.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
@@ -75,7 +74,7 @@ export default class OrderGet extends Command {
                 'take this order',
               )
             ) {
-              new ethers.Contract(swapAddress, Swap.abi, wallet)
+              new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
                 .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)
