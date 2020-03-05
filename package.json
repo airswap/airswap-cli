@@ -16,9 +16,10 @@
   "dependencies": {
     "@airswap/indexer": "3.6.8",
     "@airswap/metadata": "0.1.5",
-    "@airswap/order-utils": "0.3.20",
+    "@airswap/protocols": "0.4.5",
     "@airswap/swap": "5.4.7",
     "@airswap/tokens": "0.1.4",
+    "@airswap/utils": "0.3.10",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2.2.3",

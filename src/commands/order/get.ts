@@ -4,6 +4,8 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { get, printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
+import { isValidOrder } from '@airswap/utils'
+import { Validator } from '@airswap/protocols'
 import BigNumber from 'bignumber.js'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -35,15 +37,15 @@ export default class OrderGet extends Command {
             this.log()
           }
           process.exit(0)
-        } else {
-          const swapAddress = swapDeploys[chainId]
-          await printOrder(this, request, locator, order, wallet, metadata)
-          const errors = await utils.verifyOrder(request, order, swapAddress, wallet, metadata)
+        } else if (isValidOrder(order)) {
+          this.log(chalk.underline.bold(`Signer: ${order.signer.wallet}\n`))
+          await printOrder(this, request, order, wallet, metadata)
+          const errors = await new Validator(chainId).checkSwap(order)
 
           if (errors.length) {
-            this.log(chalk.yellow('Unable to take this order.'))
+            this.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
             for (const e in errors) {
-              this.log(`‣ ${errors[e]}`)
+              this.log(`‣ ${Validator.getReason(errors[e])}`)
             }
             this.log()
           } else {
@@ -72,12 +74,16 @@ export default class OrderGet extends Command {
                 'take this order',
               )
             ) {
-              new ethers.Contract(swapAddress, Swap.abi, wallet)
+              new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
                 .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)
             }
           }
+        } else {
+          this.log(chalk.yellow('Received an invalid or improperly signed order.\n'))
+          this.log(order)
+          this.log()
         }
       })
     } catch (e) {

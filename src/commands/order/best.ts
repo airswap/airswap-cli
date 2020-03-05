@@ -4,6 +4,7 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
+import { Validator } from '@airswap/protocols'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -22,19 +23,19 @@ export default class OrderBest extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (order: any, locator: string) => {
-        this.log()
+      requests.multiPeerCall(wallet, request.method, request.params, protocol, async (order: any) => {
         if (!order) {
           this.log(chalk.yellow('No valid responses received.\n'))
         } else {
-          const swapAddress = swapDeploys[chainId]
-          await printOrder(this, request, locator, order, wallet, metadata)
-          const errors = await utils.verifyOrder(request, order, swapAddress, wallet, metadata)
+          this.log()
+          this.log(chalk.underline.bold(`Signer: ${order.signer.wallet}\n`))
+          await printOrder(this, request, order, wallet, metadata)
+          const errors = await new Validator(chainId).checkSwap(order)
 
           if (errors.length) {
-            this.log(chalk.yellow('Unable to take this order.'))
+            this.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
             for (const e in errors) {
-              this.log(`‣ ${errors[e]}`)
+              this.log(`‣ ${Validator.getReason(errors[e])}`)
             }
             this.log()
           } else {
@@ -59,7 +60,7 @@ export default class OrderBest extends Command {
                 'take this order',
               )
             ) {
-              new ethers.Contract(swapAddress, Swap.abi, wallet)
+              new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
                 .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)

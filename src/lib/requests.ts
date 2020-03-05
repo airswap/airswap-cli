@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
-import { orders } from '@airswap/order-utils'
+import { isValidQuote, isValidOrder, getBestByLowestSenderAmount, getBestByHighestSignerAmount } from '@airswap/utils'
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
@@ -84,24 +84,25 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
       if (locators[i]) {
         requested++
 
-        peerCall(locators[i], method, params, (err: any, order: any) => {
+        peerCall(locators[i], method, params, (err: any, result: any) => {
           if (err) {
             errors.push({ locator: locators[i], message: err })
           } else {
             if (method.indexOf('Order') !== -1) {
-              if (orders.isValidOrder(order)) {
-                results.push({
-                  locator: locators[i],
-                  order,
-                })
+              if (isValidOrder(result)) {
+                results.push(result)
               } else {
-                errors.push({ locator: locators[i], message: 'Got an invalid order or signature ' })
+                errors.push({ locator: locators[i], message: 'Received an invalid order' })
+              }
+            } else if (method.indexOf('Quote') !== -1) {
+              if (isValidQuote(result)) {
+                result.locator = locators[i]
+                results.push(result)
+              } else {
+                errors.push({ locator: locators[i], message: 'Received an invalid quote' })
               }
             } else {
-              results.push({
-                locator: locators[i],
-                order,
-              })
+              results.push(result)
             }
           }
           if (++completed === requested) {
@@ -111,11 +112,9 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
               callback(null, null, errors)
             } else {
               if (method.indexOf('Signer') !== -1) {
-                const { best, locator } = utils.getByHighestSignerAmount(results)
-                callback(best, locator, results, errors)
+                callback(getBestByHighestSignerAmount(results), results, errors)
               } else {
-                const { best, locator } = utils.getByLowestSenderAmount(results)
-                callback(best, locator, results, errors)
+                callback(getBestByLowestSenderAmount(results), results, errors)
               }
             }
           }

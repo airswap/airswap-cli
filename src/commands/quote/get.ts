@@ -3,6 +3,7 @@ import * as utils from '../../lib/utils'
 import { get, printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
+import { isValidQuote } from '@airswap/utils'
 
 export default class QuoteGet extends Command {
   static description = 'get a quote from a peer'
@@ -33,7 +34,14 @@ export default class QuoteGet extends Command {
           }
           process.exit(0)
         } else if (quote) {
-          await printOrder(this, request, locator, quote, wallet, metadata)
+          if (isValidQuote(quote)) {
+            this.log(chalk.underline.bold(`Quote from ${locator}\n`))
+            await printOrder(this, request, quote, wallet, metadata)
+          } else {
+            this.log(chalk.yellow('Received an invalid quote.\n'))
+            this.log(quote)
+            this.log()
+          }
         } else {
           this.log('No valid response received.\n')
         }

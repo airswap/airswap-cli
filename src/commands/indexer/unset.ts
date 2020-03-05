@@ -23,7 +23,7 @@ export default class IntentUnset extends Command {
       const indexerAddress = indexerDeploys[chainId]
       const indexerContract = new ethers.Contract(indexerAddress, Indexer.abi, wallet)
       this.log(chalk.white(`Indexer ${indexerAddress}\n`))
-      this.log("As a maker, I no longer intend to:\n")
+      this.log('As a maker, I no longer intend to:\n')
 
       const { signerToken, senderToken }: any = await getSideAndTokens(metadata, true)
       this.log()
