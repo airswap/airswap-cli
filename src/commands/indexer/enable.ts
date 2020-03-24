@@ -5,6 +5,8 @@ import * as utils from '../../lib/utils'
 import { confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
+import { stakingTokenAddresses } from '@airswap/constants'
+
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
@@ -12,14 +14,14 @@ export default class IntentEnable extends Command {
   static description = 'enable staking on the indexer'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await utils.getWallet(this, true)
       const chainId = String((await wallet.provider.getNetwork()).chainId)
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentEnable.description, chainId)
 
       const indexerAddress = indexerDeploys[chainId]
-      const stakingTokenContract = new ethers.Contract(constants.stakingTokenAddresses[chainId], IERC20.abi, wallet)
+      const stakingTokenContract = new ethers.Contract(stakingTokenAddresses[chainId], IERC20.abi, wallet)
       const allowance = await stakingTokenContract.allowance(wallet.address, indexerAddress)
 
       if (!allowance.eq(0)) {
@@ -32,7 +34,7 @@ export default class IntentEnable extends Command {
             metadata,
             'approve',
             {
-              token: `${constants.stakingTokenAddresses[chainId]} (AST)`,
+              token: `${stakingTokenAddresses[chainId]} (AST)`,
               spender: `${indexerAddress} (Indexer)`,
             },
             chainId,

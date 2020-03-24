@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
+import { protocolNames, ADDRESS_ZERO, LOCATOR_ZERO } from '@airswap/constants'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const Index = require('@airswap/indexer/build/contracts/Index.json')
@@ -29,12 +29,12 @@ export default class IntentUnset extends Command {
       this.log()
 
       const index = await indexerContract.indexes(signerToken.address, senderToken.address, protocol)
-      if (index === constants.ADDRESS_ZERO) {
+      if (index === ADDRESS_ZERO) {
         this.log(chalk.yellow(`${signerToken.symbol}/${senderToken.symbol} does not exist`))
         this.log(`Create this index with ${chalk.bold('indexer:new')}\n`)
       } else {
         const existingEntry = await new ethers.Contract(index, Index.abi, wallet).getLocator(wallet.address)
-        if (existingEntry === constants.LOCATOR_ZERO) {
+        if (existingEntry === LOCATOR_ZERO) {
           this.log(chalk.yellow('You do not have an existing intent to unset.\n'))
         } else {
           if (
@@ -45,7 +45,7 @@ export default class IntentUnset extends Command {
               {
                 signerToken: signerToken.address,
                 senderToken: senderToken.address,
-                protocol: `${protocol} (${chalk.cyan(constants.protocolNames[protocol])})`,
+                protocol: `${protocol} (${chalk.cyan(protocolNames[protocol])})`,
               },
               chainId,
             )
