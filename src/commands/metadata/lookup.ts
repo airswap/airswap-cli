@@ -4,7 +4,7 @@ import * as utils from '../../lib/utils'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
+import { chainIds, etherscanDomains } from '@airswap/constants'
 
 export default class MetadataLookup extends Command {
   static description = 'lookup token in local metadata'
@@ -17,7 +17,7 @@ export default class MetadataLookup extends Command {
       utils.displayDescription(this, MetadataLookup.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
-      if (String(chainId) === constants.chainIds.MAINNET) {
+      if (String(chainId) === chainIds.MAINNET) {
         metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
       }
 
@@ -52,7 +52,7 @@ export default class MetadataLookup extends Command {
         this.log(`Add a new token with ${chalk.bold('metadata:add')}\n`)
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
+          `${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
         )
       }
     } catch (e) {

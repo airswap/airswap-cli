@@ -3,7 +3,7 @@ import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
 import { getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
+import { ADDRESS_ZERO } from '@airswap/constants'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
@@ -28,7 +28,7 @@ export default class IntentNew extends Command {
       this.log()
 
       indexerContract.indexes(signerToken.address, senderToken.address, protocol).then(async (index: any) => {
-        if (index !== constants.ADDRESS_ZERO) {
+        if (index !== ADDRESS_ZERO) {
           this.log(`${chalk.yellow('Index already exists')}`)
           this.log(`Set intent on this index with ${chalk.bold('indexer:set')}\n`)
         } else {

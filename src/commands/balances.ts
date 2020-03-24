@@ -3,7 +3,7 @@ import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../lib/utils'
 import { getTable } from 'console.table'
-import constants from '../lib/constants.json'
+import { balanceCheckerAddresses } from '@airswap/constants'
 import deltaBalancesABI from '../lib/deltaBalances.json'
 import { cancelled } from '../lib/prompt'
 
@@ -21,7 +21,7 @@ export default class Balances extends Command {
 
       const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
-      const balancesContract = new ethers.Contract(constants.deltaBalances[chainId], deltaBalancesABI, wallet)
+      const balancesContract = new ethers.Contract(balanceCheckerAddresses[chainId], deltaBalancesABI, wallet)
 
       const addresses = Object.keys(metadata.byAddress)
       const balances = await balancesContract.walletBalances(wallet.address, addresses)

@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
+import { chainIds, etherscanDomains } from '@airswap/constants'
 
 export default class MetadataDelete extends Command {
   static description = 'delete token from local metadata'
@@ -17,7 +17,7 @@ export default class MetadataDelete extends Command {
       utils.displayDescription(this, MetadataDelete.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
-      if (String(chainId) === constants.chainIds.MAINNET) {
+      if (String(chainId) === chainIds.MAINNET) {
         metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
       }
 
@@ -51,7 +51,7 @@ export default class MetadataDelete extends Command {
         this.log('Token not found in metadata.\n')
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+          `${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
         )
 
         const { confirm }: any = await get({

@@ -47,10 +47,10 @@ $ airswap account:import
 
 # Explore the Network
 
-Set the active network to `rinkeby` or `mainnet`
+Set the active Ethereum chain
 
 ```
-$ airswap network
+$ airswap chain
 ```
 
 Get locators for actively trading peers
@@ -107,33 +107,34 @@ $ airswap weth:withdraw
 # All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap gas`](#airswap-gas)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap indexer:enable`](#airswap-indexerenable)
-* [`airswap indexer:get`](#airswap-indexerget)
-* [`airswap indexer:new`](#airswap-indexernew)
-* [`airswap indexer:set`](#airswap-indexerset)
-* [`airswap indexer:unset`](#airswap-indexerunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:delete`](#airswap-metadatadelete)
-* [`airswap metadata:lookup`](#airswap-metadatalookup)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap network`](#airswap-network)
-* [`airswap order:best`](#airswap-orderbest)
-* [`airswap order:get`](#airswap-orderget)
-* [`airswap quote:best`](#airswap-quotebest)
-* [`airswap quote:get`](#airswap-quoteget)
-* [`airswap quote:max`](#airswap-quotemax)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap weth:deposit`](#airswap-wethdeposit)
-* [`airswap weth:withdraw`](#airswap-wethwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap gas`](#airswap-gas)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap indexer:enable`](#airswap-indexerenable)
+- [`airswap indexer:get`](#airswap-indexerget)
+- [`airswap indexer:new`](#airswap-indexernew)
+- [`airswap indexer:set`](#airswap-indexerset)
+- [`airswap indexer:unset`](#airswap-indexerunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:delete`](#airswap-metadatadelete)
+- [`airswap metadata:lookup`](#airswap-metadatalookup)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap chain`](#airswap-chain)
+- [`airswap order:best`](#airswap-orderbest)
+- [`airswap order:get`](#airswap-orderget)
+- [`airswap quote:best`](#airswap-quotebest)
+- [`airswap quote:get`](#airswap-quoteget)
+- [`airswap quote:max`](#airswap-quotemax)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap weth:deposit`](#airswap-wethdeposit)
+- [`airswap weth:withdraw`](#airswap-wethwithdraw)
 
 ## `airswap account:delete`
 
@@ -328,13 +329,13 @@ USAGE
 
 _See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v1.3.1/src/commands/metadata/update.ts)_
 
-## `airswap network`
+## `airswap chain`
 
-set the active network
+set the active ethereum chain
 
 ```
 USAGE
-  $ airswap network
+  $ airswap chain
 ```
 
 _See code: [src/commands/network.ts](https://github.com/airswap/airswap-cli/blob/v1.3.1/src/commands/network.ts)_
@@ -437,4 +438,5 @@ USAGE
 ```
 
 _See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.3.1/src/commands/weth/withdraw.ts)_
+
 <!-- commandsstop -->

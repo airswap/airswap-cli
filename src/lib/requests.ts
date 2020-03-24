@@ -7,21 +7,23 @@ import { isValidQuote, isValidOrder, getBestByLowestSenderAmount, getBestByHighe
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
+import { INDEX_HEAD } from '@airswap/constants'
 
 const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
-export function indexerCall(
+export async function indexerCall(
   wallet: any,
   signerToken: string,
   senderToken: string,
   protocol: string,
   callback: Function,
 ) {
-  const indexerAddress = indexerDeploys[wallet.provider.network.chainId]
+  const chainId = String((await wallet.provider.getNetwork()).chainId)
+  const indexerAddress = indexerDeploys[chainId]
   new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-    .getLocators(signerToken, senderToken, protocol, constants.INDEX_HEAD, constants.MAX_LOCATORS)
+    .getLocators(signerToken, senderToken, protocol, INDEX_HEAD, constants.MAX_LOCATORS)
     .then(callback)
 }
 

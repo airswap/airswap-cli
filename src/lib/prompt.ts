@@ -3,8 +3,8 @@ import chalk from 'chalk'
 import * as emoji from 'node-emoji'
 import { table } from 'table'
 import BigNumber from 'bignumber.js'
-import constants from './constants.json'
 import * as utils from './utils'
+import { chainNames } from '@airswap/constants'
 
 prompt.message = ''
 prompt.start()
@@ -264,7 +264,7 @@ export async function confirm(
   metadata: any,
   name: String,
   params: any,
-  network: string,
+  chainId: string,
   verb?: string,
 ): Promise<boolean> {
   const data = getData(metadata, params)
@@ -282,14 +282,14 @@ export async function confirm(
   }
 
   printTable(ctx, `Transaction: ${name}`, data, config)
-  const networkName = constants.chainNames[network || '4'].toUpperCase()
+  const chainName = chainNames[chainId].toUpperCase()
 
   return new Promise((resolve, reject) => {
     prompt.get(
       {
         properties: {
           confirm: {
-            description: chalk.white(`Type "yes" to ${verb || 'send'} (${networkName})`),
+            description: chalk.white(`Type "yes" to ${verb || 'send'} (${chainName})`),
           },
         },
       },
@@ -310,6 +310,6 @@ export function cancelled(e) {
     if (message === 'canceled') {
       message = 'Cancelled.'
     }
-    console.log(chalk.yellow(`\n${message}\n`))
+    console.log(`\n${chalk.yellow('Error')} ${message}\n`)
   }
 }

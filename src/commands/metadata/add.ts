@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
+import { chainNames, chainIds, etherscanDomains } from '@airswap/constants'
 
 export default class MetadataAdd extends Command {
   static description = 'add token to local metadata'
@@ -17,7 +17,7 @@ export default class MetadataAdd extends Command {
       utils.displayDescription(this, MetadataAdd.description, chainId)
 
       let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
-      if (String(chainId) === constants.chainIds.MAINNET) {
+      if (String(chainId) === chainIds.MAINNET) {
         metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
       }
 
@@ -52,14 +52,14 @@ export default class MetadataAdd extends Command {
       }
 
       this.log(
-        `\n${token.symbol} (${token.name}) · https://${constants.etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+        `\n${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
       )
 
       if (metadata.byAddress[token.address] || metadata.bySymbol[token.symbol]) {
-        const networkName = constants.chainNames[chainId || '4'].toUpperCase()
+        const chainName = chainNames[chainId || '4'].toUpperCase()
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nToken already exists in metadata. Type "yes" to overwrite it (${networkName})`),
+            description: chalk.white(`\nToken already exists in metadata. Type "yes" to overwrite it (${chainName})`),
           },
         })
         if (confirm === 'yes') {
