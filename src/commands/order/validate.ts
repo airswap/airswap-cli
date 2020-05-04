@@ -73,7 +73,7 @@ export default class OrderValidate extends Command {
           this.log(`\n${JSON.stringify(order, null, 2)}\n`)
 
           if (errors.length) {
-            this.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
+            this.log(chalk.yellow('This order would fail for the following reasons.\n'))
             for (const e in errors) {
               this.log(`‣ ${Validator.getReason(errors[e])}`)
             }
