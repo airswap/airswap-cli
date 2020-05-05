@@ -19,33 +19,29 @@ export default class Debug extends Command {
           description: 'transaction input data',
         },
       })
-      const { functionName, order }: any = parseOrderFromHex(hex)
+      const { functionName, order, delegateAddress }: any = parseOrderFromHex(hex)
 
       if (isValidOrder(order)) {
         try {
           let errors
           switch (functionName) {
-            case 'provideOrder':
-              const { delegateAddress }: any = await get({
-                delegateAddress: {
-                  description: 'delegate address',
-                  default: order.sender.wallet,
-                },
-              })
-              errors = await new Validator(chainId).checkDelegate(order, delegateAddress)
-              break
             case 'provideDelegateOrder':
-              let { delegate, wrapper }: any = await get({
-                delegateAddress: {
-                  description: 'delegate address',
-                  default: order.sender.wallet,
-                },
+              let { wrapper }: any = await get({
                 wrapperAddress: {
                   description: 'wrapper address',
                   default: wrapperDeploys[chainId],
                 },
               })
-              errors = await new Validator(chainId).checkWrappedDelegate(order, delegate, wrapper)
+              errors = await new Validator(chainId).checkWrappedDelegate(order, delegateAddress, wrapper)
+              break
+            case 'provideOrder':
+              const { delegate }: any = await get({
+                delegateAddress: {
+                  description: 'delegate address',
+                  default: order.sender.wallet,
+                },
+              })
+              errors = await new Validator(chainId).checkDelegate(order, delegate)
               break
             default:
               const { thruWrapper }: any = await get({
@@ -57,7 +53,7 @@ export default class Debug extends Command {
               if (thruWrapper === 'y') {
                 const { fromAddress, wrapperAddress }: any = await get({
                   fromAddress: {
-                    description: 'sender wallet',
+                    description: 'sender address',
                     default: order.sender.wallet,
                   },
                   wrapperAddress: {
