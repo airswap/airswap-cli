@@ -1,49 +1,31 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { get, cancelled } from '../../lib/prompt'
+import * as utils from '../lib/utils'
+import { get, cancelled } from '../lib/prompt'
 import { parseOrderFromHex, isValidOrder } from '@airswap/utils'
 import { Validator } from '@airswap/protocols'
 import * as wrapperDeploys from '@airswap/wrapper/deploys.json'
 
-export default class OrderValidate extends Command {
-  static description = 'validate an order in hex format'
+export default class Debug extends Command {
+  static description = 'debug a transaction given its input data'
   async run() {
     try {
       const wallet = await utils.getWallet(this)
       const chainId = String((await wallet.provider.getNetwork()).chainId)
-      utils.displayDescription(this, OrderValidate.description, chainId)
+      utils.displayDescription(this, Debug.description, chainId)
 
-      const { type, hex }: any = await get({
+      const { hex }: any = await get({
         hex: {
           description: 'transaction input data',
         },
-        type: {
-          description: 'destination (1=swap, 2=wrappedSwap, 3=delegate, 4=wrappedDelegate)',
-          kind: 'Number',
-          default: '1',
-        },
       })
-      const order = parseOrderFromHex(hex)
+      const { functionName, order }: any = parseOrderFromHex(hex)
 
       if (isValidOrder(order)) {
         try {
           let errors
-          switch (type) {
-            case '2':
-              const { fromAddress, wrapperAddress }: any = await get({
-                fromAddress: {
-                  description: 'sender wallet',
-                  default: order.sender.wallet,
-                },
-                wrapperAddress: {
-                  description: 'wrapper address',
-                  default: wrapperDeploys[chainId],
-                },
-              })
-              errors = await new Validator(chainId).checkWrappedSwap(order, fromAddress, wrapperAddress)
-              break
-            case '3':
+          switch (functionName) {
+            case 'provideOrder':
               const { delegateAddress }: any = await get({
                 delegateAddress: {
                   description: 'delegate address',
@@ -52,7 +34,7 @@ export default class OrderValidate extends Command {
               })
               errors = await new Validator(chainId).checkDelegate(order, delegateAddress)
               break
-            case '4':
+            case 'provideDelegateOrder':
               let { delegate, wrapper }: any = await get({
                 delegateAddress: {
                   description: 'delegate address',
@@ -63,10 +45,30 @@ export default class OrderValidate extends Command {
                   default: wrapperDeploys[chainId],
                 },
               })
-              errors = await new Validator(chainId).checkWrappedDelegate(order, delegateAddress, wrapperAddress)
+              errors = await new Validator(chainId).checkWrappedDelegate(order, delegate, wrapper)
               break
             default:
-              errors = await new Validator(chainId).checkSwap(order)
+              const { thruWrapper }: any = await get({
+                thruWrapper: {
+                  description: 'sent through a wrapper contract? (y/n)',
+                  default: 'y',
+                },
+              })
+              if (thruWrapper === 'y') {
+                const { fromAddress, wrapperAddress }: any = await get({
+                  fromAddress: {
+                    description: 'sender wallet',
+                    default: order.sender.wallet,
+                  },
+                  wrapperAddress: {
+                    description: 'wrapper address',
+                    default: wrapperDeploys[chainId],
+                  },
+                })
+                errors = await new Validator(chainId).checkWrappedSwap(order, fromAddress, wrapperAddress)
+              } else {
+                errors = await new Validator(chainId).checkSwap(order)
+              }
               break
           }
 
