@@ -65,7 +65,6 @@ export default class Debug extends Command {
               } else {
                 errors = await new Validator(chainId).checkSwap(order)
               }
-              break
           }
 
           this.log(`\n${JSON.stringify(order, null, 2)}\n`)
