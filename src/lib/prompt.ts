@@ -31,7 +31,7 @@ function generateSchema(fields) {
   for (const field in fields) {
     schema.properties[field] = {
       description: fields[field].description,
-      pattern: patterns[fields[field].type],
+      pattern: fields[field].type && patterns[fields[field].type],
       message: messages[fields[field].type],
       default: fields[field].default,
       required: fields[field].optional ? false : true,
