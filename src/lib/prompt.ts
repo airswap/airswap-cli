@@ -90,15 +90,18 @@ export async function getSideAndTokens(metadata, reversed?) {
 
   const { first, second }: any = await getTokens({ first: 'token', second: 'for' }, metadata)
 
-  let signerToken
-  let senderToken
+  let signerToken = first
+  let senderToken = second
 
-  if (side === 'buy' || (reversed && side === 'sell')) {
-    signerToken = first
-    senderToken = second
-  } else {
+  if (side === 'sell') {
     signerToken = second
     senderToken = first
+  }
+
+  if (reversed) {
+    let tempToken = signerToken
+    signerToken = senderToken
+    senderToken = tempToken
   }
 
   return {
