@@ -14,11 +14,6 @@
   resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.7.tgz#e1e8072f75208630f0cfb58762797906dab860af"
   integrity sha512-TQHwM810mMnbYm2MybJbL+BHO4t0NCHpuFS1ZcCB8OMwy8HrhPhV2j9eXriCIhjPnqjZBNOH6+KAcAIkahGp5Q==
 
-"@airswap/constants@0.3.8":
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.8.tgz#53056b8ad7409668a181219f956905848fffbb97"
-  integrity sha512-hd+maRUPvWsXr6V4DCYyF4EKTovqCpAUNBXBn+CiU5fZefgaIOBxcKqiKPnO3n3s3YBR/6xPGcuHaCk43Q2KlQ==
-
 "@airswap/constants@0.3.9":
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.9.tgz#d3acd776be2779bb5ee7b497c0abb8967d8aac5a"
@@ -56,12 +51,12 @@
   dependencies:
     openzeppelin-solidity "2.4"
 
-"@airswap/metadata@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@airswap/metadata/-/metadata-0.1.7.tgz#f63069f4f8a4fa813d31437c941a0f5dd0280d9d"
-  integrity sha512-BMCXV2xK69Zh6v42GaYgO2IERB6XHvCu7hp2KaqbRS3YhXeBDF4IrYj/Ck7xnCTSbb4UVyCj0TlD/vq8HMvq2A==
+"@airswap/metadata@0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@airswap/metadata/-/metadata-0.1.11.tgz#941a1dd629e53918f2383a29c369531c90ae7aab"
+  integrity sha512-k7hg8Ftsg/jo/zkj8/N41fYt7kvISSUKqgLPwWaSXV9QpnkpP6uU7skZybgBskZGLqUGxSdbzJqX4FG0SqtF7w==
   dependencies:
-    "@airswap/constants" "0.3.8"
+    "@airswap/constants" "0.3.9"
     "@airswap/types" "3.5.11"
     axios "^0.19.2"
     eth-contract-metadata "^1.12.1"
