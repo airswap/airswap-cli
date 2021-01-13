@@ -145,7 +145,7 @@ USAGE
   $ airswap account:delete
 ```
 
-_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/account/delete.ts)_
+_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/account/delete.ts)_
 
 ## `airswap account:export`
 
@@ -156,7 +156,7 @@ USAGE
   $ airswap account:export
 ```
 
-_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/account/export.ts)_
+_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/account/export.ts)_
 
 ## `airswap account:generate`
 
@@ -167,7 +167,7 @@ USAGE
   $ airswap account:generate
 ```
 
-_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/account/generate.ts)_
+_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/account/generate.ts)_
 
 ## `airswap account:import`
 
@@ -178,7 +178,7 @@ USAGE
   $ airswap account:import
 ```
 
-_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/account/import.ts)_
+_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/account/import.ts)_
 
 ## `airswap balances`
 
@@ -189,7 +189,7 @@ USAGE
   $ airswap balances
 ```
 
-_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/balances.ts)_
+_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/balances.ts)_
 
 ## `airswap chain`
 
@@ -200,7 +200,7 @@ USAGE
   $ airswap chain
 ```
 
-_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/chain.ts)_
+_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/chain.ts)_
 
 ## `airswap debug`
 
@@ -211,7 +211,7 @@ USAGE
   $ airswap debug
 ```
 
-_See code: [src/commands/debug.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/debug.ts)_
+_See code: [src/commands/debug.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/debug.ts)_
 
 ## `airswap gas`
 
@@ -222,7 +222,7 @@ USAGE
   $ airswap gas
 ```
 
-_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/gas.ts)_
+_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/gas.ts)_
 
 ## `airswap help [COMMAND]`
 
@@ -250,7 +250,7 @@ USAGE
   $ airswap indexer:enable
 ```
 
-_See code: [src/commands/indexer/enable.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/indexer/enable.ts)_
+_See code: [src/commands/indexer/enable.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/indexer/enable.ts)_
 
 ## `airswap indexer:get`
 
@@ -261,7 +261,7 @@ USAGE
   $ airswap indexer:get
 ```
 
-_See code: [src/commands/indexer/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/indexer/get.ts)_
+_See code: [src/commands/indexer/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/indexer/get.ts)_
 
 ## `airswap indexer:new`
 
@@ -272,7 +272,7 @@ USAGE
   $ airswap indexer:new
 ```
 
-_See code: [src/commands/indexer/new.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/indexer/new.ts)_
+_See code: [src/commands/indexer/new.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/indexer/new.ts)_
 
 ## `airswap indexer:set`
 
@@ -283,7 +283,7 @@ USAGE
   $ airswap indexer:set
 ```
 
-_See code: [src/commands/indexer/set.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/indexer/set.ts)_
+_See code: [src/commands/indexer/set.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/indexer/set.ts)_
 
 ## `airswap indexer:unset`
 
@@ -294,7 +294,7 @@ USAGE
   $ airswap indexer:unset
 ```
 
-_See code: [src/commands/indexer/unset.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/indexer/unset.ts)_
+_See code: [src/commands/indexer/unset.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/indexer/unset.ts)_
 
 ## `airswap ip`
 
@@ -305,7 +305,7 @@ USAGE
   $ airswap ip
 ```
 
-_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/ip.ts)_
+_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/ip.ts)_
 
 ## `airswap metadata:add`
 
@@ -316,7 +316,7 @@ USAGE
   $ airswap metadata:add
 ```
 
-_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/metadata/add.ts)_
+_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/metadata/add.ts)_
 
 ## `airswap metadata:delete`
 
@@ -327,7 +327,7 @@ USAGE
   $ airswap metadata:delete
 ```
 
-_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/metadata/delete.ts)_
+_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/metadata/delete.ts)_
 
 ## `airswap metadata:lookup`
 
@@ -338,7 +338,7 @@ USAGE
   $ airswap metadata:lookup
 ```
 
-_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/metadata/lookup.ts)_
+_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/metadata/lookup.ts)_
 
 ## `airswap metadata:update`
 
@@ -349,7 +349,7 @@ USAGE
   $ airswap metadata:update
 ```
 
-_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/metadata/update.ts)_
+_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/metadata/update.ts)_
 
 ## `airswap order:best`
 
@@ -360,7 +360,7 @@ USAGE
   $ airswap order:best
 ```
 
-_See code: [src/commands/order/best.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/order/best.ts)_
+_See code: [src/commands/order/best.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/order/best.ts)_
 
 ## `airswap order:get`
 
@@ -371,7 +371,7 @@ USAGE
   $ airswap order:get
 ```
 
-_See code: [src/commands/order/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/order/get.ts)_
+_See code: [src/commands/order/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/order/get.ts)_
 
 ## `airswap quote:best`
 
@@ -382,7 +382,7 @@ USAGE
   $ airswap quote:best
 ```
 
-_See code: [src/commands/quote/best.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/quote/best.ts)_
+_See code: [src/commands/quote/best.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/quote/best.ts)_
 
 ## `airswap quote:get`
 
@@ -393,7 +393,7 @@ USAGE
   $ airswap quote:get
 ```
 
-_See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/quote/get.ts)_
+_See code: [src/commands/quote/get.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/quote/get.ts)_
 
 ## `airswap quote:max`
 
@@ -404,7 +404,7 @@ USAGE
   $ airswap quote:max
 ```
 
-_See code: [src/commands/quote/max.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/quote/max.ts)_
+_See code: [src/commands/quote/max.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/quote/max.ts)_
 
 ## `airswap token:approve`
 
@@ -415,7 +415,7 @@ USAGE
   $ airswap token:approve
 ```
 
-_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/token/approve.ts)_
+_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/token/approve.ts)_
 
 ## `airswap token:transfer`
 
@@ -426,7 +426,7 @@ USAGE
   $ airswap token:transfer
 ```
 
-_See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/token/transfer.ts)_
+_See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/token/transfer.ts)_
 
 ## `airswap weth:deposit`
 
@@ -437,7 +437,7 @@ USAGE
   $ airswap weth:deposit
 ```
 
-_See code: [src/commands/weth/deposit.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/weth/deposit.ts)_
+_See code: [src/commands/weth/deposit.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/weth/deposit.ts)_
 
 ## `airswap weth:withdraw`
 
@@ -448,5 +448,5 @@ USAGE
   $ airswap weth:withdraw
 ```
 
-_See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.3.9/src/commands/weth/withdraw.ts)_
+_See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.3.10/src/commands/weth/withdraw.ts)_
 <!-- commandsstop -->
