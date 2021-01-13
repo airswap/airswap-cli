@@ -31,12 +31,12 @@ export default class TokenApprove extends Command {
         swapAddress = lightDeploys[chainId]
       }
 
-      const { token }: any = await getTokens({ token: 'token' }, metadata)
-      this.log()
-
       if (!swapAddress) {
         throw `No ${format} contract found for the current chain.`
       }
+
+      const { token }: any = await getTokens({ token: 'token' }, metadata)
+      this.log()
 
       const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
       const allowance = await tokenContract.allowance(wallet.address, swapAddress)
