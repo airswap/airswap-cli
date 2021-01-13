@@ -16,6 +16,7 @@
   "dependencies": {
     "@airswap/constants": "0.3.7",
     "@airswap/indexer": "3.6.9",
+    "@airswap/light": "^0.1.1",
     "@airswap/metadata": "0.1.11",
     "@airswap/protocols": "0.4.5",
     "@airswap/swap": "5.4.8",
