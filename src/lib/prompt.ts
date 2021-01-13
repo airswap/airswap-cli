@@ -16,13 +16,15 @@ const messages = {
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
+  Format: 'Must be full or light',
 }
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
   Locator: /^((http|https):\/\/)?(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/)?$/,
   Number: /^\d*(\.\d+)?$/,
-  Side: /buy|sell/,
+  Side: /^buy$|^sell$/,
+  Format: /^full$|^light$/,
 }
 
 function generateSchema(fields) {
@@ -99,7 +101,7 @@ export async function getSideAndTokens(metadata, reversed?) {
   }
 
   if (reversed) {
-    let tempToken = signerToken
+    const tempToken = signerToken
     signerToken = senderToken
     senderToken = tempToken
   }
