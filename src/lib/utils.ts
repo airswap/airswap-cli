@@ -2,7 +2,6 @@ import { cli } from 'cli-ux'
 import chalk from 'chalk'
 import * as keytar from 'keytar'
 import { ethers } from 'ethers'
-import { bigNumberify } from 'ethers/utils'
 import * as emoji from 'node-emoji'
 
 import * as fs from 'fs-extra'
@@ -98,7 +97,8 @@ export async function getMetadata(ctx: any, chainId: string) {
 export async function updateMetadata(ctx: any, chainId: string) {
   const startTime = Date.now()
 
-  const tokenMetadata = new TokenMetadata(chainId)
+  const provider = ethers.getDefaultProvider(chainNames[chainId].toLowerCase())
+  const tokenMetadata = new TokenMetadata(provider)
   const tokens = await tokenMetadata.fetchKnownTokens()
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
@@ -136,7 +136,7 @@ export async function getCurrentGasPrices() {
 export async function getGasPrice(ctx: any, asGwei?: boolean) {
   const { gasPrice } = await getConfig(ctx)
   if (asGwei) {
-    return bigNumberify(gasPrice || DEFAULT_GAS_PRICE)
+    return ethers.BigNumber.from(gasPrice || DEFAULT_GAS_PRICE)
   }
   return ethers.utils.parseUnits(String(gasPrice || DEFAULT_GAS_PRICE), 'gwei')
 }

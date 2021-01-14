@@ -48,7 +48,7 @@ export default class IntentUnset extends Command {
           )
         ) {
           new ethers.Contract(WETH.address, WETH9.abi, wallet)
-            .deposit({ value: ethers.utils.bigNumberify(atomicAmount.toFixed()), gasPrice })
+            .deposit({ value: ethers.BigNumber.from(atomicAmount.toFixed()), gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

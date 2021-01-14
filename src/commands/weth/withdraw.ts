@@ -48,7 +48,7 @@ export default class IntentUnset extends Command {
           )
         ) {
           new ethers.Contract(WETH.address, WETH9.abi, wallet)
-            .withdraw(ethers.utils.bigNumberify(atomicAmount.toFixed()), { gasPrice })
+            .withdraw(ethers.BigNumber.from(atomicAmount.toFixed()), { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }
