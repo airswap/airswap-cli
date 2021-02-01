@@ -6,6 +6,7 @@ import { getTable } from 'console.table'
 import { balanceCheckerAddresses } from '@airswap/constants'
 import deltaBalancesABI from '../lib/deltaBalances.json'
 import { cancelled } from '../lib/prompt'
+import { toDecimalString } from '@airswap/utils'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -30,7 +31,7 @@ export default class Balances extends Command {
       for (let i = 0; i < addresses.length; i++) {
         const token = metadata.byAddress[addresses[i]]
         if (!balances[i].eq(0)) {
-          const balanceDecimal = utils.getDecimalValue(balances[i], token.address, metadata)
+          const balanceDecimal = toDecimalString(balances[i], metadata.byAddress[token.address].decimals)
           try {
             const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
             const allowance = await tokenContract.allowance(wallet.address, swapAddress)

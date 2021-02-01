@@ -3,6 +3,7 @@ import * as utils from '../../lib/utils'
 import { get, getTokens, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
+import { toDecimalString } from '@airswap/utils'
 export default class QuoteMax extends Command {
   static description = 'get a max quote from a peer'
   async run() {
@@ -51,11 +52,11 @@ export default class QuoteMax extends Command {
           let maxAmount
           let maxFor
           if (side === 'buy') {
-            maxAmount = utils.getDecimalValue(order.signer.amount, order.signer.token, metadata).toFixed()
-            maxFor = utils.getDecimalValue(order.sender.amount, order.sender.token, metadata).toFixed()
+            maxAmount = toDecimalString(order.signer.amount, metadata.byAddress[order.signer.token].decimals)
+            maxFor = toDecimalString(order.sender.amount, metadata.byAddress[order.sender.token].decimals)
           } else {
-            maxAmount = utils.getDecimalValue(order.sender.amount, order.sender.token, metadata).toFixed()
-            maxFor = utils.getDecimalValue(order.signer.amount, order.signer.token, metadata).toFixed()
+            maxAmount = toDecimalString(order.sender.amount, metadata.byAddress[order.sender.token].decimals)
+            maxFor = toDecimalString(order.signer.amount, metadata.byAddress[order.signer.token].decimals)
           }
           this.log(chalk.underline.bold(`Response: ${locator}`))
           let verb = 'Buying'

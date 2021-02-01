@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { get, confirm, cancelled } from '../../lib/prompt'
+import { toDecimalString } from '@airswap/utils'
 
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
@@ -18,8 +19,8 @@ export default class IntentUnset extends Command {
 
       const WETH = metadata.bySymbol['WETH']
       const balance = await wallet.provider.getBalance(wallet.address)
-      const balanceDecimal = utils.getDecimalValue(balance.toString(), WETH.address, metadata)
-      this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal.toFixed())}`)
+      const balanceDecimal = toDecimalString(balance.toString(), metadata.byAddress[WETH.address].decimals)
+      this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal)}`)
       this.log(chalk.gray('Some ETH must be saved to execute the transaction.\n'))
 
       const { amount }: any = await get({

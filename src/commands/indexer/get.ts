@@ -6,6 +6,7 @@ import { getSideAndTokens, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 import { getTable } from 'console.table'
 import { protocolNames, stakingTokenAddresses, ADDRESS_ZERO, INDEX_HEAD } from '@airswap/constants'
+import { toDecimalString } from '@airswap/utils'
 
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
@@ -59,12 +60,12 @@ export default class IntentGet extends Command {
           for (let i = 0; i < result.locators.length; i++) {
             try {
               rows.push({
-                Staked: utils.getDecimalValue(result.scores[i], stakingTokenAddresses[chainId], metadata),
+                Staked: toDecimalString(result.scores[i], metadata.byAddress[stakingTokenAddresses[chainId]].decimals),
                 Locator: ethers.utils.parseBytes32String(result.locators[i]),
               })
             } catch (e) {
               rows.push({
-                Staked: utils.getDecimalValue(result.scores[i], stakingTokenAddresses[chainId], metadata),
+                Staked: toDecimalString(result.scores[i], metadata.byAddress[stakingTokenAddresses[chainId]].decimals),
                 Locator: `(Could not parse (${result.locators[i]}))`,
               })
             }

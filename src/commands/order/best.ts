@@ -5,7 +5,7 @@ import * as utils from '../../lib/utils'
 import { printOrder, confirm, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import { Validator } from '@airswap/protocols'
-
+import { toDecimalString } from '@airswap/utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 
@@ -48,12 +48,12 @@ export default class OrderBest extends Command {
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(
-                    utils.getDecimalValue(order.signer.amount, request.signerToken.address, metadata).toFixed(),
+                    toDecimalString(order.signer.amount, metadata.byAddress[request.signerToken.address].decimals),
                   )})`,
                   senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
                   senderToken: order.sender.token,
                   senderAmount: `${order.sender.amount} (${chalk.cyan(
-                    utils.getDecimalValue(order.sender.amount, request.senderToken.address, metadata).toFixed(),
+                    toDecimalString(order.sender.amount, metadata.byAddress[request.senderToken.address].decimals),
                   )})`,
                 },
                 chainId,

@@ -10,7 +10,7 @@ import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
 import { chainNames, etherscanDomains, protocols, chainIds } from '@airswap/constants'
-import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE } from './constants.json'
+import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 
 import TokenMetadata from '@airswap/metadata'
 
@@ -52,7 +52,8 @@ export async function getChainId(ctx: any): Promise<string> {
 export async function getProvider(ctx: any) {
   const chainId = await getChainId(ctx)
   const selectedChain = chainNames[chainId].toLowerCase()
-  return ethers.getDefaultProvider(selectedChain)
+
+  return new ethers.providers.JsonRpcProvider(`https://${selectedChain}.infura.io/v3/${INFURA_ID}`, selectedChain)
 }
 
 export async function getWallet(ctx: any, requireBalance?: boolean) {
@@ -64,7 +65,7 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
     const chainId = await getChainId(ctx)
     const selectedChain = chainNames[chainId].toLowerCase()
     const signerPrivateKey = Buffer.from(account, 'hex')
-    const provider = ethers.getDefaultProvider(selectedChain)
+    const provider = await getProvider(ctx)
     const wallet = new ethers.Wallet(signerPrivateKey, provider)
 
     const balance = await provider.getBalance(wallet.address)
@@ -97,7 +98,7 @@ export async function getMetadata(ctx: any, chainId: string) {
 export async function updateMetadata(ctx: any, chainId: string) {
   const startTime = Date.now()
 
-  const provider = ethers.getDefaultProvider(chainNames[chainId].toLowerCase())
+  const provider = await getProvider(ctx)
   const tokenMetadata = new TokenMetadata(provider)
   const tokens = await tokenMetadata.fetchKnownTokens()
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
