@@ -13,6 +13,16 @@ const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const indexerDeploys = require('@airswap/indexer/deploys.json')
 
+const DEFAULT_REQUEST_FIELDS = {
+  side: {
+    description: 'buy or sell',
+    type: 'Side',
+  },
+  amount: {
+    type: 'Number',
+  },
+}
+
 export async function indexerCall(
   wallet: any,
   signerToken: string,
@@ -127,15 +137,21 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  const { side, amount }: any = await get({
-    side: {
-      description: 'buy or sell',
-      type: 'Side',
-    },
-    amount: {
-      type: 'Number',
-    },
-  })
+  let fields
+
+  if (kind === 'Order') {
+    fields = {
+      format: {
+        description: 'full or light',
+        type: 'Format',
+      },
+      ...DEFAULT_REQUEST_FIELDS,
+    }
+  } else {
+    fields = { ...DEFAULT_REQUEST_FIELDS }
+  }
+
+  const { side, amount, format }: any = await get(fields)
 
   const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
 
@@ -160,6 +176,12 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     Object.assign(params, {
       senderWallet: wallet.address,
     })
+
+    if (format === 'light') {
+      Object.assign(params, {
+        swapContract: metadata.light,
+      })
+    }
   }
 
   if (side === 'buy') {
