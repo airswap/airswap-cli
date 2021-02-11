@@ -8,6 +8,7 @@ import { Validator } from '@airswap/protocols'
 import { toDecimalString } from '@airswap/utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
+const lightDeploys = require('@airswap/light/deploys.json')
 
 export default class OrderBest extends Command {
   static description = 'get the best available order'
@@ -22,6 +23,14 @@ export default class OrderBest extends Command {
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
+
+      let swapContract
+      if (request.format === 'light') {
+        swapContract = lightDeploys[chainId]
+        if (!swapContract) {
+          throw `No ${request.format} contract found for the current chain.`
+        }
+      }
 
       requests.multiPeerCall(wallet, request.method, request.params, protocol, async (order: any) => {
         if (!order) {
@@ -45,6 +54,7 @@ export default class OrderBest extends Command {
                 metadata,
                 'swap',
                 {
+                  swapContract,
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(

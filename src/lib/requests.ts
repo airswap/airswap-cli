@@ -176,12 +176,6 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     Object.assign(params, {
       senderWallet: wallet.address,
     })
-
-    if (format === 'light') {
-      Object.assign(params, {
-        swapContract: metadata.light,
-      })
-    }
   }
 
   if (side === 'buy') {
@@ -198,6 +192,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   return {
+    format,
     side,
     signerToken,
     senderToken,

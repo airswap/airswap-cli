@@ -9,6 +9,7 @@ import { Validator } from '@airswap/protocols'
 import BigNumber from 'bignumber.js'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
+const lightDeploys = require('@airswap/light/deploys.json')
 
 export default class OrderGet extends Command {
   static description = 'get an order from a peer'
@@ -27,6 +28,14 @@ export default class OrderGet extends Command {
       })
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
+
+      let swapContract
+      if (request.format === 'light') {
+        swapContract = lightDeploys[chainId]
+        if (!swapContract) {
+          throw `No ${request.format} contract found for the current chain.`
+        }
+      }
 
       requests.peerCall(locator, request.method, request.params, async (err, order) => {
         if (err) {
@@ -55,6 +64,7 @@ export default class OrderGet extends Command {
                 metadata,
                 'swap',
                 {
+                  swapContract,
                   signerWallet: order.signer.wallet,
                   signerToken: order.signer.token,
                   signerAmount: `${order.signer.amount} (${chalk.cyan(
