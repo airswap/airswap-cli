@@ -7,6 +7,7 @@ import * as requests from '../../lib/requests'
 import { Validator } from '@airswap/protocols'
 import { toDecimalString } from '@airswap/utils'
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
+const Light = require('@airswap/light/build/contracts/Light.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
 const lightDeploys = require('@airswap/light/deploys.json')
 
@@ -24,8 +25,9 @@ export default class OrderBest extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
+      const useLightOrder = request.format === 'light'
       let swapContract
-      if (request.format === 'light') {
+      if (useLightOrder) {
         swapContract = lightDeploys[chainId]
         if (!swapContract) {
           throw `No ${request.format} contract found for the current chain.`
@@ -70,7 +72,7 @@ export default class OrderBest extends Command {
                 'take this order',
               )
             ) {
-              new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
+              new ethers.Contract(swapDeploys[chainId], useLightOrder ? Light.abi : Swap.abi, wallet)
                 .swap(order, { gasPrice })
                 .then(utils.handleTransaction)
                 .catch(utils.handleError)
