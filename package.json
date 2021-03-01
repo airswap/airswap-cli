@@ -21,7 +21,7 @@
     "@airswap/protocols": "^0.4.10",
     "@airswap/swap": "5.4.8",
     "@airswap/tokens": "0.1.4",
-    "@airswap/utils": "^0.3.21",
+    "@airswap/utils": "0.4.2",
     "@airswap/wrapper": "^3.6.9",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
