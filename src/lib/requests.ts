@@ -63,7 +63,7 @@ export function peerCall(locator: string, method: string, params: any, callback:
 
 export function multiPeerCall(wallet: any, method: string, params: any, protocol: string, callback: Function) {
   indexerCall(wallet, params.signerToken, params.senderToken, protocol, (result: any) => {
-    const locators = result.locators
+    const locators = [...result.locators]
 
     if (!locators.length) {
       callback()
