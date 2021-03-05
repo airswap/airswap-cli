@@ -92,7 +92,19 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
           } else {
             if (method.indexOf('Order') !== -1) {
               if (isValidOrder(result)) {
-                results.push(result)
+                if (method.indexOf('Sender') !== -1) {
+                  if (result.signer.amount === params.signerAmount) {
+                    results.push(result)
+                  } else {
+                    errors.push({ locator: locators[i], message: 'Response does not match request' })
+                  }
+                } else {
+                  if (result.sender.amount === params.senderAmount) {
+                    results.push(result)
+                  } else {
+                    errors.push({ locator: locators[i], message: 'Response does not match request' })
+                  }
+                }
               } else {
                 errors.push({ locator: locators[i], message: 'Received an invalid order' })
               }
