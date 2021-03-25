@@ -9,7 +9,7 @@ export default class Gas extends Command {
     utils.displayDescription(this, Gas.description)
 
     try {
-      const { fastest, fast, average } = await utils.getCurrentGasPrices()
+      const { fastest, fast, average, safeLow } = await utils.getCurrentGasPrices()
 
       const gasPrice = await utils.getGasPrice(this, true)
 
@@ -17,7 +17,7 @@ export default class Gas extends Command {
 
       const { newGasPrice }: any = await get({
         newGasPrice: {
-          description: `gas price (fastest=${fastest}, fast=${fast}, average=${average})`,
+          description: `gas price (fastest=${fastest}, fast=${fast}, average=${average}, safeLow=${safeLow})`,
           default: gasPrice,
           type: 'Number',
         },

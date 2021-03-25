@@ -125,12 +125,13 @@ export async function updateMetadata(ctx: any, chainId: string) {
 
 export async function getCurrentGasPrices() {
   const {
-    data: { fastest, fast, average },
+    data: { fastest, fast, average, safeLow },
   } = await axios(ETH_GAS_STATION_URL)
   return {
     fastest: fastest / 10,
     fast: fast / 10,
     average: average / 10,
+    safeLow: safeLow / 10,
   }
 }
 

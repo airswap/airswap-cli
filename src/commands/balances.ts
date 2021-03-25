@@ -10,6 +10,7 @@ import { toDecimalString } from '@airswap/utils'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
+const lightDeploys = require('@airswap/light/deploys.json')
 
 export default class Balances extends Command {
   static description = 'display token balances'
@@ -22,6 +23,7 @@ export default class Balances extends Command {
 
       const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
+      const lightAddress = lightDeploys[chainId]
       const balancesContract = new ethers.Contract(balanceCheckerAddresses[chainId], deltaBalancesABI, wallet)
 
       const addresses = Object.keys(metadata.byAddress)
@@ -35,10 +37,12 @@ export default class Balances extends Command {
           try {
             const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
             const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+            const lightAllowance = await tokenContract.allowance(wallet.address, lightAddress)
             result.push({
               Token: token.symbol,
               Balance: balanceDecimal,
-              Approved: allowance.eq(0) ? 'No' : chalk.green('Yes'),
+              Full: allowance.eq(0) ? '-' : chalk.green('Approved'),
+              Light: lightAllowance.eq(0) ? '-' : chalk.green('Approved'),
             })
           } catch {
             continue

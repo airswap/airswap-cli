@@ -3,7 +3,13 @@ import chalk from 'chalk'
 import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
-import { isValidQuote, isValidOrder, getBestByLowestSenderAmount, getBestByHighestSignerAmount } from '@airswap/utils'
+import {
+  isValidQuote,
+  isValidOrder,
+  isValidLightOrder,
+  getBestByLowestSenderAmount,
+  getBestByHighestSignerAmount,
+} from '@airswap/utils'
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
@@ -11,7 +17,10 @@ import { INDEX_HEAD } from '@airswap/constants'
 
 const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+
 const indexerDeploys = require('@airswap/indexer/deploys.json')
+const swapDeploys = require('@airswap/swap/deploys.json')
+const lightDeploys = require('@airswap/light/deploys.json')
 
 export async function indexerCall(
   wallet: any,
@@ -61,7 +70,14 @@ export function peerCall(locator: string, method: string, params: any, callback:
   })
 }
 
-export function multiPeerCall(wallet: any, method: string, params: any, protocol: string, callback: Function) {
+export function multiPeerCall(
+  wallet: any,
+  method: string,
+  params: any,
+  protocol: string,
+  callback: Function,
+  lightOrder = false,
+) {
   indexerCall(wallet, params.signerToken, params.senderToken, protocol, (result: any) => {
     const locators = [...result.locators]
 
@@ -85,51 +101,38 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
       }
       if (locators[i]) {
         requested++
-
         peerCall(locators[i], method, params, (err: any, result: any) => {
-          if (err) {
-            errors.push({ locator: locators[i], message: err })
-          } else {
-            if (method.indexOf('Order') !== -1) {
-              if (isValidOrder(result)) {
-                if (method.indexOf('Sender') !== -1) {
-                  if (result.signer.amount === params.signerAmount) {
-                    results.push(result)
-                  } else {
-                    errors.push({ locator: locators[i], message: 'Response does not match request' })
-                  }
-                } else {
-                  if (result.sender.amount === params.senderAmount) {
-                    results.push(result)
-                  } else {
-                    errors.push({ locator: locators[i], message: 'Response does not match request' })
-                  }
-                }
-              } else {
-                errors.push({ locator: locators[i], message: 'Received an invalid order' })
-              }
-            } else if (method.indexOf('Quote') !== -1) {
-              if (isValidQuote(result)) {
-                result.locator = locators[i]
-                results.push(result)
-              } else {
-                errors.push({ locator: locators[i], message: 'Received an invalid quote' })
-              }
+          try {
+            if (lightOrder) {
+              results.push(validateLightResponse(err, result, method, params, locators[i]))
             } else {
-              results.push(result)
+              results.push(validateFullResponse(err, result, method, params, locators[i]))
             }
+          } catch (e) {
+            errors.push(e)
           }
+
           if (++completed === requested) {
             cli.action.stop()
 
             if (!results.length) {
               callback(null, null, errors)
             } else {
-              if (method.indexOf('Signer') !== -1) {
-                callback(getBestByHighestSignerAmount(results), results, errors)
+              let best
+              if (lightOrder) {
+                if (method.indexOf('Signer') !== -1) {
+                  best = getHighestLightSigner(results)
+                } else {
+                  best = getLowestLightSender(results)
+                }
               } else {
-                callback(getBestByLowestSenderAmount(results), results, errors)
+                if (method.indexOf('Signer') !== -1) {
+                  best = getBestByHighestSignerAmount(results)
+                } else {
+                  best = getBestByLowestSenderAmount(results)
+                }
               }
+              callback(best, results, errors)
             }
           }
         })
@@ -139,7 +142,11 @@ export function multiPeerCall(wallet: any, method: string, params: any, protocol
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  const { side, amount }: any = await get({
+  const { format, side, amount }: any = await get({
+    format: {
+      description: 'full or light',
+      type: 'Format',
+    },
     side: {
       description: 'buy or sell',
       type: 'Side',
@@ -162,10 +169,17 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     senderToken = first
   }
 
+  const chainId = String((await wallet.provider.getNetwork()).chainId)
+  let swapContract = swapDeploys[chainId]
+  if (format === 'light') {
+    swapContract = lightDeploys[chainId]
+  }
+
   let method = 'getSenderSide' + kind
   const params = {
     signerToken: signerToken.address,
     senderToken: senderToken.address,
+    swapContract,
   }
 
   if (kind === 'Order') {
@@ -188,10 +202,96 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   return {
+    format,
     side,
     signerToken,
     senderToken,
     method,
     params,
+  }
+}
+
+function getHighestLightSigner(results) {
+  let best: any
+  let bestAmount = 0
+  let length = results.length
+  while (length-- > 0) {
+    if (results[length].signerAmount > bestAmount) {
+      best = results[length]
+      bestAmount = best.signerAmount
+    }
+  }
+  return best
+}
+
+function getLowestLightSender(results) {
+  let best: any
+  let bestAmount = Infinity
+  let length = results.length
+  while (length-- > 0) {
+    if (results[length].senderAmount < bestAmount) {
+      best = results[length]
+      bestAmount = best.senderAmount
+    }
+  }
+  return best
+}
+
+function validateFullResponse(err: any, result: any, method: any, params: any, locator: any): [any, any] {
+  if (err) {
+    throw { locator: locator, message: err }
+  } else {
+    if (method.indexOf('Order') !== -1) {
+      if (isValidOrder(result)) {
+        if (method.indexOf('Sender') !== -1) {
+          if (result.signer.amount === params.signerAmount) {
+            return result
+          } else {
+            throw { locator: locator, message: 'Signer amount does not match request' }
+          }
+        } else {
+          if (result.sender.amount === params.senderAmount) {
+            return result
+          } else {
+            throw { locator: locator, message: 'Sender amount does not match request' }
+          }
+        }
+      } else {
+        throw { locator: locator, message: 'Received an invalid order' }
+      }
+    } else if (method.indexOf('Quote') !== -1) {
+      if (isValidQuote(result)) {
+        result.locator = locator
+        return result
+      } else {
+        throw { locator: locator, message: 'Received an invalid quote' }
+      }
+    } else {
+      return result
+    }
+  }
+}
+
+function validateLightResponse(err: any, result: any, method: any, params: any, locator: any): [any, any] {
+  if (err) {
+    throw { locator: locator, message: err }
+  } else {
+    if (isValidLightOrder(result)) {
+      if (method.indexOf('Sender') !== -1) {
+        if (result.signerAmount === params.signerAmount) {
+          return result
+        } else {
+          throw { locator: locator, message: 'Signer amount does not match request' }
+        }
+      } else {
+        if (result.senderAmount === params.senderAmount) {
+          return result
+        } else {
+          throw { locator: locator, message: 'Sender amount does not match request' }
+        }
+      }
+    } else {
+      throw { locator: locator, message: 'Received an invalid order' }
+    }
   }
 }
