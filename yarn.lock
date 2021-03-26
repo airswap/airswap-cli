@@ -7,11 +7,6 @@
   resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.10.tgz#29d4d44dbdd36c98034f8b76ba21a779da5c5051"
   integrity sha512-74kT4lncU++lyXDUJC6j1V8uasMshyhRDhiSKnV/88Ll6S0d2MyvjARaKkCfp8JqFnMbcbWl5zUyzMmSoimuIA==
 
-"@airswap/constants@0.3.7":
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-0.3.7.tgz#e1e8072f75208630f0cfb58762797906dab860af"
-  integrity sha512-TQHwM810mMnbYm2MybJbL+BHO4t0NCHpuFS1ZcCB8OMwy8HrhPhV2j9eXriCIhjPnqjZBNOH6+KAcAIkahGp5Q==
-
 "@airswap/delegate@2.6.9":
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/@airswap/delegate/-/delegate-2.6.9.tgz#b5ee752f84b6b3fd3f64dddeaab6836a1dba9885"
@@ -146,7 +141,7 @@
     "@airswap/types" "3.5.10"
     openzeppelin-solidity "2.4"
 
-"@airswap/wrapper@^3.6.9":
+"@airswap/wrapper@3.6.9":
   version "3.6.9"
   resolved "https://registry.yarnpkg.com/@airswap/wrapper/-/wrapper-3.6.9.tgz#72082e40622de6eb5b797c51714fdd216f45ac3d"
   integrity sha512-3fRXr0hwbyK8fUtxnhLovgfM5vtzr7b09q/7DoD/wEuKUteRNIcSgrvzvxOfJk97/hmzvEWCVvOWnUPb6YNPuQ==
