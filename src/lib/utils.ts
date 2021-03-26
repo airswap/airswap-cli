@@ -156,11 +156,11 @@ export async function getProtocol(ctx: any) {
 }
 
 export function getAtomicValue(value: string, token: string, metadata: any) {
-  return new BigNumber(value).multipliedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
+  return new BigNumber(value).multipliedBy(new BigNumber(10).pow(metadata.byAddress[token.toLowerCase()].decimals))
 }
 
 export function getDecimalValue(value: string, token: string, metadata: any) {
-  return new BigNumber(value).dividedBy(new BigNumber(10).pow(metadata.byAddress[token].decimals))
+  return new BigNumber(value).dividedBy(new BigNumber(10).pow(metadata.byAddress[token.toLowerCase()].decimals))
 }
 
 export async function getBalanceChanges(order: any, wallet: any, metadata: any) {
@@ -176,7 +176,7 @@ export async function getBalanceChanges(order: any, wallet: any, metadata: any) 
   const signerTokenBalance = await new ethers.Contract(signerToken, IERC20.abi, wallet).balanceOf(senderWallet)
   const senderTokenBalance = await new ethers.Contract(senderToken, IERC20.abi, wallet).balanceOf(senderWallet)
 
-  const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), senderToken, metadata)
+  const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), signerToken, metadata)
   const senderTokenBalanceDecimal = getDecimalValue(senderTokenBalance.toString(), senderToken, metadata)
   const signerTokenChangeDecimal = getDecimalValue(signerAmount, signerToken, metadata)
   const senderTokenChangeDecimal = getDecimalValue(senderAmount, senderToken, metadata)
