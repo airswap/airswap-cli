@@ -116,11 +116,11 @@ export async function getSideAndTokens(metadata, reversed?) {
 }
 
 export async function printOrder(ctx: any, request: any, order: any, wallet: any, metadata: any) {
-  const signerAmountDecimal = new BigNumber(order.signer.amount)
+  const signerAmountDecimal = new BigNumber(order.signer ? order.signer.amount : order.signerAmount)
     .dividedBy(new BigNumber(10).pow(request.signerToken.decimals))
     .toFixed()
 
-  const senderAmountDecimal = new BigNumber(order.sender.amount)
+  const senderAmountDecimal = new BigNumber(order.sender ? order.sender.amount : order.senderAmount)
     .dividedBy(new BigNumber(10).pow(request.senderToken.decimals))
     .toFixed()
 
@@ -180,50 +180,50 @@ export async function printOrder(ctx: any, request: any, order: any, wallet: any
 
   ctx.log()
 
-  if (order.signature) {
-    const {
-      signerTokenBalanceDecimal,
-      signerTokenChangeDecimal,
-      newSignerTokenBalance,
-      senderTokenBalanceDecimal,
-      senderTokenChangeDecimal,
-      newSenderTokenBalance,
-    } = await utils.getBalanceChanges(order, wallet, metadata)
+  const {
+    signerTokenBalanceDecimal,
+    signerTokenChangeDecimal,
+    newSignerTokenBalance,
+    senderTokenBalanceDecimal,
+    senderTokenChangeDecimal,
+    newSenderTokenBalance,
+  } = await utils.getBalanceChanges(order, wallet, metadata)
 
-    const config = {
-      columns: {
-        0: {
-          alignment: 'left',
-        },
-        1: {
-          alignment: 'right',
-        },
-        2: {
-          alignment: 'right',
-        },
+  const config = {
+    columns: {
+      0: {
+        alignment: 'left',
       },
-    }
-
-    const data = [
-      [
-        'current',
-        `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.symbol}`,
-        `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.symbol}`,
-      ],
-      [
-        'impact',
-        chalk.greenBright(`+${signerTokenChangeDecimal.toFixed()} ${request.signerToken.symbol}`),
-        chalk.redBright(`-${senderTokenChangeDecimal.toFixed()} ${request.senderToken.symbol}`),
-      ],
-      [
-        'new',
-        `${chalk.bold(newSignerTokenBalance.toFixed())} ${request.signerToken.symbol}`,
-        `${chalk.bold(newSenderTokenBalance.toFixed())} ${request.senderToken.symbol}`,
-      ],
-    ]
-
-    printTable(ctx, null, data, config)
+      1: {
+        alignment: 'right',
+      },
+      2: {
+        alignment: 'right',
+      },
+    },
   }
+
+  const data = [
+    [
+      'current',
+      `${signerTokenBalanceDecimal.toFixed()} ${request.signerToken.symbol}`,
+      `${senderTokenBalanceDecimal.toFixed()} ${request.senderToken.symbol}`,
+    ],
+    [
+      'impact',
+      chalk.greenBright(`+${signerTokenChangeDecimal.toFixed()} ${request.signerToken.symbol}`),
+      chalk.redBright(`-${senderTokenChangeDecimal.toFixed()} ${request.senderToken.symbol}`),
+    ],
+    [
+      'new',
+      `${chalk.bold(newSignerTokenBalance.toFixed())} ${request.signerToken.symbol}`,
+      `${chalk.bold(newSenderTokenBalance.toFixed())} ${request.senderToken.symbol}`,
+    ],
+  ]
+
+  printTable(ctx, null, data, config)
+
+  return !newSenderTokenBalance.lt(0)
 }
 
 export function getData(metadata: any, params: any) {
