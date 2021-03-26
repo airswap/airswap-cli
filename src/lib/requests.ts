@@ -109,7 +109,7 @@ export function multiPeerCall(
               results.push(validateFullResponse(err, result, method, params, locators[i]))
             }
           } catch (e) {
-            errors.push(e)
+            errors.push({ locator: locators[i], message: e })
           }
 
           if (++completed === requested) {
@@ -237,9 +237,9 @@ function getLowestLightSender(results) {
   return best
 }
 
-function validateFullResponse(err: any, result: any, method: any, params: any, locator: any): [any, any] {
+export function validateFullResponse(err: any, result: any, method: any, params: any, locator: any) {
   if (err) {
-    throw { locator: locator, message: err }
+    throw err
   } else {
     if (method.indexOf('Order') !== -1) {
       if (isValidOrder(result)) {
@@ -247,24 +247,24 @@ function validateFullResponse(err: any, result: any, method: any, params: any, l
           if (result.signer.amount === params.signerAmount) {
             return result
           } else {
-            throw { locator: locator, message: 'Signer amount does not match request' }
+            throw 'Signer amount does not match request'
           }
         } else {
           if (result.sender.amount === params.senderAmount) {
             return result
           } else {
-            throw { locator: locator, message: 'Sender amount does not match request' }
+            throw 'Sender amount does not match request'
           }
         }
       } else {
-        throw { locator: locator, message: 'Received an invalid order' }
+        throw 'Received an invalid order'
       }
     } else if (method.indexOf('Quote') !== -1) {
       if (isValidQuote(result)) {
         result.locator = locator
         return result
       } else {
-        throw { locator: locator, message: 'Received an invalid quote' }
+        throw 'Received an invalid quote'
       }
     } else {
       return result
@@ -272,26 +272,26 @@ function validateFullResponse(err: any, result: any, method: any, params: any, l
   }
 }
 
-function validateLightResponse(err: any, result: any, method: any, params: any, locator: any): [any, any] {
+export function validateLightResponse(err: any, result: any, method: any, params: any, locator: any) {
   if (err) {
-    throw { locator: locator, message: err }
+    throw err
   } else {
     if (isValidLightOrder(result)) {
       if (method.indexOf('Sender') !== -1) {
         if (result.signerAmount === params.signerAmount) {
           return result
         } else {
-          throw { locator: locator, message: 'Signer amount does not match request' }
+          throw 'Signer amount does not match request'
         }
       } else {
         if (result.senderAmount === params.senderAmount) {
           return result
         } else {
-          throw { locator: locator, message: 'Sender amount does not match request' }
+          throw 'Sender amount does not match request'
         }
       }
     } else {
-      throw { locator: locator, message: 'Received an invalid order' }
+      throw 'Received an invalid order'
     }
   }
 }

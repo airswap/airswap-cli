@@ -24,6 +24,7 @@ const hook: Hook<'init'> = async function(options) {
     console.log(table(data, {}))
   }
 
+  /*
   const { fastest, safeLow } = await utils.getCurrentGasPrices()
   const gasPrice = (await utils.getGasPrice(this, true)).toNumber()
 
@@ -33,6 +34,7 @@ const hook: Hook<'init'> = async function(options) {
   if (gasPrice < safeLow) {
     console.log(chalk.yellow(`Your gas setting is low (${gasPrice}). You can update it with the gas command.`))
   }
+  */
 }
 
 export default hook

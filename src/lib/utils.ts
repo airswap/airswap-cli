@@ -11,9 +11,16 @@ import BigNumber from 'bignumber.js'
 
 import { chainNames, etherscanDomains, protocols, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
+import { printOrder, confirm } from './prompt'
 
+import { Validator } from '@airswap/protocols'
+import { toDecimalString, lightOrderToParams } from '@airswap/utils'
 import TokenMetadata from '@airswap/metadata'
 
+const Swap = require('@airswap/swap/build/contracts/Swap.json')
+const swapDeploys = require('@airswap/swap/deploys.json')
+const Light = require('@airswap/light/build/contracts/Light.json')
+const lightDeploys = require('@airswap/light/deploys.json')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: string) {
@@ -157,27 +164,24 @@ export function getDecimalValue(value: string, token: string, metadata: any) {
 }
 
 export async function getBalanceChanges(order: any, wallet: any, metadata: any) {
-  const signerTokenBalance = await new ethers.Contract(order.signer.token, IERC20.abi, wallet).balanceOf(
-    order.sender.wallet,
-  )
-  const senderTokenBalance = await new ethers.Contract(order.sender.token, IERC20.abi, wallet).balanceOf(
-    order.sender.wallet,
-  )
+  let { signerToken, signerAmount, senderWallet, senderToken, senderAmount } = order
+  if (order.signer) {
+    signerToken = order.signer.token
+    signerAmount = order.signer.amount
+    senderWallet = order.sender.wallet
+    senderToken = order.sender.token
+    senderAmount = order.sender.amount
+  }
 
-  const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), order.signer.token, metadata)
-  const senderTokenBalanceDecimal = getDecimalValue(senderTokenBalance.toString(), order.sender.token, metadata)
-  const signerTokenChangeDecimal = getDecimalValue(order.signer.amount, order.signer.token, metadata)
-  const senderTokenChangeDecimal = getDecimalValue(order.sender.amount, order.sender.token, metadata)
-  const newSignerTokenBalance = getDecimalValue(
-    signerTokenBalance.add(order.signer.amount).toString(),
-    order.signer.token,
-    metadata,
-  )
-  const newSenderTokenBalance = getDecimalValue(
-    senderTokenBalance.sub(order.sender.amount).toString(),
-    order.sender.token,
-    metadata,
-  )
+  const signerTokenBalance = await new ethers.Contract(signerToken, IERC20.abi, wallet).balanceOf(senderWallet)
+  const senderTokenBalance = await new ethers.Contract(senderToken, IERC20.abi, wallet).balanceOf(senderWallet)
+
+  const signerTokenBalanceDecimal = getDecimalValue(signerTokenBalance.toString(), senderToken, metadata)
+  const senderTokenBalanceDecimal = getDecimalValue(senderTokenBalance.toString(), senderToken, metadata)
+  const signerTokenChangeDecimal = getDecimalValue(signerAmount, signerToken, metadata)
+  const senderTokenChangeDecimal = getDecimalValue(senderAmount, senderToken, metadata)
+  const newSignerTokenBalance = getDecimalValue(signerTokenBalance.add(signerAmount).toString(), signerToken, metadata)
+  const newSenderTokenBalance = getDecimalValue(senderTokenBalance.sub(senderAmount).toString(), senderToken, metadata)
 
   return {
     signerTokenBalanceDecimal,
@@ -207,6 +211,120 @@ export function getByHighestSignerAmount(results) {
     }
   }
   return { best: highest.order, locator: highest.locator }
+}
+
+export async function handleFullResponse(
+  request: any,
+  wallet: any,
+  metadata: any,
+  chainId: any,
+  gasPrice: any,
+  ctx: any,
+  order: any,
+) {
+  if (!order) {
+    ctx.log(chalk.yellow('No valid responses received.\n'))
+  } else {
+    ctx.log()
+    ctx.log(chalk.underline.bold(`Signer: ${order.signer.wallet}\n`))
+    await printOrder(ctx, request, order, wallet, metadata)
+    const errors = await new Validator(chainId).checkSwap(order)
+
+    if (errors.length) {
+      ctx.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
+      for (const e in errors) {
+        ctx.log(`‣ ${Validator.getReason(errors[e])}`)
+      }
+      ctx.log()
+    } else {
+      if (
+        await confirm(
+          ctx,
+          metadata,
+          'swap',
+          {
+            signerWallet: order.signer.wallet,
+            signerToken: order.signer.token,
+            signerAmount: `${order.signer.amount} (${chalk.cyan(
+              toDecimalString(order.signer.amount, metadata.byAddress[request.signerToken.address].decimals),
+            )})`,
+            senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
+            senderToken: order.sender.token,
+            senderAmount: `${order.sender.amount} (${chalk.cyan(
+              toDecimalString(order.sender.amount, metadata.byAddress[request.senderToken.address].decimals),
+            )})`,
+          },
+          chainId,
+          'take this order',
+        )
+      ) {
+        new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
+          .swap(order, { gasPrice })
+          .then(handleTransaction)
+          .catch(handleError)
+      }
+    }
+  }
+}
+
+export async function handleLightResponse(
+  request: any,
+  wallet: any,
+  metadata: any,
+  chainId: any,
+  gasPrice: any,
+  ctx: any,
+  order: any,
+) {
+  if (!order) {
+    ctx.log(chalk.yellow('No valid responses received.\n'))
+  } else {
+    ctx.log()
+    ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
+
+    // Light protocol does not include senderWallet
+    order.senderWallet = wallet.address
+
+    const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
+      order.senderWallet,
+      lightDeploys[chainId],
+    )
+
+    if (senderTokenAllowance.lt(order.senderAmount)) {
+      ctx.log(
+        chalk.yellow(
+          'Unable to take (as sender) sender has not approved its token for trading. (try token:approve)\n\n',
+        ),
+      )
+    } else if (!(await printOrder(ctx, request, order, wallet, metadata))) {
+      ctx.log(chalk.yellow('Unable to take (as sender) because sender token balance is insufficient.\n\n'))
+    } else if (
+      await confirm(
+        ctx,
+        metadata,
+        'light',
+        {
+          signerWallet: order.signerWallet,
+          signerToken: order.signerToken,
+          signerAmount: `${order.signerAmount} (${chalk.cyan(
+            toDecimalString(order.signerAmount, metadata.byAddress[request.signerToken.address].decimals),
+          )})`,
+          senderWallet: `${request.params.senderWallet} (${chalk.cyan('You')})`,
+          senderToken: order.senderToken,
+          senderAmount: `${order.senderAmount} (${chalk.cyan(
+            toDecimalString(order.senderAmount, metadata.byAddress[request.senderToken.address].decimals),
+          )})`,
+        },
+        chainId,
+        'take this order',
+      )
+    ) {
+      new ethers.Contract(lightDeploys[chainId], Light.abi, wallet)
+        .swap(...lightOrderToParams(order), { gasPrice })
+        .then(handleTransaction)
+        .catch(handleError)
+    }
+  }
 }
 
 export function handleTransaction(tx: any) {
