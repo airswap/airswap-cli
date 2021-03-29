@@ -9,7 +9,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, protocols, chainIds } from '@airswap/constants'
+import { chainNames, chainCurrencies, etherscanDomains, protocols, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
@@ -56,11 +56,19 @@ export async function getChainId(ctx: any): Promise<string> {
   return chainId || chainIds.RINKEBY
 }
 
-export async function getProvider(ctx: any) {
+export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
   const selectedChain = chainNames[chainId].toLowerCase()
+  if (chainId === '56') {
+    return `https://bsc-dataseed.binance.org/`
+  }
+  return `https://${selectedChain}.infura.io/v3/${INFURA_ID}`
+}
 
-  return new ethers.providers.JsonRpcProvider(`https://${selectedChain}.infura.io/v3/${INFURA_ID}`, selectedChain)
+export async function getProvider(ctx: any) {
+  const provider = new ethers.providers.JsonRpcProvider(await getNodeURL(ctx))
+  await provider.getNetwork()
+  return provider
 }
 
 export async function getWallet(ctx: any, requireBalance?: boolean) {
@@ -70,17 +78,17 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
     throw new Error(`No account set. Set one with ${chalk.bold('account:import')}`)
   } else {
     const chainId = await getChainId(ctx)
-    const selectedChain = chainNames[chainId].toLowerCase()
+    const selectedCurrency = chainCurrencies[chainId]
     const signerPrivateKey = Buffer.from(account, 'hex')
     const provider = await getProvider(ctx)
     const wallet = new ethers.Wallet(signerPrivateKey, provider)
 
     const balance = await provider.getBalance(wallet.address)
     if (requireBalance && balance.eq(0)) {
-      throw new Error(`Current account must hold (${selectedChain}) ETH to use this command.`)
+      throw new Error(`Current account must hold ${selectedCurrency} to use this command.`)
     } else {
       const balanceLabel = new BigNumber(balance.toString()).dividedBy(new BigNumber(10).pow(18)).toFixed()
-      ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ETH)`))
+      ctx.log(chalk.gray(`Account ${wallet.address} (${balanceLabel} ${selectedCurrency})`))
       return wallet
     }
   }

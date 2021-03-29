@@ -18,6 +18,10 @@ export default class IntentUnset extends Command {
       utils.displayDescription(this, IntentUnset.description, chainId)
 
       const WETH = metadata.bySymbol['WETH']
+      if (!WETH) {
+        throw new Error('WETH token not found.')
+      }
+
       const tokenContract = new ethers.Contract(WETH.address, WETH9.abi, wallet)
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
       const balanceDecimal = toDecimalString(tokenBalance.toString(), metadata.byAddress[WETH.address].decimals)

@@ -18,6 +18,10 @@ export default class IntentUnset extends Command {
       utils.displayDescription(this, IntentUnset.description, chainId)
 
       const WETH = metadata.bySymbol['WETH']
+      if (!WETH) {
+        throw new Error('WETH token not found.')
+      }
+
       const balance = await wallet.provider.getBalance(wallet.address)
       const balanceDecimal = toDecimalString(balance.toString(), metadata.byAddress[WETH.address].decimals)
       this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal)}`)

@@ -15,7 +15,7 @@ export default class Network extends Command {
 
       const { newChainId }: any = await get({
         newChainId: {
-          description: 'New chain: (1=mainnet, 4=rinkeby, 5=goerli, 42=kovan)',
+          description: 'New chain: (1=mainnet, 4=rinkeby, 5=goerli, 42=kovan, 56=binance)',
           default: chainId,
         },
       })

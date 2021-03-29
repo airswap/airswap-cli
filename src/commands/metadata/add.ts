@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import { chainNames, chainIds, etherscanDomains } from '@airswap/constants'
+import { chainNames, etherscanDomains } from '@airswap/constants'
 
 export default class MetadataAdd extends Command {
   static description = 'add token to local metadata'
@@ -16,10 +16,7 @@ export default class MetadataAdd extends Command {
       this.log()
       utils.displayDescription(this, MetadataAdd.description, chainId)
 
-      let metadataPath = path.join(this.config.configDir, 'metadata-rinkeby.json')
-      if (String(chainId) === chainIds.MAINNET) {
-        metadataPath = path.join(this.config.configDir, 'metadata-mainnet.json')
-      }
+      const metadataPath = path.join(this.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
       const token: any = await get({
         symbol: {

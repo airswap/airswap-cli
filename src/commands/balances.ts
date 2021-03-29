@@ -24,6 +24,11 @@ export default class Balances extends Command {
       const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
       const lightAddress = lightDeploys[chainId]
+
+      if (!balanceCheckerAddresses[chainId]) {
+        throw new Error('Unable to check balances on this chain.')
+      }
+
       const balancesContract = new ethers.Contract(balanceCheckerAddresses[chainId], deltaBalancesABI, wallet)
 
       const addresses = Object.keys(metadata.byAddress)
@@ -60,7 +65,6 @@ export default class Balances extends Command {
         this.log(`The current account holds no balances in any of ${addresses.length} known tokens.\n`)
       }
     } catch (e) {
-      console.log(e)
       cancelled(e)
     }
   }

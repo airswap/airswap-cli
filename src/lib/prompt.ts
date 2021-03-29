@@ -272,6 +272,7 @@ export async function confirm(
   chainId: string,
   verb?: string,
 ): Promise<boolean> {
+  const { gasPrice } = await utils.getConfig(ctx)
   const data = getData(metadata, params)
   const config = {
     columns: {
@@ -294,7 +295,9 @@ export async function confirm(
       {
         properties: {
           confirm: {
-            description: chalk.white(`Type "yes" to ${verb || 'send'} (${chainName})`),
+            description: chalk.white(
+              `${chalk.bold(chainName)} | gas price ${gasPrice} | Type "${chalk.bold('yes')}" to ${verb || 'send'}`,
+            ),
           },
         },
       },
