@@ -8,25 +8,25 @@ import constants from '../../lib/constants.json'
 import { stakingTokenAddresses } from '@airswap/constants'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const indexerDeploys = require('@airswap/indexer/deploys.json')
+const registryDeploys = require('@airswap/registry/deploys.json')
 
-export default class IntentEnable extends Command {
-  static description = 'enable staking on the indexer'
+export default class RegistryEnable extends Command {
+  static description = 'enable staking on the registry'
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, IntentEnable.description, chainId)
+      utils.displayDescription(this, RegistryEnable.description, chainId)
 
-      const indexerAddress = indexerDeploys[chainId]
+      const registryAddress = registryDeploys[chainId]
       const stakingTokenContract = new ethers.Contract(stakingTokenAddresses[chainId], IERC20.abi, wallet)
-      const allowance = await stakingTokenContract.allowance(wallet.address, indexerAddress)
+      const allowance = await stakingTokenContract.allowance(wallet.address, registryAddress)
 
       if (!allowance.eq(0)) {
-        this.log(chalk.yellow('Staking already enabled'))
-        this.log(`Set intent with ${chalk.bold('indexer:set')}\n`)
+        this.log(chalk.yellow('Registry already enabled'))
+        this.log(`Add tokens to the Registry with ${chalk.bold('registry:add')}\n`)
       } else {
         if (
           await confirm(
@@ -35,13 +35,13 @@ export default class IntentEnable extends Command {
             'approve',
             {
               token: `${stakingTokenAddresses[chainId]} (AST)`,
-              spender: `${indexerAddress} (Indexer)`,
+              spender: `${registryAddress} (Registry)`,
             },
             chainId,
           )
         ) {
           stakingTokenContract
-            .approve(indexerAddress, constants.APPROVAL_AMOUNT, { gasPrice })
+            .approve(registryAddress, constants.APPROVAL_AMOUNT, { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

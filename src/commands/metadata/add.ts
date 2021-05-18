@@ -11,7 +11,7 @@ export default class MetadataAdd extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = String((await provider.getNetwork()).chainId)
+      const chainId = (await provider.getNetwork()).chainId
 
       this.log()
       utils.displayDescription(this, MetadataAdd.description, chainId)

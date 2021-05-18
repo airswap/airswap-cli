@@ -29,7 +29,7 @@ export async function indexerCall(
   protocol: string,
   callback: Function,
 ) {
-  const chainId = String((await wallet.provider.getNetwork()).chainId)
+  const chainId = (await wallet.provider.getNetwork()).chainId
   const indexerAddress = indexerDeploys[chainId]
   new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     .getLocators(signerToken, senderToken, protocol, INDEX_HEAD, constants.MAX_LOCATORS)
@@ -169,7 +169,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     senderToken = first
   }
 
-  const chainId = String((await wallet.provider.getNetwork()).chainId)
+  const chainId = (await wallet.provider.getNetwork()).chainId
   let swapContract = swapDeploys[chainId]
   if (format === 'light') {
     swapContract = lightDeploys[chainId]

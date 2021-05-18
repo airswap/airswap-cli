@@ -12,7 +12,7 @@ export default class IntentUnset extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = String((await wallet.provider.getNetwork()).chainId)
+      const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
