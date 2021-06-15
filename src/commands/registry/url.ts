@@ -2,14 +2,13 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
-import { get, getTokenList, confirm, cancelled } from '../../lib/prompt'
-import { stakingTokenAddresses, protocolNames, ADDRESS_ZERO, LOCATOR_ZERO } from '@airswap/constants'
+import { get, confirm, cancelled } from '../../lib/prompt'
 
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.json')
+const registryDeploys = require('@airswap/registry/deploys.js')
 
 export default class RegistryAdd extends Command {
-  static description = 'set server locator'
+  static description = 'set server url on the registry'
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)

@@ -3,16 +3,13 @@ import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { get, cancelled } from '../../lib/prompt'
-import constants from '../../lib/constants.json'
 import { getTable } from 'console.table'
-import { protocolNames, stakingTokenAddresses, ADDRESS_ZERO, INDEX_HEAD } from '@airswap/constants'
-import { toDecimalString } from '@airswap/utils'
 
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.json')
+const registryDeploys = require('@airswap/registry/deploys.js')
 
 export default class RegistryGet extends Command {
-  static description = 'get intents from the registry'
+  static description = 'get urls from the registry'
 
   async run() {
     try {
@@ -27,6 +24,7 @@ export default class RegistryGet extends Command {
       const { pair }: any = await get({
         pair: {
           description: 'Token pair (e.g. WETH/USDT)',
+          type: 'Pair',
         },
       })
 
@@ -46,8 +44,13 @@ export default class RegistryGet extends Command {
           Server: urls[i],
         })
       }
-      this.log()
-      this.log(getTable(rows))
+
+      if (rows.length) {
+        this.log()
+        this.log(getTable(rows))
+      } else {
+        this.log(chalk.yellow(`\nNo servers currently support ${pair.toUpperCase()}.\n`))
+      }
     } catch (e) {
       cancelled(e)
     }

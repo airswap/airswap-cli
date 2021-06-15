@@ -8,10 +8,10 @@ import { getTable } from 'console.table'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.json')
+const registryDeploys = require('@airswap/registry/deploys.js')
 
 export default class RegistryAdd extends Command {
-  static description = 'add tokens to registry'
+  static description = 'add supported tokens to the registry'
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
@@ -37,7 +37,7 @@ export default class RegistryAdd extends Command {
         this.log(`Currently supporting the following tokens...\n`)
         const result = []
         alreadySupported.map(address => {
-          const token = metadata.byAddress[address]
+          const token = metadata.byAddress[address.toLowerCase()]
           result.push({
             Symbol: token.symbol,
             Address: token.address,
@@ -57,7 +57,7 @@ export default class RegistryAdd extends Command {
         const tokenAddresses = []
         const tokenLabels = []
 
-        for (let i in tokens) {
+        for (const i in tokens) {
           tokenAddresses.push(tokens[i].address)
           tokenLabels.push(`${tokens[i].address} (${tokens[i].symbol})`)
         }

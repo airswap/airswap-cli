@@ -104,7 +104,7 @@ export function multiPeerCall(
         peerCall(locators[i], method, params, (err: any, result: any) => {
           try {
             if (lightOrder) {
-              results.push(validateLightResponse(err, result, method, params, locators[i]))
+              results.push(validateLightResponse(err, result, method, params))
             } else {
               results.push(validateFullResponse(err, result, method, params, locators[i]))
             }
@@ -272,7 +272,7 @@ export function validateFullResponse(err: any, result: any, method: any, params:
   }
 }
 
-export function validateLightResponse(err: any, result: any, method: any, params: any, locator: any) {
+export function validateLightResponse(err: any, result: any, method: any, params: any) {
   if (err) {
     throw err
   } else {
