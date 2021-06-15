@@ -17,12 +17,14 @@ import { INDEX_HEAD } from '@airswap/constants'
 
 const constants = require('./constants.json')
 const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
+const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
 
 const indexerDeploys = require('@airswap/indexer/deploys.json')
+const registryDeploys = require('@airswap/registry/deploys.js')
 const swapDeploys = require('@airswap/swap/deploys.json')
 const lightDeploys = require('@airswap/light/deploys.json')
 
-export async function indexerCall(
+export async function getServerURLs(
   wallet: any,
   signerToken: string,
   senderToken: string,
@@ -33,7 +35,21 @@ export async function indexerCall(
   const indexerAddress = indexerDeploys[chainId]
   new ethers.Contract(indexerAddress, Indexer.abi, wallet)
     .getLocators(signerToken, senderToken, protocol, INDEX_HEAD, constants.MAX_LOCATORS)
-    .then(callback)
+    .then(async result => {
+      const locators = [...result.locators].map(url => {
+        try {
+          return ethers.utils.parseBytes32String(url)
+        } catch (e) {
+          return false
+        }
+      })
+      const registryAddress = registryDeploys[chainId]
+      const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+      const signerURLs = await registryContract.getURLsForToken(signerToken)
+      const senderURLs = await registryContract.getURLsForToken(senderToken)
+      const urls = signerURLs.filter(value => senderURLs.includes(value))
+      callback(locators.concat(urls))
+    })
 }
 
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
@@ -47,6 +63,7 @@ export function peerCall(locator: string, method: string, params: any, callback:
   const options = {
     protocol: locatorUrl.protocol,
     hostname: locatorUrl.hostname,
+    path: locatorUrl.path,
     port: locatorUrl.port,
     timeout: constants.REQUEST_TIMEOUT,
   }
@@ -78,9 +95,7 @@ export function multiPeerCall(
   callback: Function,
   lightOrder = false,
 ) {
-  indexerCall(wallet, params.signerToken, params.senderToken, protocol, (result: any) => {
-    const locators = [...result.locators]
-
+  getServerURLs(wallet, params.signerToken, params.senderToken, protocol, (locators: any) => {
     if (!locators.length) {
       callback()
       return
@@ -94,11 +109,6 @@ export function multiPeerCall(
     cli.action.start(`Requesting from ${locators.length} peer${locators.length !== 1 ? 's' : ''}`)
 
     for (let i = 0; i < locators.length; i++) {
-      try {
-        locators[i] = ethers.utils.parseBytes32String(locators[i])
-      } catch (e) {
-        locators[i] = false
-      }
       if (locators[i]) {
         requested++
         peerCall(locators[i], method, params, (err: any, result: any) => {

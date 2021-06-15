@@ -35,7 +35,6 @@ export default class RegistryGet extends Command {
       const registryContract = new ethers.Contract(registryAddress, Registry.abi, provider)
       const signerURLs = await registryContract.getURLsForToken(first.address)
       const senderURLs = await registryContract.getURLsForToken(second.address)
-
       const urls = signerURLs.filter(value => senderURLs.includes(value))
 
       const rows = []

@@ -34,7 +34,7 @@ export default class OrderGet extends Command {
         } else {
           try {
             if (request.format === 'light') {
-              requests.validateLightResponse(err, order, request.method, request.params, locator)
+              requests.validateLightResponse(err, order, request.method, request.params)
               utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
             } else {
               requests.validateFullResponse(err, order, request.method, request.params, locator)
