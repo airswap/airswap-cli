@@ -26,7 +26,7 @@ export default class RegistryAdd extends Command {
 
       const url = (await registryContract.getURLsForStakers([wallet.address]))[0]
       if (!url) {
-        this.log(chalk.yellow('Server URL is not set'))
+        this.log(chalk.yellow('\nServer URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
       } else {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
@@ -78,7 +78,7 @@ export default class RegistryAdd extends Command {
             'addTokens',
             {
               tokens: tokenLabels.join('\n'),
-              cost: `${totalCost / 10000} AST`,
+              stake: `${totalCost / 10000} AST`,
             },
             chainId,
           )

@@ -24,7 +24,7 @@ export default class RegistryAdd extends Command {
 
       const url = (await registryContract.getURLsForStakers([wallet.address]))[0]
       if (!url) {
-        this.log(chalk.yellow('Server URL is not set'))
+        this.log(chalk.yellow('\nServer URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
       } else {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
@@ -57,7 +57,7 @@ export default class RegistryAdd extends Command {
       const obligationCost = (await registryContract.obligationCost()).toNumber()
 
       let totalCost = 0
-      if ((await registryContract.balanceOf(wallet.address)).eq(0)) {
+      if (alreadySupported.length - tokenAddresses.length === 0) {
         totalCost = obligationCost
       }
       totalCost += tokenCost * tokenAddresses.length
@@ -69,7 +69,7 @@ export default class RegistryAdd extends Command {
           'removeTokens',
           {
             tokens: tokenLabels.join('\n'),
-            refund: `${totalCost / 10000} AST`,
+            unstake: `${totalCost / 10000} AST`,
           },
           chainId,
         )
