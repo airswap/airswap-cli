@@ -11,7 +11,7 @@ export default class Debug extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this)
-      const chainId = String((await wallet.provider.getNetwork()).chainId)
+      const chainId = (await wallet.provider.getNetwork()).chainId
       utils.displayDescription(this, Debug.description, chainId)
 
       const { hex }: any = await get({

@@ -17,8 +17,9 @@
     "@airswap/constants": "0.3.13",
     "@airswap/indexer": "3.6.10",
     "@airswap/light": "2.2.1",
-    "@airswap/metadata": "0.2.4",
+    "@airswap/metadata": "0.3.2",
     "@airswap/protocols": "0.4.10",
+    "@airswap/registry": "3.6.1",
     "@airswap/swap": "5.4.8",
     "@airswap/tokens": "0.1.4",
     "@airswap/utils": "0.4.4",
@@ -87,8 +88,8 @@
       "balances": {
         "description": "display balances for the current ethereum account"
       },
-      "indexer": {
-        "description": "get, set, and unset intents on the indexer"
+      "registry": {
+        "description": "add and remove supported tokens"
       },
       "ip": {
         "description": "display local network addresses"

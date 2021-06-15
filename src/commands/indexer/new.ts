@@ -13,7 +13,7 @@ export default class IntentNew extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this, true)
-      const chainId = String((await wallet.provider.getNetwork()).chainId)
+      const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)

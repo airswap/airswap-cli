@@ -17,14 +17,17 @@ const messages = {
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
   Format: 'Must be full or light',
+  TokenList: 'One or more symbols not in metadata',
 }
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
-  Locator: /^((http|https):\/\/)?(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/)?$/,
+  Locator: /^((http|https):\/\/)?(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,
   Format: /^full$|^light$/,
+  TokenList: /./,
+  Pair: /^[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/,
 }
 
 function generateSchema(fields) {
@@ -113,6 +116,28 @@ export async function getSideAndTokens(metadata, reversed?) {
     signerToken,
     senderToken,
   }
+}
+
+export async function getTokenList(metadata, label) {
+  let { values }: any = await get({
+    values: {
+      description: label || 'tokens (comma separated)',
+      type: 'TokenList',
+      conform: value => {
+        const symbols = value.split(',')
+        for (const i in symbols) {
+          if (!(symbols[i].trim().toUpperCase() in metadata.bySymbol)) return false
+        }
+        return true
+      },
+    },
+  })
+  const tokens = {}
+  values = values.split(',')
+  for (const val in values) {
+    tokens[val] = metadata.bySymbol[values[val].trim().toUpperCase()]
+  }
+  return tokens
 }
 
 export async function printOrder(ctx: any, request: any, order: any, wallet: any, metadata: any) {
@@ -269,7 +294,7 @@ export async function confirm(
   metadata: any,
   name: String,
   params: any,
-  chainId: string,
+  chainId: number,
   verb?: string,
 ): Promise<boolean> {
   const { gasPrice } = await utils.getConfig(ctx)

@@ -17,7 +17,7 @@ export default class IntentGet extends Command {
   async run() {
     try {
       const provider = await utils.getProvider(this)
-      const chainId = String((await provider.getNetwork()).chainId)
+      const chainId = (await provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)
       utils.displayDescription(this, IntentGet.description, chainId)

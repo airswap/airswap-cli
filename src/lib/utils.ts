@@ -15,7 +15,7 @@ import { printOrder, confirm } from './prompt'
 
 import { Validator } from '@airswap/protocols'
 import { toDecimalString, lightOrderToParams } from '@airswap/utils'
-import TokenMetadata from '@airswap/metadata'
+import { fetchTokens, scrapeToken, findTokenByAddress, findTokensBySymbol } from '@airswap/metadata'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
 const swapDeploys = require('@airswap/swap/deploys.json')
@@ -23,7 +23,7 @@ const Light = require('@airswap/light/build/contracts/Light.json')
 const lightDeploys = require('@airswap/light/deploys.json')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
-export function displayDescription(ctx: any, title: string, chainId?: string) {
+export function displayDescription(ctx: any, title: string, chainId?: number) {
   let chainName = ''
   if (chainId) {
     const selectedChain = chainNames[chainId].toUpperCase()
@@ -94,7 +94,7 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
   }
 }
 
-export async function getMetadata(ctx: any, chainId: string) {
+export async function getMetadata(ctx: any, chainId: number) {
   const selectedChain = chainNames[chainId]
   const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedChain}.json`)
   if (!(await fs.pathExists(metadataPath))) {
@@ -110,20 +110,17 @@ export async function getMetadata(ctx: any, chainId: string) {
   return metadata
 }
 
-export async function updateMetadata(ctx: any, chainId: string) {
+export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
-
-  const provider = await getProvider(ctx)
-  const tokenMetadata = new TokenMetadata(provider)
-  const tokens = await tokenMetadata.fetchKnownTokens()
+  const tokens = await fetchTokens(chainId)
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
   const bySymbol: any = {}
+  const byAddress: any = {}
   for (const token of tokens) {
     bySymbol[token.symbol] = token
+    byAddress[token.address] = token
   }
-
-  const byAddress = tokenMetadata.getTokensByAddress()
 
   const metadata = {
     version: ctx.config.version,

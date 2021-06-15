@@ -9,7 +9,7 @@ export default class OrderGet extends Command {
   async run() {
     try {
       const wallet = await utils.getWallet(this)
-      const chainId = String((await wallet.provider.getNetwork()).chainId)
+      const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, OrderGet.description, chainId)
@@ -34,7 +34,7 @@ export default class OrderGet extends Command {
         } else {
           try {
             if (request.format === 'light') {
-              requests.validateLightResponse(err, order, request.method, request.params, locator)
+              requests.validateLightResponse(err, order, request.method, request.params)
               utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
             } else {
               requests.validateFullResponse(err, order, request.method, request.params, locator)
