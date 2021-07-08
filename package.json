@@ -19,7 +19,7 @@
     "@airswap/light": "2.2.1",
     "@airswap/metadata": "0.3.2",
     "@airswap/protocols": "0.5.6",
-    "@airswap/registry": "3.6.1",
+    "@airswap/registry": "4.6.1",
     "@airswap/swap": "5.4.8",
     "@airswap/tokens": "0.1.4",
     "@airswap/utils": "0.4.4",

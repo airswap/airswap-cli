@@ -107,10 +107,10 @@
   resolved "https://registry.yarnpkg.com/@airswap/registry/-/registry-2.6.1.tgz#2b2aab57111de9930c9431d9bd7eb1b1c0b2e7c6"
   integrity sha512-KYjYHAzEGFsp75VQ+yCiWYumUE0r/8rHhmzYPxX4Ti3eREe3x8rRQ0bX0deCVqbZyW4LuoPU66cgCMa8mXhLZA==
 
-"@airswap/registry@3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@airswap/registry/-/registry-3.6.1.tgz#f5ed623518714eba4a341e886513f8ce8d526f47"
-  integrity sha512-zhUNQJo7uvzDy710f077a2/p13rOhOjV5iwUh/exgFnlXFprsaxrjn3LHmXXfl2z13Hi2YaXCEFzWL+ut84YUg==
+"@airswap/registry@4.6.1":
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/@airswap/registry/-/registry-4.6.1.tgz#e1a2805106a132c830d83224cc17ec952f0c8143"
+  integrity sha512-+uW6p5ry7dLZoPhs3CD+kVBelw+IQE6JTT03JmFLSa3EVh+ICh9owgFYtDBNbjMploAomO0BfP2j0ycIrt+JtA==
 
 "@airswap/swap@5.4.8":
   version "5.4.8"
