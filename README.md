@@ -11,7 +11,6 @@ Command Line Interface (CLI) for the AirSwap Network
 - Docs → https://docs.airswap.io/
 - Website → https://www.airswap.io/
 - Blog → https://blog.airswap.io/
-- Support → https://support.airswap.io/
 
 AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract. AirSwap CLI includes functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
 
@@ -107,40 +106,41 @@ $ airswap weth:withdraw
 # All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap chain`](#airswap-chain)
-* [`airswap debug`](#airswap-debug)
-* [`airswap gas`](#airswap-gas)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap indexer:enable`](#airswap-indexerenable)
-* [`airswap indexer:get`](#airswap-indexerget)
-* [`airswap indexer:new`](#airswap-indexernew)
-* [`airswap indexer:set`](#airswap-indexerset)
-* [`airswap indexer:unset`](#airswap-indexerunset)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:delete`](#airswap-metadatadelete)
-* [`airswap metadata:lookup`](#airswap-metadatalookup)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap order:best`](#airswap-orderbest)
-* [`airswap order:get`](#airswap-orderget)
-* [`airswap quote:best`](#airswap-quotebest)
-* [`airswap quote:get`](#airswap-quoteget)
-* [`airswap quote:max`](#airswap-quotemax)
-* [`airswap registry:add`](#airswap-registryadd)
-* [`airswap registry:enable`](#airswap-registryenable)
-* [`airswap registry:get`](#airswap-registryget)
-* [`airswap registry:list`](#airswap-registrylist)
-* [`airswap registry:remove`](#airswap-registryremove)
-* [`airswap registry:url`](#airswap-registryurl)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap weth:deposit`](#airswap-wethdeposit)
-* [`airswap weth:withdraw`](#airswap-wethwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap chain`](#airswap-chain)
+- [`airswap debug`](#airswap-debug)
+- [`airswap gas`](#airswap-gas)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap indexer:enable`](#airswap-indexerenable)
+- [`airswap indexer:get`](#airswap-indexerget)
+- [`airswap indexer:new`](#airswap-indexernew)
+- [`airswap indexer:set`](#airswap-indexerset)
+- [`airswap indexer:unset`](#airswap-indexerunset)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:delete`](#airswap-metadatadelete)
+- [`airswap metadata:lookup`](#airswap-metadatalookup)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap order:best`](#airswap-orderbest)
+- [`airswap order:get`](#airswap-orderget)
+- [`airswap quote:best`](#airswap-quotebest)
+- [`airswap quote:get`](#airswap-quoteget)
+- [`airswap quote:max`](#airswap-quotemax)
+- [`airswap registry:add`](#airswap-registryadd)
+- [`airswap registry:enable`](#airswap-registryenable)
+- [`airswap registry:get`](#airswap-registryget)
+- [`airswap registry:list`](#airswap-registrylist)
+- [`airswap registry:remove`](#airswap-registryremove)
+- [`airswap registry:url`](#airswap-registryurl)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap weth:deposit`](#airswap-wethdeposit)
+- [`airswap weth:withdraw`](#airswap-wethwithdraw)
 
 ## `airswap account:delete`
 
@@ -589,4 +589,5 @@ USAGE
 ```
 
 _See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v1.6.1/src/commands/weth/withdraw.ts)_
+
 <!-- commandsstop -->
