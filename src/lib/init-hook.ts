@@ -6,7 +6,7 @@ import * as emoji from 'node-emoji'
 import { table } from 'table'
 
 const hook: Hook<'init'> = async function(options) {
-  console.log(chalk.gray.bold(`AirSwap CLI ${options.config.version} — https://support.airswap.io/`))
+  console.log(chalk.gray.bold(`AirSwap CLI ${options.config.version} — https://www.airswap.io/`))
   var query = {
     name: 'airswap',
   }

@@ -9,8 +9,8 @@ import { cancelled } from '../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const swapDeploys = require('@airswap/swap/deploys.json')
-const lightDeploys = require('@airswap/light/deploys.json')
+const swapDeploys = require('@airswap/swap/deploys.js')
+const lightDeploys = require('@airswap/light/deploys.js')
 
 export default class Balances extends Command {
   static description = 'display token balances'

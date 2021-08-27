@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import * as emoji from 'node-emoji'
 import { table } from 'table'
 import BigNumber from 'bignumber.js'
+import readline from 'readline'
 import * as utils from './utils'
 import { chainNames } from '@airswap/constants'
 
@@ -12,7 +13,7 @@ prompt.start()
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
   Token: `Token not found. Manage local metadata with the ${chalk.bold('metadata')} command`,
-  Locator: 'Must be a URL. If no scheme provided (e.g. http://...) then HTTPS is implied',
+  Locator: 'Must be a URL',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
@@ -22,7 +23,7 @@ const messages = {
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
-  Locator: /^((http|https):\/\/)?(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?$/,
+  Locator: /^((http|https|ws|wss):\/\/)+(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,
   Format: /^full$|^light$/,
@@ -289,6 +290,30 @@ export function printTable(ctx: any, title: string, data: Array<any>, config: an
   ctx.log(table(data, config))
 }
 
+export function printQuote(ctx, signerToken, signerAmount, senderToken, senderAmount) {
+  ctx.log(
+    `Quote: ${chalk.bold(signerAmount)} ${chalk.bold(signerToken.symbol)} for ${chalk.bold(senderAmount)} ${chalk.bold(
+      senderToken.symbol,
+    )}\nPrice ${chalk.white(
+      new BigNumber(senderAmount)
+        .div(signerAmount)
+        .decimalPlaces(6)
+        .toFixed(),
+    )} ${senderToken.symbol}/${signerToken.symbol} (${chalk.white(
+      new BigNumber(signerAmount)
+        .div(senderAmount)
+        .decimalPlaces(6)
+        .toFixed(),
+    )} ${signerToken.symbol}/${senderToken.symbol})`,
+  )
+}
+
+export function clearLines(count) {
+  readline.moveCursor(process.stdout, 0, -1 * count)
+  readline.cursorTo(process.stdout, 0)
+  readline.clearLine(process.stdout, count)
+}
+
 export async function confirm(
   ctx: any,
   metadata: any,
@@ -296,6 +321,7 @@ export async function confirm(
   params: any,
   chainId: number,
   verb?: string,
+  gas = true,
 ): Promise<boolean> {
   const { gasPrice } = await utils.getConfig(ctx)
   const data = getData(metadata, params)
@@ -321,7 +347,9 @@ export async function confirm(
         properties: {
           confirm: {
             description: chalk.white(
-              `${chalk.bold(chainName)} | gas price ${gasPrice} | Type "${chalk.bold('yes')}" to ${verb || 'send'}`,
+              `${chalk.bold(chainName)} ${gas ? `| gas price ${gasPrice} ` : ''}| Type "${chalk.bold(
+                'yes',
+              )}" to ${verb || 'send'}`,
             ),
           },
         },
