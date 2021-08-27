@@ -218,7 +218,7 @@ export function getByHighestSignerAmount(results) {
   return { best: highest.order, locator: highest.locator }
 }
 
-export function calculateCostForAmount(amount, levels) {
+export function calculateCostFromLevels(amount, levels) {
   const totalAmount = new BigNumber(amount)
   const totalAvailable = new BigNumber(levels[levels.length - 1][0])
   let totalCost = new BigNumber(0)

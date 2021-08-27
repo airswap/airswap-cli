@@ -130,9 +130,9 @@ export default class OrderStream extends Command {
                   if (levels[i].baseToken.toLowerCase() === baseToken) {
                     if (levels[i].quoteToken.toLowerCase() === quoteToken) {
                       if (side === 'buy') {
-                        signerAmount = utils.calculateCostForAmount(senderAmount, levels[i].ask)
+                        signerAmount = utils.calculateCostFromLevels(senderAmount, levels[i].ask)
                       } else {
-                        senderAmount = utils.calculateCostForAmount(signerAmount, levels[i].bid)
+                        senderAmount = utils.calculateCostFromLevels(signerAmount, levels[i].bid)
                       }
                     }
                   }
