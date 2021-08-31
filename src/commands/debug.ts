@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
 import { get, cancelled } from '../lib/prompt'
 import { parseOrderFromHex, isValidOrder } from '@airswap/utils'
 import { Validator } from '@airswap/protocols'
@@ -10,7 +11,7 @@ export default class Debug extends Command {
   static description = 'debug a transaction given its input data'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       utils.displayDescription(this, Debug.description, chainId)
 
