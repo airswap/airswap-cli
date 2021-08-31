@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { getSideAndTokens, confirm, cancelled } from '../../lib/prompt'
 import { protocolNames, ADDRESS_ZERO, LOCATOR_ZERO } from '@airswap/constants'
 
@@ -13,7 +14,7 @@ export default class IntentUnset extends Command {
   static description = 'unset an intent'
   async run() {
     try {
-      const wallet = await utils.getWallet(this, true)
+      const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)

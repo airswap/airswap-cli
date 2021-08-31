@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
 import { getTable } from 'console.table'
 import { balanceCheckerAddresses } from '@airswap/constants'
 import deltaBalancesABI from '../lib/deltaBalances.json'
@@ -16,7 +17,7 @@ export default class Balances extends Command {
   static description = 'display token balances'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, Balances.description, chainId)

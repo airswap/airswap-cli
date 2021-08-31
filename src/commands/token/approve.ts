@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { get, getTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
@@ -13,7 +14,7 @@ export default class TokenApprove extends Command {
   static description = 'approve a token for trading'
   async run() {
     try {
-      const wallet = await utils.getWallet(this, true)
+      const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)

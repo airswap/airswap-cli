@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { getTokenList, confirm, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 
@@ -12,7 +13,7 @@ export default class RegistryAdd extends Command {
   static description = 'remove supported tokens from the registry'
   async run() {
     try {
-      const wallet = await utils.getWallet(this, true)
+      const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
