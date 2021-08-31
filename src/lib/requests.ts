@@ -13,43 +13,22 @@ import {
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
-import { INDEX_HEAD } from '@airswap/constants'
 
 const constants = require('./constants.json')
-const Indexer = require('@airswap/indexer/build/contracts/Indexer.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
 
-const indexerDeploys = require('@airswap/indexer/deploys.json')
 const registryDeploys = require('@airswap/registry/deploys.js')
-const swapDeploys = require('@airswap/swap/deploys.json')
-const lightDeploys = require('@airswap/light/deploys.json')
+const swapDeploys = require('@airswap/swap/deploys.js')
+const lightDeploys = require('@airswap/light/deploys.js')
 
-export async function getServerURLs(
-  wallet: any,
-  signerToken: string,
-  senderToken: string,
-  protocol: string,
-  callback: Function,
-) {
+export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: Function) {
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const indexerAddress = indexerDeploys[chainId]
-  new ethers.Contract(indexerAddress, Indexer.abi, wallet)
-    .getLocators(signerToken, senderToken, protocol, INDEX_HEAD, constants.MAX_LOCATORS)
-    .then(async result => {
-      const locators = [...result.locators].map(url => {
-        try {
-          return ethers.utils.parseBytes32String(url)
-        } catch (e) {
-          return false
-        }
-      })
-      const registryAddress = registryDeploys[chainId]
-      const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
-      const signerURLs = await registryContract.getURLsForToken(signerToken)
-      const senderURLs = await registryContract.getURLsForToken(senderToken)
-      const urls = signerURLs.filter(value => senderURLs.includes(value))
-      callback(locators.concat(urls))
-    })
+  const registryAddress = registryDeploys[chainId]
+  const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+  const signerURLs = await registryContract.getURLsForToken(signerToken)
+  const senderURLs = await registryContract.getURLsForToken(senderToken)
+  const urls = signerURLs.filter(value => senderURLs.includes(value))
+  callback(urls)
 }
 
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
@@ -95,7 +74,7 @@ export function multiPeerCall(
   callback: Function,
   lightOrder = false,
 ) {
-  getServerURLs(wallet, params.signerToken, params.senderToken, protocol, (locators: any) => {
+  getServerURLs(wallet, params.signerToken, params.senderToken, (locators: any) => {
     if (!locators.length) {
       callback()
       return
@@ -152,11 +131,7 @@ export function multiPeerCall(
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  const { format, side, amount }: any = await get({
-    format: {
-      description: 'full or light',
-      type: 'Format',
-    },
+  let inputs: any = {
     side: {
       description: 'buy or sell',
       type: 'Side',
@@ -164,8 +139,17 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     amount: {
       type: 'Number',
     },
-  })
-
+  }
+  if (kind != 'Quote') {
+    inputs = {
+      format: {
+        description: 'full or light',
+        type: 'Format',
+      },
+      ...inputs,
+    }
+  }
+  const { format, side, amount }: any = await get(inputs)
   const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
 
   let signerToken

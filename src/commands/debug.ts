@@ -5,7 +5,7 @@ import { getWallet } from '../lib/wallet'
 import { get, cancelled } from '../lib/prompt'
 import { parseOrderFromHex, isValidOrder } from '@airswap/utils'
 import { Validator } from '@airswap/protocols'
-import * as wrapperDeploys from '@airswap/wrapper/deploys.json'
+import * as wrapperDeploys from '@airswap/wrapper/deploys.js'
 
 export default class Debug extends Command {
   static description = 'debug a transaction given its input data'
@@ -27,7 +27,7 @@ export default class Debug extends Command {
           let errors
           switch (functionName) {
             case 'provideDelegateOrder':
-              let { wrapper }: any = await get({
+              const { wrapper }: any = await get({
                 wrapperAddress: {
                   description: 'wrapper address',
                   default: wrapperDeploys[chainId],

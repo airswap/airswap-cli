@@ -14,12 +14,12 @@ import { printOrder, confirm } from './prompt'
 
 import { Validator } from '@airswap/protocols'
 import { toDecimalString, lightOrderToParams } from '@airswap/utils'
-import { fetchTokens, scrapeToken, findTokenByAddress, findTokensBySymbol } from '@airswap/metadata'
+import { fetchTokens } from '@airswap/metadata'
 
 const Swap = require('@airswap/swap/build/contracts/Swap.json')
-const swapDeploys = require('@airswap/swap/deploys.json')
+const swapDeploys = require('@airswap/swap/deploys.js')
 const Light = require('@airswap/light/build/contracts/Light.json')
-const lightDeploys = require('@airswap/light/deploys.json')
+const lightDeploys = require('@airswap/light/deploys.js')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: number) {
@@ -192,6 +192,31 @@ export function getByHighestSignerAmount(results) {
     }
   }
   return { best: highest.order, locator: highest.locator }
+}
+
+export function calculateCostFromLevels(amount, levels) {
+  const totalAmount = new BigNumber(amount)
+  const totalAvailable = new BigNumber(levels[levels.length - 1][0])
+  let totalCost = new BigNumber(0)
+  let previousLevel = new BigNumber(0)
+
+  if (totalAmount.gt(totalAvailable)) {
+    throw new Error(
+      `Requested amount (${totalAmount.toFixed()}) exceeds maximum available (${totalAvailable.toFixed()}).`,
+    )
+  }
+  for (let i = 0; i < levels.length; i++) {
+    let incrementalAmount
+    if (totalAmount.gt(new BigNumber(levels[i][0]))) {
+      incrementalAmount = new BigNumber(levels[i][0]).minus(previousLevel)
+    } else {
+      incrementalAmount = new BigNumber(totalAmount).minus(previousLevel)
+    }
+    totalCost = totalCost.plus(new BigNumber(incrementalAmount).multipliedBy(levels[i][1]))
+    previousLevel = levels[i][0]
+    if (totalAmount.lt(previousLevel)) break
+  }
+  return totalCost.decimalPlaces(6).toFixed()
 }
 
 export async function handleFullResponse(
