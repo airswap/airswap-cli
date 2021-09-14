@@ -2,11 +2,10 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
-import { get, getTokens, confirm, cancelled } from '../../lib/prompt'
+import { getTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
 const lightDeploys = require('@airswap/light/deploys.js')
 
 export default class TokenApprove extends Command {
@@ -19,20 +18,9 @@ export default class TokenApprove extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenApprove.description, chainId)
 
-      const { format }: any = await get({
-        format: {
-          description: 'full or light',
-          type: 'Format',
-        },
-      })
-
-      let swapAddress = swapDeploys[chainId]
-      if (format === 'light') {
-        swapAddress = lightDeploys[chainId]
-      }
-
+      const swapAddress = lightDeploys[chainId]
       if (!swapAddress) {
-        throw `No ${format} contract found for the current chain.`
+        throw `No swap contract found for the current chain.`
       }
 
       const { token }: any = await getTokens({ token: 'token' }, metadata)
@@ -51,7 +39,7 @@ export default class TokenApprove extends Command {
             'approve',
             {
               token: `${token.address} (${token.symbol})`,
-              spender: `${swapAddress} (Swap ${format})`,
+              spender: `${swapAddress} (Swap)`,
             },
             chainId,
           )

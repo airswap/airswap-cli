@@ -7,12 +7,20 @@
     "url": "https://github.com/airswap/airswap-cli"
   },
   "contributors": [
-    "Don Mosites <don.mosites@fluidity.io>"
+    "Don Mosites"
   ],
   "bin": {
     "airswap": "./bin/run"
   },
   "bugs": "https://github.com/airswap/airswap-cli/issues",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md",
+    "lint": "yarn eslint \"./**/*.ts\"",
+    "pretty:check": "prettier --check \"./**/*.ts\" \"./**/*.js\"",
+    "pretty:fix": "prettier --write \"./**/*.ts\" \"./**/*.js\""
+  },
   "dependencies": {
     "@airswap/constants": "0.4.0",
     "@airswap/light": "2.2.2",
@@ -119,11 +127,6 @@
       "@oclif/plugin-help"
     ]
   },
-  "scripts": {
-    "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "version": "oclif-dev readme && git add README.md",
-    "lint": "yarn eslint \"./**/*.ts\""
-  },
+
   "types": "lib/index.d.ts"
 }

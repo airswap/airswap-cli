@@ -17,22 +17,16 @@ export default class OrderBest extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      if (request.format === 'light') {
-        requests.multiPeerCall(
-          wallet,
-          request.method,
-          request.params,
-          protocol,
-          (order: any) => {
-            utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
-          },
-          true,
-        )
-      } else {
-        requests.multiPeerCall(wallet, request.method, request.params, protocol, (order: any) => {
-          utils.handleFullResponse(request, wallet, metadata, chainId, gasPrice, this, order)
-        })
-      }
+      requests.multiPeerCall(
+        wallet,
+        request.method,
+        request.params,
+        protocol,
+        (order: any) => {
+          utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
+        },
+        true,
+      )
     } catch (e) {
       cancelled(e)
     }

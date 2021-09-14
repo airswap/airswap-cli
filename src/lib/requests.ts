@@ -18,7 +18,6 @@ const constants = require('./constants.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
 
 const registryDeploys = require('@airswap/registry/deploys.js')
-const swapDeploys = require('@airswap/swap/deploys.js')
 const lightDeploys = require('@airswap/light/deploys.js')
 
 export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: Function) {
@@ -131,7 +130,7 @@ export function multiPeerCall(
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
-  let inputs: any = {
+  const inputs: any = {
     side: {
       description: 'buy or sell',
       type: 'Side',
@@ -140,16 +139,8 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
       type: 'Number',
     },
   }
-  if (kind != 'Quote') {
-    inputs = {
-      format: {
-        description: 'full or light',
-        type: 'Format',
-      },
-      ...inputs,
-    }
-  }
-  const { format, side, amount }: any = await get(inputs)
+
+  const { side, amount }: any = await get(inputs)
   const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
 
   let signerToken
@@ -164,10 +155,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   const chainId = (await wallet.provider.getNetwork()).chainId
-  let swapContract = swapDeploys[chainId]
-  if (format === 'light') {
-    swapContract = lightDeploys[chainId]
-  }
+  const swapContract = lightDeploys[chainId]
 
   let method = 'getSenderSide' + kind
   const params = {
@@ -196,7 +184,6 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   return {
-    format,
     side,
     signerToken,
     senderToken,

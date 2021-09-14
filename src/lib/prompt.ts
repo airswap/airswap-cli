@@ -17,7 +17,6 @@ const messages = {
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
-  Format: 'Must be full or light',
   TokenList: 'One or more symbols not in metadata',
 }
 const patterns = {
@@ -26,7 +25,6 @@ const patterns = {
   Locator: /^((http|https|ws|wss):\/\/)+(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,
-  Format: /^full$|^light$/,
   TokenList: /./,
   Pair: /^[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/,
 }
