@@ -1,5 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { printOrder, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
@@ -8,7 +9,7 @@ export default class QuoteBest extends Command {
   static description = 'get the best available quote'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const protocol = await utils.getProtocol(this)

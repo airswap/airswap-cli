@@ -4,6 +4,7 @@ import * as jayson from 'jayson'
 import * as url from 'url'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
 import { createLightOrder, createLightSignature, toAtomicString, toDecimalString } from '@airswap/utils'
 import readline from 'readline'
@@ -16,7 +17,7 @@ export default class OrderStream extends Command {
   static description = 'stream quotes for a swap'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const math = create(all, {

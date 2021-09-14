@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
@@ -11,7 +12,7 @@ export default class IntentUnset extends Command {
   static description = 'deposit eth to weth'
   async run() {
     try {
-      const wallet = await utils.getWallet(this, true)
+      const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)

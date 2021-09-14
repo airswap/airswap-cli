@@ -1,5 +1,6 @@
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
+import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 import chalk from 'chalk'
@@ -8,7 +9,7 @@ export default class QuoteMax extends Command {
   static description = 'get a max quote from a peer'
   async run() {
     try {
-      const wallet = await utils.getWallet(this)
+      const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, QuoteMax.description, chainId)
