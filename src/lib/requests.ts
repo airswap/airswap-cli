@@ -5,7 +5,6 @@ import { ethers } from 'ethers'
 import * as url from 'url'
 import {
   isValidQuote,
-  isValidOrder,
   isValidLightOrder,
   getBestByLowestSenderAmount,
   getBestByHighestSignerAmount,
