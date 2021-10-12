@@ -24,7 +24,7 @@ export default class OrderBest extends Command {
         request.params,
         protocol,
         (order: any) => {
-          utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
+          utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order)
         },
         true,
       )

@@ -34,8 +34,8 @@ export default class OrderGet extends Command {
           process.exit(0)
         } else {
           try {
-            requests.validateLightResponse(err, order, request.method, request.params)
-            utils.handleLightResponse(request, wallet, metadata, chainId, gasPrice, this, order)
+            requests.validateResponse(err, order, request.method, request.params)
+            utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order)
           } catch (e) {
             cancelled(e)
           }

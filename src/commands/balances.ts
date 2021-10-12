@@ -44,7 +44,7 @@ export default class Balances extends Command {
             result.push({
               Token: token.symbol,
               Balance: balanceDecimal,
-              Light: lightAllowance.eq(0) ? '-' : chalk.green('Approved'),
+              Approved: lightAllowance.eq(0) ? '-' : chalk.green('Yes'),
             })
           } catch {
             continue
