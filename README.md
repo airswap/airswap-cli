@@ -8,17 +8,9 @@ Command Line Interface (CLI) for the AirSwap Network
 [![Discord](https://img.shields.io/discord/590643190281928738.svg)](https://discord.gg/ecQbV7H)
 ![Twitter Follow](https://img.shields.io/twitter/follow/airswap?style=social)
 
-- Docs → https://docs.airswap.io/
+- About → https://about.airswap.io/
 - Website → https://www.airswap.io/
 - Blog → https://blog.airswap.io/
-
-AirSwap is a peer-to-peer trading network for Ethereum (ERC20, ERC721) tokens. Using an Indexer smart contract, peers can find each other based on their mutual intent to trade specific tokens. Once found, peers exchange pricing information and settle trades on a Swap contract. AirSwap CLI includes functionality to interact with peers, indexers, and tokens. See [Commands](#commands) below.
-
-**Concepts**
-
-- Quotes are indicative prices and orders are signed and executable. Makers should be able to provide both.
-- Makers run as web servers at public URLs. Takers request quotes and orders using JSON-RPC over HTTP.
-- Indexers are used to signal an intent to trade to other peers. Tokens are staked to improve visibility.
 
 **Key Management**
 
@@ -52,10 +44,10 @@ Set the active Ethereum chain
 $ airswap chain
 ```
 
-Get locators for actively trading peers
+Get URLs for active servers
 
 ```
-$ airswap indexer:get
+$ airswap registry:list
 ```
 
 Get a quote from a specific peer
