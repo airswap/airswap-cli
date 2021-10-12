@@ -63,6 +63,7 @@ export default class OrderStream extends Command {
       const server = await Server.for(url)
 
       if (server.supportsProtocol('last-look')) {
+        senderWallet = await server.getSenderWallet()
         await server.subscribeAll()
         server.on('pricing', pricing => {
           let found = false
