@@ -302,7 +302,7 @@ export function printQuote(ctx, signerToken, signerAmount, senderToken, senderAm
         .div(senderAmount)
         .decimalPlaces(6)
         .toFixed(),
-    )} ${signerToken.symbol}/${senderToken.symbol})`,
+    )} ${signerToken.symbol}/${senderToken.symbol}) · ${new Date().toLocaleTimeString()}`,
   )
 }
 

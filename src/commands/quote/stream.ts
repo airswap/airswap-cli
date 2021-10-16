@@ -4,13 +4,7 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
-import {
-  calculateCostFromLevels,
-  createLightOrder,
-  createLightSignature,
-  toAtomicString,
-  toDecimalString,
-} from '@airswap/utils'
+import { calculateCost, createLightOrder, createLightSignature, toAtomicString, toDecimalString } from '@airswap/utils'
 import { Server } from '@airswap/libraries'
 import readline from 'readline'
 
@@ -60,7 +54,7 @@ export default class OrderStream extends Command {
         signerAmount = amount
       }
 
-      const server = await Server.for(url)
+      const server = await Server.at(url)
 
       if (server.supportsProtocol('last-look')) {
         senderWallet = await server.getSenderWallet()
@@ -77,9 +71,9 @@ export default class OrderStream extends Command {
             if (pricing[i].baseToken.toLowerCase() === baseToken.toLowerCase()) {
               if (pricing[i].quoteToken.toLowerCase() === quoteToken.toLowerCase()) {
                 if (side === 'buy') {
-                  signerAmount = calculateCostFromLevels(senderAmount, pricing[i].ask)
+                  signerAmount = calculateCost(senderAmount, pricing[i].ask)
                 } else {
-                  senderAmount = calculateCostFromLevels(signerAmount, pricing[i].bid)
+                  senderAmount = calculateCost(signerAmount, pricing[i].bid)
                 }
                 found = true
               }
