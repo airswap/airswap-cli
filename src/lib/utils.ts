@@ -8,17 +8,14 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, chainCurrencies, etherscanDomains, protocols, chainIds } from '@airswap/constants'
+import { chainNames, etherscanDomains, protocols, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
-import { Validator } from '@airswap/protocols'
 import { toDecimalString, lightOrderToParams } from '@airswap/utils'
 import { fetchTokens } from '@airswap/metadata'
 
-const Swap = require('@airswap/swap/build/contracts/Swap.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
-const Light = require('@airswap/light/build/contracts/Light.json')
+const Light = require('@airswap/light/build/contracts/Light.sol/Light.json')
 const lightDeploys = require('@airswap/light/deploys.js')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
@@ -88,7 +85,7 @@ export async function getMetadata(ctx: any, chainId: number) {
 
 export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
-  const tokens: any = await fetchTokens(chainId)
+  const tokens: any = (await fetchTokens(chainId)).tokens
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
   const bySymbol: any = {}
@@ -194,86 +191,8 @@ export function getByHighestSignerAmount(results) {
   return { best: highest.order, locator: highest.locator }
 }
 
-export function calculateCostFromLevels(amount, levels) {
-  const totalAmount = new BigNumber(amount)
-  const totalAvailable = new BigNumber(levels[levels.length - 1][0])
-  let totalCost = new BigNumber(0)
-  let previousLevel = new BigNumber(0)
 
-  if (totalAmount.gt(totalAvailable)) {
-    throw new Error(
-      `Requested amount (${totalAmount.toFixed()}) exceeds maximum available (${totalAvailable.toFixed()}).`,
-    )
-  }
-  for (let i = 0; i < levels.length; i++) {
-    let incrementalAmount
-    if (totalAmount.gt(new BigNumber(levels[i][0]))) {
-      incrementalAmount = new BigNumber(levels[i][0]).minus(previousLevel)
-    } else {
-      incrementalAmount = new BigNumber(totalAmount).minus(previousLevel)
-    }
-    totalCost = totalCost.plus(new BigNumber(incrementalAmount).multipliedBy(levels[i][1]))
-    previousLevel = levels[i][0]
-    if (totalAmount.lt(previousLevel)) break
-  }
-  return totalCost.decimalPlaces(6).toFixed()
-}
-
-export async function handleFullResponse(
-  request: any,
-  wallet: any,
-  metadata: any,
-  chainId: any,
-  gasPrice: any,
-  ctx: any,
-  order: any,
-) {
-  if (!order) {
-    ctx.log(chalk.yellow('No valid responses received.\n'))
-  } else {
-    ctx.log()
-    ctx.log(chalk.underline.bold(`Signer: ${order.signer.wallet}\n`))
-    await printOrder(ctx, request, order, wallet, metadata)
-    const errors = await new Validator(chainId).checkSwap(order)
-
-    if (errors.length) {
-      ctx.log(chalk.yellow('Unable to take (as sender) for the following reasons.\n'))
-      for (const e in errors) {
-        ctx.log(`‣ ${Validator.getReason(errors[e])}`)
-      }
-      ctx.log()
-    } else {
-      if (
-        await confirm(
-          ctx,
-          metadata,
-          'swap',
-          {
-            signerWallet: order.signer.wallet,
-            signerToken: order.signer.token,
-            signerAmount: `${order.signer.amount} (${chalk.cyan(
-              toDecimalString(order.signer.amount, metadata.byAddress[request.signerToken.address].decimals),
-            )})`,
-            senderWallet: `${order.sender.wallet} (${chalk.cyan('You')})`,
-            senderToken: order.sender.token,
-            senderAmount: `${order.sender.amount} (${chalk.cyan(
-              toDecimalString(order.sender.amount, metadata.byAddress[request.senderToken.address].decimals),
-            )})`,
-          },
-          chainId,
-          'take this order',
-        )
-      ) {
-        new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-          .swap(order, { gasPrice })
-          .then(handleTransaction)
-          .catch(handleError)
-      }
-    }
-  }
-}
-
-export async function handleLightResponse(
+export async function handleResponse(
   request: any,
   wallet: any,
   metadata: any,
@@ -299,11 +218,11 @@ export async function handleLightResponse(
     if (senderTokenAllowance.lt(order.senderAmount)) {
       ctx.log(
         chalk.yellow(
-          'Unable to take (as sender) sender has not approved its token for trading. (try token:approve)\n\n',
+          `Unable to take: you have not approved ${metadata.byAddress[request.senderToken.address].symbol} for trading. (try token:approve)\n\n`,
         ),
       )
     } else if (!(await printOrder(ctx, request, order, wallet, metadata))) {
-      ctx.log(chalk.yellow('Unable to take (as sender) because sender token balance is insufficient.\n\n'))
+      ctx.log(chalk.yellow('Unable to take: your token balance is insufficient.\n\n'))
     } else if (
       await confirm(
         ctx,

@@ -1,14 +1,12 @@
-import WebSocket from 'ws'
 import chalk from 'chalk'
 import * as jayson from 'jayson'
-import * as url from 'url'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
-import { createLightOrder, createLightSignature, toAtomicString, toDecimalString } from '@airswap/utils'
+import { calculateCost, createLightOrder, createLightSignature, toAtomicString, toDecimalString } from '@airswap/utils'
+import { Server } from '@airswap/libraries'
 import readline from 'readline'
-import { create, all } from 'mathjs'
 
 const constants = require('../../lib/constants.json')
 const lightDeploys = require('@airswap/light/deploys.js')
@@ -20,16 +18,10 @@ export default class OrderStream extends Command {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const math = create(all, {
-        number: 'BigNumber',
-        precision: 20,
-      })
       utils.displayDescription(this, OrderStream.description, chainId)
 
-      let taking = false
-
-      const { server, side, amount }: any = await get({
-        server: {
+      const { url, side, amount }: any = await get({
+        url: {
           type: 'Locator',
         },
         side: {
@@ -43,15 +35,14 @@ export default class OrderStream extends Command {
       const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
       this.log('\n\n\n')
 
+      const swapContract = lightDeploys[chainId]
       let signerToken
       let senderToken
       let signerAmount
       let senderAmount
-
-      let pricingFormula
-      let swapContract = lightDeploys[chainId]
       let senderWallet
       let senderServer
+      let taking = false
 
       if (side === 'buy') {
         senderToken = first
@@ -63,93 +54,51 @@ export default class OrderStream extends Command {
         signerAmount = amount
       }
 
+      const server = await Server.at(url)
+
+      if (server.supportsProtocol('last-look')) {
+        senderWallet = await server.getSenderWallet()
+        await server.subscribeAll()
+        server.on('pricing', pricing => {
+          let found = false
+          for (const i in pricing) {
+            let baseToken = signerToken.address
+            let quoteToken = senderToken.address
+            if (side === 'buy') {
+              baseToken = senderToken.address
+              quoteToken = signerToken.address
+            }
+            if (pricing[i].baseToken.toLowerCase() === baseToken.toLowerCase()) {
+              if (pricing[i].quoteToken.toLowerCase() === quoteToken.toLowerCase()) {
+                if (side === 'buy') {
+                  signerAmount = calculateCost(senderAmount, pricing[i].ask)
+                } else {
+                  senderAmount = calculateCost(signerAmount, pricing[i].bid)
+                }
+                found = true
+              }
+            }
+          }
+          if (found) {
+            if (!taking) {
+              clearLines(3)
+              printQuote(this, signerToken, signerAmount, senderToken, senderAmount)
+              console.log(chalk.gray(`ENTER to proceed, CTRL+C to Cancel`))
+            }
+          } else {
+            console.log('Pricing not available for selected pair.')
+            process.exit(0)
+          }
+        })
+      } else {
+        console.log('Server does not support last-look.')
+        process.exit(0)
+      }
+
       var rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
         terminal: false,
-      })
-      const ws = new WebSocket(server)
-
-      ws.on('open', function open() {
-        ws.send(
-          JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'subscribeAll',
-            id: Date.now(),
-            params: {},
-          }),
-        )
-      })
-
-      ws.on('message', message => {
-        let json
-        try {
-          json = JSON.parse(message)
-        } catch (e) {
-          console.log('Failed to parse JSON-RPC message', message)
-          return
-        }
-        try {
-          if (json.id) {
-            if (json.params.baseToken === senderToken.address) {
-              if (json.params.quoteToken === signerToken.address) {
-                pricingFormula = json.params.pricingFormula
-              }
-            }
-          } else
-            switch (json.method) {
-              case 'initialize':
-                senderWallet = json.params.senderWallet
-                swapContract = json.params.swapContract
-                senderServer = json.params.senderServer
-                break
-              case 'updateValues':
-                if (json.params.baseToken.toLowerCase() === senderToken.address) {
-                  if (json.params.quoteToken.toLowerCase() === signerToken.address) {
-                    if (side === 'buy') {
-                      signerAmount = math.evaluate(pricingFormula, json.params)
-                    } else {
-                      senderAmount = math.evaluate(pricingFormula, json.params)
-                    }
-                  }
-                }
-                if (!taking) {
-                  clearLines(3)
-                  printQuote(this, signerToken, signerAmount, senderToken, senderAmount)
-                  console.log(chalk.gray(`ENTER to proceed, CTRL+C to Cancel`))
-                }
-                break
-              case 'updatePricing':
-                const levels = json.params
-                for (const i in levels) {
-                  let baseToken = signerToken.address
-                  let quoteToken = senderToken.address
-                  if (side === 'buy') {
-                    baseToken = senderToken.address
-                    quoteToken = signerToken.address
-                  }
-                  if (levels[i].baseToken.toLowerCase() === baseToken) {
-                    if (levels[i].quoteToken.toLowerCase() === quoteToken) {
-                      if (side === 'buy') {
-                        signerAmount = utils.calculateCostFromLevels(senderAmount, levels[i].ask)
-                      } else {
-                        senderAmount = utils.calculateCostFromLevels(signerAmount, levels[i].bid)
-                      }
-                    }
-                  }
-                }
-                if (!taking) {
-                  clearLines(3)
-                  printQuote(this, signerToken, signerAmount, senderToken, senderAmount)
-                  console.log(chalk.gray(`ENTER to proceed, CTRL+C to Cancel`))
-                }
-                break
-            }
-        } catch (e) {
-          console.log(e.message, '\n')
-          ws.close()
-          rl.close()
-        }
       })
 
       rl.on('line', async () => {
@@ -193,10 +142,8 @@ export default class OrderStream extends Command {
             false,
           )
         ) {
-          console.log(`Sending order to ${chalk.bold(senderServer)}...`)
-
           if (senderServer) {
-            ws.close()
+            console.log(`Sending order to ${chalk.bold(senderServer)}...`)
             const locatorUrl = url.parse(senderServer)
             const options = {
               protocol: locatorUrl.protocol,
@@ -224,27 +171,23 @@ export default class OrderStream extends Command {
                 } else {
                   console.log(result, '\n')
                 }
-                taking = false
               },
             )
           } else {
-            ws.send(
-              JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'consider',
-                params: {
-                  ...order,
-                  ...signature,
-                },
-              }),
-            )
+            console.log('Sending order over the socket...')
+            await server.consider({
+              ...order,
+              ...signature,
+            })
+            process.exit(0)
           }
         } else {
+          cancelled('Cancelled')
           process.exit(0)
         }
       })
     } catch (e) {
-      cancelled(e)
+      cancelled(e.error ? e.error : e)
       process.exit(0)
     }
   }

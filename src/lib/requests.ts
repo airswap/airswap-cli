@@ -4,8 +4,6 @@ import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import {
-  isValidQuote,
-  isValidOrder,
   isValidLightOrder,
   getBestByLowestSenderAmount,
   getBestByHighestSignerAmount,
@@ -91,11 +89,7 @@ export function multiPeerCall(
         requested++
         peerCall(locators[i], method, params, (err: any, result: any) => {
           try {
-            if (lightOrder) {
-              results.push(validateLightResponse(err, result, method, params))
-            } else {
-              results.push(validateFullResponse(err, result, method, params, locators[i]))
-            }
+              results.push(validateResponse(err, result, method, params))
           } catch (e) {
             errors.push({ locator: locators[i], message: e })
           }
@@ -218,42 +212,7 @@ function getLowestLightSender(results) {
   return best
 }
 
-export function validateFullResponse(err: any, result: any, method: any, params: any, locator: any) {
-  if (err) {
-    throw err
-  } else {
-    if (method.indexOf('Order') !== -1) {
-      if (isValidOrder(result)) {
-        if (method.indexOf('Sender') !== -1) {
-          if (result.signer.amount === params.signerAmount) {
-            return result
-          } else {
-            throw 'Signer amount does not match request'
-          }
-        } else {
-          if (result.sender.amount === params.senderAmount) {
-            return result
-          } else {
-            throw 'Sender amount does not match request'
-          }
-        }
-      } else {
-        throw 'Received an invalid order'
-      }
-    } else if (method.indexOf('Quote') !== -1) {
-      if (isValidQuote(result)) {
-        result.locator = locator
-        return result
-      } else {
-        throw 'Received an invalid quote'
-      }
-    } else {
-      return result
-    }
-  }
-}
-
-export function validateLightResponse(err: any, result: any, method: any, params: any) {
+export function validateResponse(err: any, result: any, method: any, params: any) {
   if (err) {
     throw err
   } else {
