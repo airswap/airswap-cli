@@ -13,7 +13,7 @@ prompt.start()
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
   Token: `Token not found. Manage local metadata with the ${chalk.bold('metadata')} command`,
-  Locator: 'Must be a URL',
+  Locator: 'Must be a URL including scheme (e.g. HTTPS, WSS)',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
@@ -22,7 +22,7 @@ const messages = {
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
-  Locator: /^((http|https|ws|wss):\/\/)+(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?$/,
+  Locator: /^((http|https|ws|wss):\/\/)+(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?(\/)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,
   TokenList: /./,
@@ -355,6 +355,7 @@ export async function confirm(
       function(err, result) {
         if (err) reject()
         if (result && result.confirm === 'yes') resolve(true)
+        else resolve(false)
       },
     )
   })

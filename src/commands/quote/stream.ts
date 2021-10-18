@@ -182,6 +182,7 @@ export default class OrderStream extends Command {
             process.exit(0)
           }
         } else {
+          cancelled('Cancelled')
           process.exit(0)
         }
       })
