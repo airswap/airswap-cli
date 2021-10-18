@@ -218,11 +218,11 @@ export async function handleResponse(
     if (senderTokenAllowance.lt(order.senderAmount)) {
       ctx.log(
         chalk.yellow(
-          'Unable to take (as sender) sender has not approved its token for trading. (try token:approve)\n\n',
+          `Unable to take: you have not approved ${metadata.byAddress[request.senderToken.address].symbol} for trading. (try token:approve)\n\n`,
         ),
       )
     } else if (!(await printOrder(ctx, request, order, wallet, metadata))) {
-      ctx.log(chalk.yellow('Unable to take (as sender) because sender token balance is insufficient.\n\n'))
+      ctx.log(chalk.yellow('Unable to take: your token balance is insufficient.\n\n'))
     } else if (
       await confirm(
         ctx,
