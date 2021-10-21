@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@airswap/constants": "0.4.3",
-    "@airswap/libraries": "0.0.6",
+    "@airswap/libraries": "0.0.8",
     "@airswap/light": "2.3.1",
     "@airswap/metadata": "0.3.8",
     "@airswap/registry": "4.8.3",

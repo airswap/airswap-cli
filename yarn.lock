@@ -24,10 +24,10 @@
   dependencies:
     get-parameter-names "^0.3.0"
 
-"@airswap/libraries@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-0.0.6.tgz#ce212662a7fa3e9d597d01599cf5ee13dc6c91b8"
-  integrity sha512-gh2qhlaTdV/fY2hcCFiMmwbl9AKvQS887Nojrf7UScIp7+nBj/xOietDIxNSXiNaclSywgIG7PerzeJn/8KYlA==
+"@airswap/libraries@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-0.0.8.tgz#479554ca3fbc5d308e7b376fca8d8cd06726eee6"
+  integrity sha512-zTjdeZlrfCPB4MTSHN90C0AZnmkFJvmg4hYfzPjMhGjuyEBMgifeJhR2yzIjaR99dFuvStB4uwyy8jQ4aM8vvg==
   dependencies:
     "@airswap/constants" "0.4.3"
     "@airswap/jsonrpc-client-websocket" "0.0.1"
