@@ -175,10 +175,14 @@ export default class OrderStream extends Command {
             )
           } else {
             console.log('Sending order over the socket...')
-            await server.consider({
-              ...order,
-              ...signature,
-            })
+            try {
+              await server.consider({
+                ...order,
+                ...signature,
+              })
+            } catch (e) {
+              cancelled(e.error ? e.error : e)
+            }
             process.exit(0)
           }
         } else {
