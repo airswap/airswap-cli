@@ -10,7 +10,7 @@ import { cancelled } from '../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const lightDeploys = require('@airswap/light/deploys.js')
+const swapDeploys = require('@airswap/swap/deploys.js')
 
 export default class Balances extends Command {
   static description = 'display token balances'
@@ -22,7 +22,7 @@ export default class Balances extends Command {
       utils.displayDescription(this, Balances.description, chainId)
 
       const startTime = Date.now()
-      const lightAddress = lightDeploys[chainId]
+      const swapAddress = swapDeploys[chainId]
 
       if (!balanceCheckerAddresses[chainId]) {
         throw new Error('Unable to check balances on this chain.')
@@ -40,7 +40,7 @@ export default class Balances extends Command {
           const balanceDecimal = toDecimalString(balances[i], metadata.byAddress[token.address].decimals)
           try {
             const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
-            const lightAllowance = await tokenContract.allowance(wallet.address, lightAddress)
+            const lightAllowance = await tokenContract.allowance(wallet.address, swapAddress)
             result.push({
               Token: token.symbol,
               Balance: balanceDecimal,

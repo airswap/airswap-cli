@@ -4,9 +4,7 @@ import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import {
-  isValidLightOrder,
-  getBestByLowestSenderAmount,
-  getBestByHighestSignerAmount,
+  isValidOrder,
 } from '@airswap/utils'
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
@@ -16,7 +14,7 @@ const constants = require('./constants.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
 
 const registryDeploys = require('@airswap/registry/deploys.js')
-const lightDeploys = require('@airswap/light/deploys.js')
+const swapDeploys = require('@airswap/swap/deploys.js')
 
 export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: Function) {
   const chainId = (await wallet.provider.getNetwork()).chainId
@@ -69,7 +67,6 @@ export function multiPeerCall(
   params: any,
   protocol: string,
   callback: Function,
-  lightOrder = false,
 ) {
   getServerURLs(wallet, params.signerToken, params.senderToken, (locators: any) => {
     if (!locators.length) {
@@ -89,7 +86,7 @@ export function multiPeerCall(
         requested++
         peerCall(locators[i], method, params, (err: any, result: any) => {
           try {
-              results.push(validateResponse(err, result, method, params))
+            results.push(validateResponse(err, result, method, params))
           } catch (e) {
             errors.push({ locator: locators[i], message: e })
           }
@@ -101,18 +98,10 @@ export function multiPeerCall(
               callback(null, null, errors)
             } else {
               let best
-              if (lightOrder) {
-                if (method.indexOf('Signer') !== -1) {
-                  best = getHighestLightSigner(results)
-                } else {
-                  best = getLowestLightSender(results)
-                }
+              if (method.indexOf('Signer') !== -1) {
+                best = getHighestSwapSigner(results)
               } else {
-                if (method.indexOf('Signer') !== -1) {
-                  best = getBestByHighestSignerAmount(results)
-                } else {
-                  best = getBestByLowestSenderAmount(results)
-                }
+                best = getLowestSwapSender(results)
               }
               callback(best, results, errors)
             }
@@ -149,7 +138,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const swapContract = lightDeploys[chainId]
+  const swapContract = swapDeploys[chainId]
 
   let method = 'getSenderSide' + kind
   const params = {
@@ -186,7 +175,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 }
 
-function getHighestLightSigner(results) {
+function getHighestSwapSigner(results) {
   let best: any
   let bestAmount = 0
   let length = results.length
@@ -199,7 +188,7 @@ function getHighestLightSigner(results) {
   return best
 }
 
-function getLowestLightSender(results) {
+function getLowestSwapSender(results) {
   let best: any
   let bestAmount = Infinity
   let length = results.length
@@ -216,7 +205,7 @@ export function validateResponse(err: any, result: any, method: any, params: any
   if (err) {
     throw err
   } else {
-    if (isValidLightOrder(result)) {
+    if (isValidOrder(result)) {
       if (method.indexOf('Sender') !== -1) {
         if (result.signerAmount === params.signerAmount) {
           return result

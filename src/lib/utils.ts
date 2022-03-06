@@ -8,15 +8,15 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, protocols, chainIds } from '@airswap/constants'
+import { chainNames, etherscanDomains, protocols, chainIds, ADDRESS_ZERO } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
-import { toDecimalString, lightOrderToParams } from '@airswap/utils'
+import { toDecimalString, orderToParams } from '@airswap/utils'
 import { fetchTokens } from '@airswap/metadata'
 
-const Light = require('@airswap/light/build/contracts/Light.sol/Light.json')
-const lightDeploys = require('@airswap/light/deploys.js')
+const Swap = require('@airswap/swap/build/contracts/Swap.sol/Swap.json')
+const swapDeploys = require('@airswap/swap/deploys.js')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: number) {
@@ -200,19 +200,21 @@ export async function handleResponse(
   gasPrice: any,
   ctx: any,
   order: any,
+  errors = []
 ) {
   if (!order) {
     ctx.log(chalk.yellow('No valid responses received.\n'))
+    ctx.log('Errors', JSON.stringify(errors))
   } else {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
 
-    // Light protocol does not include senderWallet
+    // Swap protocol does not include senderWallet
     order.senderWallet = wallet.address
 
     const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
       order.senderWallet,
-      lightDeploys[chainId],
+      swapDeploys[chainId],
     )
 
     if (senderTokenAllowance.lt(order.senderAmount)) {
@@ -244,8 +246,8 @@ export async function handleResponse(
         'take this order',
       )
     ) {
-      new ethers.Contract(lightDeploys[chainId], Light.abi, wallet)
-        .swap(...lightOrderToParams(order), { gasPrice })
+      new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
+        .swap(wallet.address, ...orderToParams(order), { gasPrice })
         .then(handleTransaction)
         .catch(handleError)
     }

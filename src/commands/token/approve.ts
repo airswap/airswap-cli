@@ -7,7 +7,7 @@ import { getTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const lightDeploys = require('@airswap/light/deploys.js')
+const swapDeploys = require('@airswap/swap/deploys.js')
 
 export default class TokenApprove extends Command {
   static description = 'approve a token for trading'
@@ -19,7 +19,7 @@ export default class TokenApprove extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokenApprove.description, chainId)
 
-      const swapAddress = lightDeploys[chainId]
+      const swapAddress = swapDeploys[chainId]
       if (!swapAddress) {
         throw `No swap contract found for the current chain.`
       }

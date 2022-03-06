@@ -4,12 +4,12 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
-import { calculateCost, createLightOrder, createLightSignature, toAtomicString, toDecimalString } from '@airswap/utils'
+import { calculateCost, createOrder, createSwapSignature, toAtomicString, toDecimalString } from '@airswap/utils'
 import { Server } from '@airswap/libraries'
 import readline from 'readline'
 
 const constants = require('../../lib/constants.json')
-const lightDeploys = require('@airswap/light/deploys.js')
+const swapDeploys = require('@airswap/swap/deploys.js')
 
 export default class OrderStream extends Command {
   static description = 'stream quotes for a swap'
@@ -35,7 +35,7 @@ export default class OrderStream extends Command {
       const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
       this.log('\n\n\n')
 
-      const swapContract = lightDeploys[chainId]
+      const swapContract = swapDeploys[chainId]
       let signerToken
       let senderToken
       let signerAmount
@@ -105,9 +105,9 @@ export default class OrderStream extends Command {
         taking = true
         rl.close()
 
-        const order = createLightOrder({
+        const order = createOrder({
           expiry: String(Math.round(Date.now() / 1000) + 120),
-          signerFee: '7',
+          protocolFee: '30',
           signerWallet: wallet.address,
           signerToken: signerToken.address,
           signerAmount: toAtomicString(signerAmount, signerToken.decimals),
@@ -115,9 +115,9 @@ export default class OrderStream extends Command {
           senderToken: senderToken.address,
           senderAmount: toAtomicString(senderAmount, senderToken.decimals),
         })
-        const signature = await createLightSignature(order, wallet.privateKey, swapContract, chainId)
+        const signature = await createSwapSignature(order, wallet.privateKey, swapContract, chainId)
 
-        delete order.signerFee
+        delete order.protocolFee
         delete order.senderWallet
 
         if (
