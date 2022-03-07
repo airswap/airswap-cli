@@ -247,7 +247,7 @@ export async function handleResponse(
       )
     ) {
       new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-        .swap(wallet.address, ...orderToParams(order), { gasPrice })
+        .light(...orderToParams(order), { gasPrice })
         .then(handleTransaction)
         .catch(handleError)
     }
