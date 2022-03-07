@@ -107,7 +107,7 @@ export default class OrderStream extends Command {
 
         const order = createOrder({
           expiry: String(Math.round(Date.now() / 1000) + 120),
-          protocolFee: '30',
+          protocolFee: '7',
           signerWallet: wallet.address,
           signerToken: signerToken.address,
           signerAmount: toAtomicString(signerAmount, signerToken.decimals),
