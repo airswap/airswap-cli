@@ -83,7 +83,7 @@
     "@airswap/constants" "3.0.0-beta.0"
     "@uniswap/token-lists" "^1.0.0-beta.26"
 
-"@airswap/utils@3.0.0-beta.0", "@airswap/utils@3.0.0-beta.1":
+"@airswap/utils@3.0.0-beta.0":
   version "3.0.0-beta.0"
   resolved "https://registry.yarnpkg.com/@airswap/utils/-/utils-3.0.0-beta.0.tgz#6a4a839e4b6b2a111d238efd94991e36679e5341"
   integrity sha512-gpRQN11LytDSSjc6qCGw55iJO1Tr1335MrYd/l7PCezg3AqprDQV+dzjVKSXB0VoLtmVK+UX78dzCms43n2Fqg==
