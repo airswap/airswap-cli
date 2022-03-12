@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "1.7.4",
+  "version": "3.0.0-beta.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -22,14 +22,14 @@
     "pretty:fix": "prettier --write \"./**/*.ts\" \"./**/*.js\""
   },
   "dependencies": {
-    "@airswap/constants": "0.4.3",
-    "@airswap/libraries": "0.0.10",
-    "@airswap/light": "2.3.1",
-    "@airswap/metadata": "0.3.8",
-    "@airswap/registry": "4.8.3",
-    "@airswap/tokens": "0.1.4",
-    "@airswap/utils": "^0.4.12",
-    "@airswap/wrapper": "1.1.1",
+    "@airswap/constants": "3.0.0-beta.1",
+    "@airswap/libraries": "3.0.0-beta.3",
+    "@airswap/metadata": "3.0.0-beta.0",
+    "@airswap/registry": "3.0.0-beta.4",
+    "@airswap/swap": "3.0.0-beta.4",
+    "@airswap/tokens": "^0.1.4",
+    "@airswap/utils": "3.0.0-beta.0",
+    "@airswap/wrapper": "3.0.0-beta.4",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2.2.3",

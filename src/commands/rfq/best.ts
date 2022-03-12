@@ -23,10 +23,9 @@ export default class OrderBest extends Command {
         request.method,
         request.params,
         protocol,
-        (order: any) => {
-          utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order)
+        (order: any, results: any, errors: any) => {
+          utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order, errors)
         },
-        true,
       )
     } catch (e) {
       cancelled(e)
