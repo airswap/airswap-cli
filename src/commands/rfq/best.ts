@@ -11,22 +11,15 @@ export default class OrderBest extends Command {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const protocol = await utils.getProtocol(this)
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, OrderBest.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.multiPeerCall(
-        wallet,
-        request.method,
-        request.params,
-        protocol,
-        (order: any, results: any, errors: any) => {
-          utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order, errors)
-        },
-      )
+      requests.multiPeerCall(wallet, request.method, request.params, (order: any, results: any, errors: any) => {
+        utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order, errors)
+      })
     } catch (e) {
       cancelled(e)
     }

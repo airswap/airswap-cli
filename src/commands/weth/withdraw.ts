@@ -5,6 +5,7 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
+import { wethAddresses } from '@airswap/constants'
 
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
@@ -18,7 +19,7 @@ export default class IntentUnset extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
-      const WETH = metadata.bySymbol['WETH']
+      const WETH = metadata.byAddress[wethAddresses[chainId]]
       if (!WETH) {
         throw new Error('WETH token not found.')
       }

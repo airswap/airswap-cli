@@ -22,14 +22,14 @@
     "pretty:fix": "prettier --write \"./**/*.ts\" \"./**/*.js\""
   },
   "dependencies": {
-    "@airswap/constants": "3.0.0-beta.1",
-    "@airswap/libraries": "3.0.0-beta.3",
-    "@airswap/metadata": "3.0.0-beta.0",
+    "@airswap/balances": "2.0.2",
+    "@airswap/constants": "3.0.0-beta.3",
+    "@airswap/libraries": "3.0.0-beta.7",
+    "@airswap/metadata": "3.0.0-beta.2",
     "@airswap/registry": "3.0.0-beta.4",
-    "@airswap/swap": "3.0.0-beta.4",
+    "@airswap/swap": "3.0.0-beta.7",
     "@airswap/tokens": "^0.1.4",
-    "@airswap/utils": "3.0.0-beta.0",
-    "@airswap/wrapper": "3.0.0-beta.4",
+    "@airswap/utils": "^3.0.0-beta.1",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2.2.3",
@@ -107,11 +107,11 @@
       "chain": {
         "description": "set the active ethereum chain"
       },
-      "order": {
+      "rfq": {
         "description": "get and take orders from a single peer or all peers"
       },
-      "quote": {
-        "description": "get quotes and maximums from a single peer or all peers"
+      "stream": {
+        "description": "stream pricing from a peer and send orders to swap "
       },
       "token": {
         "description": "approve and transfer tokens between accounts"

@@ -8,7 +8,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, protocols, chainIds, ADDRESS_ZERO } from '@airswap/constants'
+import { chainNames, etherscanDomains, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
@@ -55,10 +55,18 @@ export async function getChainId(ctx: any): Promise<string> {
 export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
   const selectedChain = chainNames[chainId].toLowerCase()
-  if (chainId === '56') {
-    return `https://bsc-dataseed.binance.org/`
+  switch(chainId) {
+    case '56':
+      return 'https://bsc-dataseed.binance.org/'
+    case '97':
+      return 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+    case '43113':
+      return 'https://api.avax-test.network/ext/bc/C/rpc'
+    case '43114':
+      return 'https://api.avax.network/ext/bc/C/rpc'
+    default:
+      return `https://${selectedChain}.infura.io/v3/${INFURA_ID}`
   }
-  return `https://${selectedChain}.infura.io/v3/${INFURA_ID}`
 }
 
 export async function getProvider(ctx: any) {
@@ -126,11 +134,6 @@ export async function getGasPrice(ctx: any, asGwei?: boolean) {
     return ethers.BigNumber.from(gasPrice || DEFAULT_GAS_PRICE)
   }
   return ethers.utils.parseUnits(String(gasPrice || DEFAULT_GAS_PRICE), 'gwei')
-}
-
-export async function getProtocol(ctx: any) {
-  const { protocol } = await getConfig(ctx)
-  return protocol || protocols.SERVER
 }
 
 export function getAtomicValue(value: string, token: string, metadata: any) {

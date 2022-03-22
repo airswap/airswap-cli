@@ -65,7 +65,6 @@ export function multiPeerCall(
   wallet: any,
   method: string,
   params: any,
-  protocol: string,
   callback: Function,
 ) {
   getServerURLs(wallet, params.signerToken, params.senderToken, (locators: any) => {

@@ -106,6 +106,7 @@ export default class OrderStream extends Command {
         rl.close()
 
         const order = createOrder({
+          nonce: String(Date.now()),
           expiry: String(Math.round(Date.now() / 1000) + 120),
           protocolFee: '7',
           signerWallet: wallet.address,

@@ -4,13 +4,16 @@ import { ethers } from 'ethers'
 import * as utils from '../lib/utils'
 import { getWallet } from '../lib/wallet'
 import { getTable } from 'console.table'
-import { balanceCheckerAddresses } from '@airswap/constants'
-import deltaBalancesABI from '../lib/deltaBalances.json'
 import { cancelled } from '../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
+import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.json'
+import balancesDeploys from '@airswap/balances/deploys.js'
+
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap/deploys.js')
+
+const balancesInterface = new ethers.utils.Interface(JSON.stringify(BalanceChecker.abi))
 
 export default class Balances extends Command {
   static description = 'display token balances'
@@ -24,11 +27,11 @@ export default class Balances extends Command {
       const startTime = Date.now()
       const swapAddress = swapDeploys[chainId]
 
-      if (!balanceCheckerAddresses[chainId]) {
+      if (!balancesDeploys[chainId]) {
         throw new Error('Unable to check balances on this chain.')
       }
 
-      const balancesContract = new ethers.Contract(balanceCheckerAddresses[chainId], deltaBalancesABI, wallet)
+      const balancesContract = new ethers.Contract(balancesDeploys[chainId], balancesInterface, wallet)
 
       const addresses = Object.keys(metadata.byAddress)
       const balances = await balancesContract.walletBalances(wallet.address, addresses)
