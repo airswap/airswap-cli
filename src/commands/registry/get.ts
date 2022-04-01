@@ -32,6 +32,13 @@ export default class RegistryGet extends Command {
       const first = metadata.bySymbol[one.toUpperCase()]
       const second = metadata.bySymbol[two.toUpperCase()]
 
+      if (!first) {
+        throw new Error(`${one.toUpperCase()} not found in metadata.`)
+      }
+      if (!second) {
+        throw new Error(`${two.toUpperCase()} not found in metadata.`)
+      }
+
       const registryContract = new ethers.Contract(registryAddress, Registry.abi, provider)
       const signerURLs = await registryContract.getURLsForToken(first.address)
       const senderURLs = await registryContract.getURLsForToken(second.address)

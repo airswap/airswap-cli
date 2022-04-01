@@ -25,7 +25,6 @@ export default class Balances extends Command {
       utils.displayDescription(this, Balances.description, chainId)
 
       const startTime = Date.now()
-      const swapAddress = swapDeploys[chainId]
 
       if (!balancesDeploys[chainId]) {
         throw new Error('Unable to check balances on this chain.')
@@ -34,24 +33,34 @@ export default class Balances extends Command {
       const balancesContract = new ethers.Contract(balancesDeploys[chainId], balancesInterface, wallet)
 
       const addresses = Object.keys(metadata.byAddress)
-      const balances = await balancesContract.walletBalances(wallet.address, addresses)
+      for (let i = addresses.length; i >= 0; i--) {
+        if (!ethers.utils.isAddress(addresses[i])) {
+          addresses.splice(i, 1)
+        }
+      }
+
+      this.log(`Checking balances for ${addresses.length} tokens...\n`)
+
+      const chunk = 750
+      const count = addresses.length
+      let balances = []
+      let index = 0
+      while (index < count) {
+        balances = balances.concat(
+          await balancesContract.walletBalances(wallet.address, addresses.slice(index, index + chunk)),
+        )
+        index += chunk
+      }
 
       const result = []
       for (let i = 0; i < addresses.length; i++) {
         const token = metadata.byAddress[addresses[i]]
         if (!balances[i].eq(0)) {
           const balanceDecimal = toDecimalString(balances[i], metadata.byAddress[token.address].decimals)
-          try {
-            const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
-            const lightAllowance = await tokenContract.allowance(wallet.address, swapAddress)
-            result.push({
-              Token: token.symbol,
-              Balance: balanceDecimal,
-              Approved: lightAllowance.eq(0) ? '-' : chalk.green('Yes'),
-            })
-          } catch {
-            continue
-          }
+          result.push({
+            Token: token.symbol,
+            Balance: balanceDecimal,
+          })
         }
       }
 
