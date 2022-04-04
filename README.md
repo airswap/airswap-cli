@@ -38,7 +38,7 @@ $ airswap account:import
 
 # Explore the Network
 
-Set the active Ethereum chain
+Set the active chain ([chainIds](https://github.com/airswap/airswap-protocols/blob/8ddcacf9ab7b9b5778e5003c56564e7ae55afc9c/tools/constants/index.ts#L28))
 
 ```
 $ airswap chain
@@ -47,19 +47,19 @@ $ airswap chain
 Get URLs for active servers
 
 ```
-$ airswap registry:list
+$ airswap registry:get
 ```
 
 Get a quote from a specific peer
 
 ```
-$ airswap quote:get
+$ airswap rfq:get
 ```
 
 Get the best quote from all peers
 
 ```
-$ airswap quote:best
+$ airswap rfq:best
 ```
 
 # Balance Management
@@ -76,16 +76,16 @@ Transfer a balance to another account
 $ airswap token:transfer
 ```
 
-Deposit an ETH balance to WETH
+Deposit a native balance (e.g. ETH) into wrapped (e.g. WETH)
 
 ```
-$ airswap weth:deposit
+$ airswap wrapped:deposit
 ```
 
-Withdraw an ETH balance from WETH
+Withdraw a native balance from wrapped
 
 ```
-$ airswap weth:withdraw
+$ airswap wrapped:withdraw
 ```
 
 # Rinkeby Resources
@@ -98,33 +98,34 @@ $ airswap weth:withdraw
 # All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap chain`](#airswap-chain)
-* [`airswap gas`](#airswap-gas)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:delete`](#airswap-metadatadelete)
-* [`airswap metadata:lookup`](#airswap-metadatalookup)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap registry:add`](#airswap-registryadd)
-* [`airswap registry:enable`](#airswap-registryenable)
-* [`airswap registry:get`](#airswap-registryget)
-* [`airswap registry:list`](#airswap-registrylist)
-* [`airswap registry:remove`](#airswap-registryremove)
-* [`airswap registry:url`](#airswap-registryurl)
-* [`airswap rfq:best`](#airswap-rfqbest)
-* [`airswap rfq:get`](#airswap-rfqget)
-* [`airswap stream:open`](#airswap-streamopen)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:revoke`](#airswap-tokenrevoke)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap weth:deposit`](#airswap-wethdeposit)
-* [`airswap weth:withdraw`](#airswap-wethwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap chain`](#airswap-chain)
+- [`airswap gas`](#airswap-gas)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:delete`](#airswap-metadatadelete)
+- [`airswap metadata:lookup`](#airswap-metadatalookup)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap registry:add`](#airswap-registryadd)
+- [`airswap registry:enable`](#airswap-registryenable)
+- [`airswap registry:get`](#airswap-registryget)
+- [`airswap registry:list`](#airswap-registrylist)
+- [`airswap registry:remove`](#airswap-registryremove)
+- [`airswap registry:url`](#airswap-registryurl)
+- [`airswap rfq:best`](#airswap-rfqbest)
+- [`airswap rfq:get`](#airswap-rfqget)
+- [`airswap stream:open`](#airswap-streamopen)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:revoke`](#airswap-tokenrevoke)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap wrapped:deposit`](#airswap-wrappeddeposit)
+- [`airswap wrapped:withdraw`](#airswap-wrappedwithdraw)
 
 ## `airswap account:delete`
 
@@ -137,7 +138,7 @@ USAGE
   $ airswap account:delete
 ```
 
-_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/account/delete.ts)_
+_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/account/delete.ts)_
 
 ## `airswap account:export`
 
@@ -150,7 +151,7 @@ USAGE
   $ airswap account:export
 ```
 
-_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/account/export.ts)_
+_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/account/export.ts)_
 
 ## `airswap account:generate`
 
@@ -163,7 +164,7 @@ USAGE
   $ airswap account:generate
 ```
 
-_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/account/generate.ts)_
+_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/account/generate.ts)_
 
 ## `airswap account:import`
 
@@ -176,7 +177,7 @@ USAGE
   $ airswap account:import
 ```
 
-_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/account/import.ts)_
+_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/account/import.ts)_
 
 ## `airswap balances`
 
@@ -189,7 +190,7 @@ USAGE
   $ airswap balances
 ```
 
-_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/balances.ts)_
+_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/balances.ts)_
 
 ## `airswap chain`
 
@@ -202,7 +203,7 @@ USAGE
   $ airswap chain
 ```
 
-_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/chain.ts)_
+_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/chain.ts)_
 
 ## `airswap gas`
 
@@ -215,7 +216,7 @@ USAGE
   $ airswap gas
 ```
 
-_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/gas.ts)_
+_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/gas.ts)_
 
 ## `airswap help [COMMAND]`
 
@@ -247,7 +248,7 @@ USAGE
   $ airswap ip
 ```
 
-_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/ip.ts)_
+_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/ip.ts)_
 
 ## `airswap metadata:add`
 
@@ -260,7 +261,7 @@ USAGE
   $ airswap metadata:add
 ```
 
-_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/metadata/add.ts)_
+_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/metadata/add.ts)_
 
 ## `airswap metadata:delete`
 
@@ -273,7 +274,7 @@ USAGE
   $ airswap metadata:delete
 ```
 
-_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/metadata/delete.ts)_
+_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/metadata/delete.ts)_
 
 ## `airswap metadata:lookup`
 
@@ -286,7 +287,7 @@ USAGE
   $ airswap metadata:lookup
 ```
 
-_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/metadata/lookup.ts)_
+_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/metadata/lookup.ts)_
 
 ## `airswap metadata:update`
 
@@ -299,7 +300,7 @@ USAGE
   $ airswap metadata:update
 ```
 
-_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/metadata/update.ts)_
+_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/metadata/update.ts)_
 
 ## `airswap registry:add`
 
@@ -312,7 +313,7 @@ USAGE
   $ airswap registry:add
 ```
 
-_See code: [src/commands/registry/add.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/add.ts)_
+_See code: [src/commands/registry/add.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/add.ts)_
 
 ## `airswap registry:enable`
 
@@ -325,7 +326,7 @@ USAGE
   $ airswap registry:enable
 ```
 
-_See code: [src/commands/registry/enable.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/enable.ts)_
+_See code: [src/commands/registry/enable.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/enable.ts)_
 
 ## `airswap registry:get`
 
@@ -338,7 +339,7 @@ USAGE
   $ airswap registry:get
 ```
 
-_See code: [src/commands/registry/get.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/get.ts)_
+_See code: [src/commands/registry/get.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/get.ts)_
 
 ## `airswap registry:list`
 
@@ -351,7 +352,7 @@ USAGE
   $ airswap registry:list
 ```
 
-_See code: [src/commands/registry/list.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/list.ts)_
+_See code: [src/commands/registry/list.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/list.ts)_
 
 ## `airswap registry:remove`
 
@@ -364,7 +365,7 @@ USAGE
   $ airswap registry:remove
 ```
 
-_See code: [src/commands/registry/remove.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/remove.ts)_
+_See code: [src/commands/registry/remove.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/remove.ts)_
 
 ## `airswap registry:url`
 
@@ -377,7 +378,7 @@ USAGE
   $ airswap registry:url
 ```
 
-_See code: [src/commands/registry/url.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/registry/url.ts)_
+_See code: [src/commands/registry/url.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/registry/url.ts)_
 
 ## `airswap rfq:best`
 
@@ -390,7 +391,7 @@ USAGE
   $ airswap rfq:best
 ```
 
-_See code: [src/commands/rfq/best.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/rfq/best.ts)_
+_See code: [src/commands/rfq/best.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/rfq/best.ts)_
 
 ## `airswap rfq:get`
 
@@ -403,7 +404,7 @@ USAGE
   $ airswap rfq:get
 ```
 
-_See code: [src/commands/rfq/get.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/rfq/get.ts)_
+_See code: [src/commands/rfq/get.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/rfq/get.ts)_
 
 ## `airswap stream:open`
 
@@ -416,7 +417,7 @@ USAGE
   $ airswap stream:open
 ```
 
-_See code: [src/commands/stream/open.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/stream/open.ts)_
+_See code: [src/commands/stream/open.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/stream/open.ts)_
 
 ## `airswap token:approve`
 
@@ -429,7 +430,7 @@ USAGE
   $ airswap token:approve
 ```
 
-_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/token/approve.ts)_
+_See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/token/approve.ts)_
 
 ## `airswap token:revoke`
 
@@ -442,7 +443,7 @@ USAGE
   $ airswap token:revoke
 ```
 
-_See code: [src/commands/token/revoke.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/token/revoke.ts)_
+_See code: [src/commands/token/revoke.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/token/revoke.ts)_
 
 ## `airswap token:transfer`
 
@@ -455,9 +456,9 @@ USAGE
   $ airswap token:transfer
 ```
 
-_See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/token/transfer.ts)_
+_See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/token/transfer.ts)_
 
-## `airswap weth:deposit`
+## `airswap wrapped:deposit`
 
 deposit eth to weth
 
@@ -465,12 +466,12 @@ deposit eth to weth
 deposit eth to weth
 
 USAGE
-  $ airswap weth:deposit
+  $ airswap wrapped:deposit
 ```
 
-_See code: [src/commands/weth/deposit.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/weth/deposit.ts)_
+_See code: [src/commands/wrapped/deposit.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/wrapped/deposit.ts)_
 
-## `airswap weth:withdraw`
+## `airswap wrapped:withdraw`
 
 withdraw eth from weth
 
@@ -478,8 +479,9 @@ withdraw eth from weth
 withdraw eth from weth
 
 USAGE
-  $ airswap weth:withdraw
+  $ airswap wrapped:withdraw
 ```
 
-_See code: [src/commands/weth/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v3.0.0-beta.1/src/commands/weth/withdraw.ts)_
+_See code: [src/commands/wrapped/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v3.0.1/src/commands/wrapped/withdraw.ts)_
+
 <!-- commandsstop -->

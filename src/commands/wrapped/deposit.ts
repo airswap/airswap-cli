@@ -5,12 +5,12 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
-import { wethAddresses } from '@airswap/constants'
+import { wrappedTokenAddresses } from '@airswap/constants'
 
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
 export default class IntentUnset extends Command {
-  static description = 'withdraw eth from weth'
+  static description = 'deposit eth to weth'
   async run() {
     try {
       const wallet = await getWallet(this, true)
@@ -19,19 +19,19 @@ export default class IntentUnset extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
-      const WETH = metadata.byAddress[wethAddresses[chainId]]
+      const WETH = metadata.byAddress[wrappedTokenAddresses[chainId]]
       if (!WETH) {
-        throw new Error('WETH token not found.')
+        throw new Error('Wrapped token not found for the selected chain.')
       }
 
-      const tokenContract = new ethers.Contract(WETH.address, WETH9.abi, wallet)
-      const tokenBalance = await tokenContract.balanceOf(wallet.address)
-      const balanceDecimal = toDecimalString(tokenBalance.toString(), metadata.byAddress[WETH.address].decimals)
-      this.log(`WETH available to withdraw: ${chalk.bold(balanceDecimal)}\n`)
+      const balance = await wallet.provider.getBalance(wallet.address)
+      const balanceDecimal = toDecimalString(balance.toString(), metadata.byAddress[WETH.address].decimals)
+      this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal)}`)
+      this.log(chalk.gray('Some ETH must be saved to execute the transaction.\n'))
 
       const { amount }: any = await get({
         amount: {
-          description: 'amount to withdraw',
+          description: 'amount to deposit',
           type: 'Number',
         },
       })
@@ -39,23 +39,23 @@ export default class IntentUnset extends Command {
 
       if (atomicAmount.eq(0)) {
         cancelled('Amount must be greater than zero.')
-      } else if (tokenBalance.lt(atomicAmount.toString())) {
-        cancelled('Insufficient balance to withdraw.')
+      } else if (balance.lt(atomicAmount.toString())) {
+        cancelled('Insufficient balance.')
       } else {
         this.log()
         if (
           await confirm(
             this,
             metadata,
-            'withdraw',
+            'deposit',
             {
-              amount: `${atomicAmount} (${chalk.cyan(amount)})`,
+              '[value]': `${atomicAmount} (${chalk.cyan(amount)})`,
             },
             chainId,
           )
         ) {
           new ethers.Contract(WETH.address, WETH9.abi, wallet)
-            .withdraw(ethers.BigNumber.from(atomicAmount.toFixed()), { gasPrice })
+            .deposit({ value: ethers.BigNumber.from(atomicAmount.toFixed()), gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

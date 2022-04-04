@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -23,13 +23,13 @@
   },
   "dependencies": {
     "@airswap/balances": "2.0.2",
-    "@airswap/constants": "3.0.0-beta.3",
-    "@airswap/libraries": "3.0.0-beta.7",
-    "@airswap/metadata": "3.0.0-beta.2",
-    "@airswap/registry": "3.0.0-beta.4",
-    "@airswap/swap": "3.0.0-beta.7",
+    "@airswap/constants": "3.0.1",
+    "@airswap/libraries": "3.0.1",
+    "@airswap/metadata": "3.0.0",
+    "@airswap/registry": "3.0.1",
+    "@airswap/swap": "3.0.1",
     "@airswap/tokens": "^0.1.4",
-    "@airswap/utils": "^3.0.0-beta.1",
+    "@airswap/utils": "3.0.0",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2.2.3",
@@ -115,6 +115,9 @@
       },
       "token": {
         "description": "approve and transfer tokens between accounts"
+      },
+      "wrapped": {
+        "description": "deposit and withdraw wrapped native tokens (e.g. WETH)"
       }
     },
     "commands": "./lib/commands",
