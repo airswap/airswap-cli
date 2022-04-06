@@ -38,6 +38,9 @@ export default class MetadataAdd extends Command {
       })
 
       token.symbol = token.symbol.toUpperCase()
+      token.chainId = chainId
+      token.decimals = Number(token.decimals)
+      token.address = token.address.toLowerCase()
 
       let metadata = {
         byAddress: {},
