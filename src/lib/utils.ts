@@ -60,10 +60,14 @@ export async function getNodeURL(ctx): Promise<string> {
       return 'https://bsc-dataseed.binance.org/'
     case '97':
       return 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+    case '137':
+      return 'https://polygon-rpc.com/'
     case '43113':
       return 'https://api.avax-test.network/ext/bc/C/rpc'
     case '43114':
       return 'https://api.avax.network/ext/bc/C/rpc'
+    case '80001':
+      return 'https://rpc-mumbai.maticvigil.com'
     default:
       return `https://${selectedChain}.infura.io/v3/${INFURA_ID}`
   }
