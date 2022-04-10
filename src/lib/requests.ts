@@ -29,6 +29,11 @@ export async function getServerURLs(wallet: any, signerToken: string, senderToke
 export function peerCall(locator: string, method: string, params: any, callback: Function) {
   let client
 
+  if (/^ws:\/\//.test(locator) || /^wss:\/\//.test(locator)) {
+    callback(`\nError: Attempted HTTP RFQ request with a WebSocket URL`)
+    return
+  }
+
   if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {
     locator = `https://${locator}`
   }
