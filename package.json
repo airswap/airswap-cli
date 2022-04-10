@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -24,8 +24,8 @@
   "dependencies": {
     "@airswap/balances": "2.0.2",
     "@airswap/constants": "3.0.1",
-    "@airswap/libraries": "3.0.1",
-    "@airswap/metadata": "3.0.0",
+    "@airswap/libraries": "3.0.3",
+    "@airswap/metadata": "3.0.1",
     "@airswap/registry": "3.0.1",
     "@airswap/swap": "3.0.1",
     "@airswap/tokens": "^0.1.4",

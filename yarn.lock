@@ -26,12 +26,12 @@
   dependencies:
     get-parameter-names "^0.3.0"
 
-"@airswap/libraries@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-3.0.1.tgz#8872f4d81d3623e19d1d0b1318c3ad1bde3f4445"
-  integrity sha512-UYJdCNACUCaCKvSP+Tv5e5up/xx6yqclt1uKA7oNQ9tUyb6LYgsAV8ol1AxcNoeTQflGRzu6seQZEB4wwkR/6Q==
+"@airswap/libraries@3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-3.0.3.tgz#42170e23815a1fae58780ea64e13a6cf66dbd3c5"
+  integrity sha512-xpHeHIEqRJ1uIqLymXFUPTP6UgcKh0AmpVkiYQXiXU5EMUyNe2hOpF/ofyA1rGRiqVwyUbZItei/pnxxy2+rSg==
   dependencies:
-    "@airswap/constants" "3.0.0"
+    "@airswap/constants" "3.0.1"
     "@airswap/jsonrpc-client-websocket" "0.0.1"
     "@airswap/registry" "3.0.1"
     "@airswap/swap" "3.0.1"
@@ -45,12 +45,12 @@
     tiny-typed-emitter "^2.1.0"
     websocket "^1.0.34"
 
-"@airswap/metadata@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@airswap/metadata/-/metadata-3.0.0.tgz#2230974daa15f2a03c782ea80b1065c574d90107"
-  integrity sha512-5GBseaEE3y8V7sF+bkDU3UUJ4AgBdjIUm5W3yQo7+6iKsCGQc2fu26QqlaCa1eqLrx9m7o1r2nkBVv2Lbl658g==
+"@airswap/metadata@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@airswap/metadata/-/metadata-3.0.1.tgz#2d99ae62d15a7ab5260062794b3fe833c481de7d"
+  integrity sha512-pPNFTR4SKu3odN663/YD66rgkQZCK5/t+fF+vpiAvApueZgYcYXgk5lGebA5mC9PwWxv4amkQ4rr2AkRFk865g==
   dependencies:
-    "@airswap/constants" "3.0.0"
+    "@airswap/constants" "3.0.1"
     "@airswap/typescript" "3.0.0"
     "@uniswap/token-lists" "^1.0.0-beta.24"
     axios "^0.21.3"
