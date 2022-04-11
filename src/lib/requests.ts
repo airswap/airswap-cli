@@ -214,40 +214,6 @@ function getLowestSwapSender(results) {
 
 export async function validateResponse(order: any, method: any, params: any, wallet: any) {
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const signatory = getSignerFromSwapSignature(
-    {
-      senderWallet: wallet.address,
-      protocolFee: '7',
-      ...order
-    },
-    swapDeploys[chainId],
-    chainId,
-    order.v,
-    order.r,
-    order.s
-  )
-  if (signatory.toLowerCase() !== order.signerWallet?.toLowerCase()) {
-
-    const authorized = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet).authorized(order.signerWallet, signatory)
-    if (!authorized) {
-      throw 'Signature invalid'
-    }
-  }
-
-  const signerTokenAllowance = await new ethers.Contract(order.signerToken, IERC20.abi, wallet).allowance(
-    order.signerWallet,
-    swapDeploys[chainId],
-  )
-  const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
-    wallet.address,
-    swapDeploys[chainId],
-  )
-  if (signerTokenAllowance.lt(order.signerAmount)) {
-    throw `Unable to take: server has not approved its token for trading.`
-  } else if (senderTokenAllowance.lt(order.senderAmount)) {
-    throw `Unable to take: you have not approved your token for trading. (try token:approve)`
-  }
-
   const errors = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
   .check(wallet.address, ...orderToParams(order))
 
