@@ -8,7 +8,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, chainIds } from '@airswap/constants'
+import { chainNames, etherscanDomains, chainIds, ADDRESS_ZERO } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
@@ -219,18 +219,7 @@ export async function handleResponse(
     // Swap protocol does not include senderWallet
     order.senderWallet = wallet.address
 
-    const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
-      order.senderWallet,
-      swapDeploys[chainId],
-    )
-
-    if (senderTokenAllowance.lt(order.senderAmount)) {
-      ctx.log(
-        chalk.yellow(
-          `Unable to take: you have not approved ${metadata.byAddress[request.senderToken.address].symbol} for trading. (try token:approve)\n\n`,
-        ),
-      )
-    } else if (!(await printOrder(ctx, request, order, wallet, metadata))) {
+    if (!(await printOrder(ctx, request, order, wallet, metadata))) {
       ctx.log(chalk.yellow('Unable to take: your token balance is insufficient.\n\n'))
     } else if (
       await confirm(

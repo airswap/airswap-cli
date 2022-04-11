@@ -4,15 +4,18 @@ import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import {
+  getSignerFromSwapSignature,
   isValidOrder,
+  orderToParams
 } from '@airswap/utils'
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 
 const constants = require('./constants.json')
+const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-
+const Swap = require('@airswap/swap/build/contracts/Swap.sol/Swap.json')
 const registryDeploys = require('@airswap/registry/deploys.js')
 const swapDeploys = require('@airswap/swap/deploys.js')
 
@@ -30,40 +33,40 @@ export function peerCall(locator: string, method: string, params: any, callback:
   let client
 
   if (/^ws:\/\//.test(locator) || /^wss:\/\//.test(locator)) {
-    callback(`\nError: Attempted HTTP RFQ request with a WebSocket URL`)
-    return
-  }
+    callback(`${chalk.yellow('Error')}: Attempted HTTP RFQ request with a WebSocket URL`, null)
+  } else {
 
-  if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {
-    locator = `https://${locator}`
-  }
-
-  const locatorUrl = url.parse(locator)
-  const options = {
-    protocol: locatorUrl.protocol,
-    hostname: locatorUrl.hostname,
-    path: locatorUrl.path,
-    port: locatorUrl.port,
-    timeout: constants.REQUEST_TIMEOUT,
-  }
-
-  if (options.protocol === 'http:') {
-    client = jayson.Client.http(options)
-  } else if (options.protocol === 'https:') {
-    client = jayson.Client.https(options)
-  }
-
-  client.request(method, params, function(err: any, error: any, result: any) {
-    if (err) {
-      callback(`\n${chalk.yellow('Server Error')}: ${locator} \n ${err}`, null)
-    } else if (error) {
-      callback(`\n${chalk.yellow('Maker Error')}: ${error.message}\n`, null)
-    } else if (result) {
-      callback(null, result)
-    } else {
-      callback(null, null)
+    if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {
+      locator = `https://${locator}`
     }
-  })
+
+    const locatorUrl = url.parse(locator)
+    const options = {
+      protocol: locatorUrl.protocol,
+      hostname: locatorUrl.hostname,
+      path: locatorUrl.path,
+      port: locatorUrl.port,
+      timeout: constants.REQUEST_TIMEOUT,
+    }
+
+    if (options.protocol === 'http:') {
+      client = jayson.Client.http(options)
+    } else if (options.protocol === 'https:') {
+      client = jayson.Client.https(options)
+    }
+
+    client.request(method, params, function(err: any, error: any, result: any) {
+      if (err) {
+        callback(`${chalk.yellow('Server Error')}: ${locator} \n ${err}`, null)
+      } else if (error) {
+        callback(`${chalk.yellow('Maker Error')}: ${error.message}`, null)
+      } else if (result) {
+        callback(null, result)
+      } else {
+        callback(null, null)
+      }
+    })
+  }
 }
 
 export function multiPeerCall(
@@ -88,11 +91,15 @@ export function multiPeerCall(
     for (let i = 0; i < locators.length; i++) {
       if (locators[i]) {
         requested++
-        peerCall(locators[i], method, params, (err: any, result: any) => {
-          try {
-            results.push(validateResponse(err, result, method, params))
-          } catch (e) {
-            errors.push({ locator: locators[i], message: e })
+        peerCall(locators[i], method, params, async (err: any, result: any) => {
+          if (err) {
+            errors.push({ locator: locators[i], message: err })
+          } else {
+            try {
+              results.push(await validateResponse(result, method, params, wallet))
+            } catch (e) {
+              errors.push({ locator: locators[i], message: e })
+            }
           }
 
           if (++completed === requested) {
@@ -205,26 +212,64 @@ function getLowestSwapSender(results) {
   return best
 }
 
-export function validateResponse(err: any, result: any, method: any, params: any) {
-  if (err) {
-    throw err
-  } else {
-    if (isValidOrder(result)) {
-      if (method.indexOf('Sender') !== -1) {
-        if (result.signerAmount === params.signerAmount) {
-          return result
-        } else {
-          throw 'Signer amount does not match request'
-        }
+export async function validateResponse(order: any, method: any, params: any, wallet: any) {
+  const chainId = (await wallet.provider.getNetwork()).chainId
+  const signatory = getSignerFromSwapSignature(
+    {
+      senderWallet: wallet.address,
+      protocolFee: '7',
+      ...order
+    },
+    swapDeploys[chainId],
+    chainId,
+    order.v,
+    order.r,
+    order.s
+  )
+  if (signatory.toLowerCase() !== order.signerWallet?.toLowerCase()) {
+
+    const authorized = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet).authorized(order.signerWallet, signatory)
+    if (!authorized) {
+      throw 'Signature invalid'
+    }
+  }
+
+  const signerTokenAllowance = await new ethers.Contract(order.signerToken, IERC20.abi, wallet).allowance(
+    order.signerWallet,
+    swapDeploys[chainId],
+  )
+  const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
+    wallet.address,
+    swapDeploys[chainId],
+  )
+  if (signerTokenAllowance.lt(order.signerAmount)) {
+    throw `Unable to take: server has not approved its token for trading.`
+  } else if (senderTokenAllowance.lt(order.senderAmount)) {
+    throw `Unable to take: you have not approved your token for trading. (try token:approve)`
+  }
+
+  const errors = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
+  .check(wallet.address, ...orderToParams(order))
+
+  if (errors[0].toString() !== '0') {
+    throw ethers.utils.parseBytes32String(errors[1][0])
+  }
+
+  if (isValidOrder(order)) {
+    if (method.indexOf('Sender') !== -1) {
+      if (order.signerAmount === params.signerAmount) {
+        return order
       } else {
-        if (result.senderAmount === params.senderAmount) {
-          return result
-        } else {
-          throw 'Sender amount does not match request'
-        }
+        throw 'Signer amount does not match request'
       }
     } else {
-      throw 'Received an invalid order'
+      if (order.senderAmount === params.senderAmount) {
+        return order
+      } else {
+        throw 'Sender amount does not match request'
+      }
     }
+  } else {
+    throw 'Received an invalid order'
   }
 }
