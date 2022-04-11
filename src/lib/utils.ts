@@ -211,7 +211,11 @@ export async function handleResponse(
 ) {
   if (!order) {
     ctx.log(chalk.yellow('No valid responses received.\n'))
-    ctx.log('Errors', JSON.stringify(errors))
+    ctx.log('Errors...')
+    for (let i = 0; i < errors.length; i ++) {
+      ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
+    }
+    ctx.log()
   } else {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
@@ -219,19 +223,8 @@ export async function handleResponse(
     // Swap protocol does not include senderWallet
     order.senderWallet = wallet.address
 
-    const senderTokenAllowance = await new ethers.Contract(order.senderToken, IERC20.abi, wallet).allowance(
-      order.senderWallet,
-      swapDeploys[chainId],
-    )
-
-    if (senderTokenAllowance.lt(order.senderAmount)) {
-      ctx.log(
-        chalk.yellow(
-          `Unable to take: you have not approved ${metadata.byAddress[request.senderToken.address].symbol} for trading. (try token:approve)\n\n`,
-        ),
-      )
-    } else if (!(await printOrder(ctx, request, order, wallet, metadata))) {
-      ctx.log(chalk.yellow('Unable to take: your token balance is insufficient.\n\n'))
+    if (!(await printOrder(ctx, request, order, wallet, metadata))) {
+      ctx.log(`${chalk.yellow('Unable to take')}: your token balance is insufficient.\n\n`)
     } else if (
       await confirm(
         ctx,

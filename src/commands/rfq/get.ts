@@ -28,13 +28,12 @@ export default class OrderGet extends Command {
           if (err === 'timeout') {
             this.log(chalk.yellow('The request timed out.\n'))
           } else {
-            this.log(err)
-            this.log()
+            cancelled(err)
           }
           process.exit(0)
         } else {
           try {
-            requests.validateResponse(err, order, request.method, request.params)
+            await requests.validateResponse(order, request.method, request.params, wallet)
             utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order)
           } catch (e) {
             cancelled(e)
