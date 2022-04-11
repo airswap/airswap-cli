@@ -26,7 +26,7 @@ const patterns = {
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,
   TokenList: /./,
-  Pair: /^[a-zA-Z0-9]+\/[a-zA-Z0-9]+$/,
+  Pair: /^[a-zA-Z0-9\.]+\/[a-zA-Z0-9\.]+$/,
 }
 
 function generateSchema(fields) {
