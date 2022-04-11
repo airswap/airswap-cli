@@ -4,7 +4,6 @@ import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import {
-  getSignerFromSwapSignature,
   isValidOrder,
   orderToParams
 } from '@airswap/utils'
@@ -13,7 +12,6 @@ import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 
 const constants = require('./constants.json')
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
 const Swap = require('@airswap/swap/build/contracts/Swap.sol/Swap.json')
 const registryDeploys = require('@airswap/registry/deploys.js')
@@ -33,7 +31,7 @@ export function peerCall(locator: string, method: string, params: any, callback:
   let client
 
   if (/^ws:\/\//.test(locator) || /^wss:\/\//.test(locator)) {
-    callback(`${chalk.yellow('Error')}: Attempted HTTP RFQ request with a WebSocket URL`, null)
+    callback(`Invalid URL for HTTP RFQ`, null)
   } else {
 
     if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {
@@ -57,9 +55,9 @@ export function peerCall(locator: string, method: string, params: any, callback:
 
     client.request(method, params, function(err: any, error: any, result: any) {
       if (err) {
-        callback(`${chalk.yellow('Server Error')}: ${locator} \n ${err}`, null)
+        callback(`Server: ${locator} \n ${err}`, null)
       } else if (error) {
-        callback(`${chalk.yellow('Maker Error')}: ${error.message}`, null)
+        callback(`Server: ${error.message}`, null)
       } else if (result) {
         callback(null, result)
       } else {

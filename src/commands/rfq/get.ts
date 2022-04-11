@@ -28,8 +28,7 @@ export default class OrderGet extends Command {
           if (err === 'timeout') {
             this.log(chalk.yellow('The request timed out.\n'))
           } else {
-            this.log(err)
-            this.log()
+            cancelled(err)
           }
           process.exit(0)
         } else {

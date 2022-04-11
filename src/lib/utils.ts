@@ -8,7 +8,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, chainIds, ADDRESS_ZERO } from '@airswap/constants'
+import { chainNames, etherscanDomains, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
@@ -211,7 +211,11 @@ export async function handleResponse(
 ) {
   if (!order) {
     ctx.log(chalk.yellow('No valid responses received.\n'))
-    ctx.log('Errors', JSON.stringify(errors))
+    ctx.log('Errors...')
+    for (let i = 0; i < errors.length; i ++) {
+      ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
+    }
+    ctx.log()
   } else {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
@@ -220,7 +224,7 @@ export async function handleResponse(
     order.senderWallet = wallet.address
 
     if (!(await printOrder(ctx, request, order, wallet, metadata))) {
-      ctx.log(chalk.yellow('Unable to take: your token balance is insufficient.\n\n'))
+      ctx.log(`${chalk.yellow('Unable to take')}: your token balance is insufficient.\n\n`)
     } else if (
       await confirm(
         ctx,
