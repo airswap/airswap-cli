@@ -32,7 +32,7 @@ export async function getConfig(ctx: any) {
   const config = path.join(ctx.config.configDir, 'config.json')
   if (!(await fs.pathExists(config))) {
     await fs.outputJson(config, {
-      chainId: chainIds.RINKEBY,
+      chainId: chainIds.GOERLI,
     })
   }
   return await fs.readJson(config)
@@ -49,7 +49,7 @@ export async function updateConfig(ctx: any, config: any) {
 
 export async function getChainId(ctx: any): Promise<string> {
   const { chainId } = await getConfig(ctx)
-  return chainId || chainIds.RINKEBY
+  return chainId || chainIds.GOERLI
 }
 
 export async function getNodeURL(ctx): Promise<string> {

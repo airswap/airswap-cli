@@ -88,43 +88,37 @@ Withdraw a native balance from wrapped
 $ airswap wrapped:withdraw
 ```
 
-# Rinkeby Resources
-
-- **ETH** to pay for transactions - [Faucet](https://faucet.rinkeby.io/)
-- **WETH** for trading - `0xc778417e063141139fce010982780140aa0cd5ab` [Etherscan](https://rinkeby.etherscan.io/address/0xc778417e063141139fce010982780140aa0cd5ab)
-- **DAI** for trading - `0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea` [Etherscan](https://rinkeby.etherscan.io/address/0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea)
-- **AST** for staking - `0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8` [Etherscan](https://rinkeby.etherscan.io/address/0xcc1cbd4f67cceb7c001bd4adf98451237a193ff8) / [Faucet](https://ast-faucet-ui.development.airswap.io/)
-
 # All Commands
 
 <!-- commands -->
-* [`airswap account:delete`](#airswap-accountdelete)
-* [`airswap account:export`](#airswap-accountexport)
-* [`airswap account:generate`](#airswap-accountgenerate)
-* [`airswap account:import`](#airswap-accountimport)
-* [`airswap balances`](#airswap-balances)
-* [`airswap chain`](#airswap-chain)
-* [`airswap gas`](#airswap-gas)
-* [`airswap help [COMMAND]`](#airswap-help-command)
-* [`airswap ip`](#airswap-ip)
-* [`airswap metadata:add`](#airswap-metadataadd)
-* [`airswap metadata:delete`](#airswap-metadatadelete)
-* [`airswap metadata:lookup`](#airswap-metadatalookup)
-* [`airswap metadata:update`](#airswap-metadataupdate)
-* [`airswap registry:add`](#airswap-registryadd)
-* [`airswap registry:enable`](#airswap-registryenable)
-* [`airswap registry:get`](#airswap-registryget)
-* [`airswap registry:list`](#airswap-registrylist)
-* [`airswap registry:remove`](#airswap-registryremove)
-* [`airswap registry:url`](#airswap-registryurl)
-* [`airswap rfq:best`](#airswap-rfqbest)
-* [`airswap rfq:get`](#airswap-rfqget)
-* [`airswap stream:open`](#airswap-streamopen)
-* [`airswap token:approve`](#airswap-tokenapprove)
-* [`airswap token:revoke`](#airswap-tokenrevoke)
-* [`airswap token:transfer`](#airswap-tokentransfer)
-* [`airswap wrapped:deposit`](#airswap-wrappeddeposit)
-* [`airswap wrapped:withdraw`](#airswap-wrappedwithdraw)
+
+- [`airswap account:delete`](#airswap-accountdelete)
+- [`airswap account:export`](#airswap-accountexport)
+- [`airswap account:generate`](#airswap-accountgenerate)
+- [`airswap account:import`](#airswap-accountimport)
+- [`airswap balances`](#airswap-balances)
+- [`airswap chain`](#airswap-chain)
+- [`airswap gas`](#airswap-gas)
+- [`airswap help [COMMAND]`](#airswap-help-command)
+- [`airswap ip`](#airswap-ip)
+- [`airswap metadata:add`](#airswap-metadataadd)
+- [`airswap metadata:delete`](#airswap-metadatadelete)
+- [`airswap metadata:lookup`](#airswap-metadatalookup)
+- [`airswap metadata:update`](#airswap-metadataupdate)
+- [`airswap registry:add`](#airswap-registryadd)
+- [`airswap registry:enable`](#airswap-registryenable)
+- [`airswap registry:get`](#airswap-registryget)
+- [`airswap registry:list`](#airswap-registrylist)
+- [`airswap registry:remove`](#airswap-registryremove)
+- [`airswap registry:url`](#airswap-registryurl)
+- [`airswap rfq:best`](#airswap-rfqbest)
+- [`airswap rfq:get`](#airswap-rfqget)
+- [`airswap stream:open`](#airswap-streamopen)
+- [`airswap token:approve`](#airswap-tokenapprove)
+- [`airswap token:revoke`](#airswap-tokenrevoke)
+- [`airswap token:transfer`](#airswap-tokentransfer)
+- [`airswap wrapped:deposit`](#airswap-wrappeddeposit)
+- [`airswap wrapped:withdraw`](#airswap-wrappedwithdraw)
 
 ## `airswap account:delete`
 
@@ -482,4 +476,5 @@ USAGE
 ```
 
 _See code: [src/commands/wrapped/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v3.0.7/src/commands/wrapped/withdraw.ts)_
+
 <!-- commandsstop -->
