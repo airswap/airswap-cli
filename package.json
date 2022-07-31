@@ -24,6 +24,7 @@
   "dependencies": {
     "@airswap/balances": "2.0.2",
     "@airswap/constants": "3.0.1",
+    "@airswap/indexers": "^3.0.0",
     "@airswap/libraries": "3.0.3",
     "@airswap/metadata": "3.0.1",
     "@airswap/registry": "3.0.1",
@@ -97,6 +98,9 @@
       },
       "registry": {
         "description": "add and remove supported tokens"
+      },
+      "indexers": {
+        "description": "set or unset indexer server url"
       },
       "ip": {
         "description": "display local network addresses"

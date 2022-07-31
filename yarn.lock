@@ -19,6 +19,13 @@
   resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-3.0.1.tgz#cf5f99c99da4612dde2ca373af0f39e9da7e9374"
   integrity sha512-XJ0EhohJGW3g/jvEv2bUYU8aKL0XMDmVoAraqSdETlx1vamFvOd2rTqHT81Ch46wPTF7qDNzHRh6+HjvAmDOPw==
 
+"@airswap/indexers@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@airswap/indexers/-/indexers-3.0.0.tgz#f9c8d21815dceb0305feb06ff0794f97d3a0a71f"
+  integrity sha512-sM/BJiX+EYNC9JvjZQhpeZUivIPcEncPL9+2+Gjtrbay8pxeFik+kp7EcCq3YX4rEJnkHY3KK0y7bLkmYe/QoA==
+  dependencies:
+    "@openzeppelin/contracts" "^4.3.1"
+
 "@airswap/jsonrpc-client-websocket@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@airswap/jsonrpc-client-websocket/-/jsonrpc-client-websocket-0.0.1.tgz#e75932a0f19cb6c23cf145834277211cce150400"
