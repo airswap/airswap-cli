@@ -7,7 +7,7 @@ import { getTokens, confirm, cancelled } from '../../lib/prompt'
 import constants from '../../lib/constants.json'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
+const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class TokenApprove extends Command {
   static description = 'approve a token for trading'

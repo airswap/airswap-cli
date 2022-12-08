@@ -12,11 +12,11 @@ import { chainNames, etherscanDomains, chainIds } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
-import { toDecimalString, orderToParams } from '@airswap/utils'
+import { toDecimalString, orderERC20ToParams } from '@airswap/utils'
 import { fetchTokens } from '@airswap/metadata'
 
-const Swap = require('@airswap/swap/build/contracts/Swap.sol/Swap.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
+const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
+const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: number) {
@@ -247,7 +247,7 @@ export async function handleResponse(
       )
     ) {
       new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-        .swapLight(...orderToParams(order), { gasPrice })
+        .swapLight(...orderERC20ToParams(order), { gasPrice })
         .then(handleTransaction)
         .catch(handleError)
     }
