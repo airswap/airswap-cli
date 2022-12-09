@@ -8,8 +8,8 @@ import { stakingTokenAddresses } from '@airswap/constants'
 import { getTable } from 'console.table'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.js')
+const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
+const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryAdd extends Command {
   static description = 'add supported tokens to the registry'

@@ -9,7 +9,7 @@ import constants from '../../lib/constants.json'
 import { stakingTokenAddresses } from '@airswap/constants'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const registryDeploys = require('@airswap/registry/deploys.js')
+const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryEnable extends Command {
   static description = 'enable staking on the registry'

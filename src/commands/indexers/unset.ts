@@ -5,8 +5,8 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 
-const Indexers = require('@airswap/indexers/build/contracts/Indexers.sol/Indexers.json')
-const indexersDeploys = require('@airswap/indexers/deploys.js')
+const Indexers = require('@airswap/indexer-registry/build/contracts/IndexerRegistry.sol/IndexerRegistry.json')
+const indexersDeploys = require('@airswap/indexer-registry/deploys.js')
 
 export default class IndexersUnset extends Command {
   static description = 'set server url on the indexers indexers'

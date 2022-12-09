@@ -11,7 +11,7 @@ import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.jso
 import balancesDeploys from '@airswap/balances/deploys.js'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
+const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 const balancesInterface = new ethers.utils.Interface(JSON.stringify(BalanceChecker.abi))
 

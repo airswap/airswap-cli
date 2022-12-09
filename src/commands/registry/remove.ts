@@ -6,8 +6,8 @@ import { getWallet } from '../../lib/wallet'
 import { getTokenList, confirm, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 
-const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.js')
+const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
+const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryAdd extends Command {
   static description = 'remove supported tokens from the registry'

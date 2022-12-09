@@ -4,12 +4,18 @@ import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
-import { calculateCost, createOrder, createSwapSignature, toAtomicString, toDecimalString } from '@airswap/utils'
-import { Server } from '@airswap/libraries'
+import {
+  calculateCost,
+  createOrderERC20,
+  createOrderERC20Signature,
+  toAtomicString,
+  toDecimalString,
+} from '@airswap/utils'
+import { Maker } from '@airswap/libraries'
 import readline from 'readline'
 
 const constants = require('../../lib/constants.json')
-const swapDeploys = require('@airswap/swap/deploys.js')
+const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class OrderStream extends Command {
   static description = 'stream quotes for a swap'
@@ -54,7 +60,7 @@ export default class OrderStream extends Command {
         signerAmount = amount
       }
 
-      const server = await Server.at(url)
+      const server = await Maker.at(url)
 
       if (server.supportsProtocol('last-look')) {
         senderWallet = await server.getSenderWallet()
@@ -105,7 +111,7 @@ export default class OrderStream extends Command {
         taking = true
         rl.close()
 
-        const order = createOrder({
+        const order = createOrderERC20({
           nonce: String(Date.now()),
           expiry: String(Math.round(Date.now() / 1000) + 120),
           protocolFee: '7',
@@ -116,7 +122,7 @@ export default class OrderStream extends Command {
           senderToken: senderToken.address,
           senderAmount: toAtomicString(senderAmount, senderToken.decimals),
         })
-        const signature = await createSwapSignature(order, wallet.privateKey, swapContract, chainId)
+        const signature = await createOrderERC20Signature(order, wallet.privateKey, swapContract, chainId)
 
         delete order.protocolFee
         delete order.senderWallet

@@ -1,21 +1,20 @@
 import { cli } from 'cli-ux'
-import chalk from 'chalk'
 import * as jayson from 'jayson'
 import { ethers } from 'ethers'
 import * as url from 'url'
 import {
-  isValidOrder,
-  orderToParams
+  isValidOrderERC20,
+  orderERC20ToParams
 } from '@airswap/utils'
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 
 const constants = require('./constants.json')
-const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const Swap = require('@airswap/swap/build/contracts/Swap.sol/Swap.json')
-const registryDeploys = require('@airswap/registry/deploys.js')
-const swapDeploys = require('@airswap/swap/deploys.js')
+const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
+const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
+const registryDeploys = require('@airswap/maker-registry/deploys.js')
+const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: Function) {
   const chainId = (await wallet.provider.getNetwork()).chainId
@@ -213,13 +212,13 @@ function getLowestSwapSender(results) {
 export async function validateResponse(order: any, method: any, params: any, wallet: any) {
   const chainId = (await wallet.provider.getNetwork()).chainId
   const errors = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-  .check(wallet.address, ...orderToParams(order))
+  .check(wallet.address, ...orderERC20ToParams(order))
 
   if (errors[0].toString() !== '0') {
     throw ethers.utils.parseBytes32String(errors[1][0])
   }
 
-  if (isValidOrder(order)) {
+  if (isValidOrderERC20(order)) {
     if (method.indexOf('Sender') !== -1) {
       if (order.signerAmount === params.signerAmount) {
         return order

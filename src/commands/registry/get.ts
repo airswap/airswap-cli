@@ -5,8 +5,8 @@ import * as utils from '../../lib/utils'
 import { get, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 
-const Registry = require('@airswap/registry/build/contracts/Registry.sol/Registry.json')
-const registryDeploys = require('@airswap/registry/deploys.js')
+const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
+const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryGet extends Command {
   static description = 'get urls from the registry'
