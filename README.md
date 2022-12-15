@@ -127,8 +127,6 @@ $ airswap wrapped:withdraw
 delete the current ethereum account
 
 ```
-delete the current ethereum account
-
 USAGE
   $ airswap account:delete
 ```
@@ -140,8 +138,6 @@ _See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-c
 export the current ethereum account
 
 ```
-export the current ethereum account
-
 USAGE
   $ airswap account:export
 ```
@@ -153,8 +149,6 @@ _See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-c
 generate a new ethereum account
 
 ```
-generate a new ethereum account
-
 USAGE
   $ airswap account:generate
 ```
@@ -166,8 +160,6 @@ _See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap
 import an ethereum account
 
 ```
-import an ethereum account
-
 USAGE
   $ airswap account:import
 ```
@@ -179,8 +171,6 @@ _See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-c
 display token balances
 
 ```
-display token balances
-
 USAGE
   $ airswap balances
 ```
@@ -192,8 +182,6 @@ _See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blo
 set the active ethereum chain
 
 ```
-set the active ethereum chain
-
 USAGE
   $ airswap chain
 ```
@@ -205,8 +193,6 @@ _See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v
 set gas price for transactions
 
 ```
-set gas price for transactions
-
 USAGE
   $ airswap gas
 ```
@@ -215,30 +201,26 @@ _See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v3.
 
 ## `airswap help [COMMAND]`
 
-display help for airswap
+Display help for airswap.
 
 ```
-display help for <%= config.bin %>
-
 USAGE
   $ airswap help [COMMAND]
 
 ARGUMENTS
-  COMMAND  command to show help for
+  COMMAND  Command to show help for.
 
 OPTIONS
-  --all  see all commands in CLI
+  -n, --nested-commands  Include all nested commands in the output.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
 
 ## `airswap indexers:get`
 
 get indexer server urls
 
 ```
-get indexer server urls
-
 USAGE
   $ airswap indexers:get
 ```
@@ -250,8 +232,6 @@ _See code: [src/commands/indexers/get.ts](https://github.com/airswap/airswap-cli
 set server url on the indexers indexers
 
 ```
-set server url on the indexers indexers
-
 USAGE
   $ airswap indexers:set
 ```
@@ -263,8 +243,6 @@ _See code: [src/commands/indexers/set.ts](https://github.com/airswap/airswap-cli
 set server url on the indexers indexers
 
 ```
-set server url on the indexers indexers
-
 USAGE
   $ airswap indexers:unset
 ```
@@ -276,8 +254,6 @@ _See code: [src/commands/indexers/unset.ts](https://github.com/airswap/airswap-c
 display local network addresses
 
 ```
-display local network addresses
-
 USAGE
   $ airswap ip
 ```
@@ -289,8 +265,6 @@ _See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v3.1
 add token to local metadata
 
 ```
-add token to local metadata
-
 USAGE
   $ airswap metadata:add
 ```
@@ -302,8 +276,6 @@ _See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli
 delete token from local metadata
 
 ```
-delete token from local metadata
-
 USAGE
   $ airswap metadata:delete
 ```
@@ -315,8 +287,6 @@ _See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-
 lookup token in local metadata
 
 ```
-lookup token in local metadata
-
 USAGE
   $ airswap metadata:lookup
 ```
@@ -328,8 +298,6 @@ _See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-
 update local metadata from remote sources
 
 ```
-update local metadata from remote sources
-
 USAGE
   $ airswap metadata:update
 ```
@@ -341,8 +309,6 @@ _See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-
 add supported tokens to the registry
 
 ```
-add supported tokens to the registry
-
 USAGE
   $ airswap registry:add
 ```
@@ -354,8 +320,6 @@ _See code: [src/commands/registry/add.ts](https://github.com/airswap/airswap-cli
 enable staking on the registry
 
 ```
-enable staking on the registry
-
 USAGE
   $ airswap registry:enable
 ```
@@ -367,8 +331,6 @@ _See code: [src/commands/registry/enable.ts](https://github.com/airswap/airswap-
 get urls from the registry
 
 ```
-get urls from the registry
-
 USAGE
   $ airswap registry:get
 ```
@@ -380,8 +342,6 @@ _See code: [src/commands/registry/get.ts](https://github.com/airswap/airswap-cli
 list supported tokens from registry
 
 ```
-list supported tokens from registry
-
 USAGE
   $ airswap registry:list
 ```
@@ -393,8 +353,6 @@ _See code: [src/commands/registry/list.ts](https://github.com/airswap/airswap-cl
 remove supported tokens from the registry
 
 ```
-remove supported tokens from the registry
-
 USAGE
   $ airswap registry:remove
 ```
@@ -406,8 +364,6 @@ _See code: [src/commands/registry/remove.ts](https://github.com/airswap/airswap-
 set server url on the registry
 
 ```
-set server url on the registry
-
 USAGE
   $ airswap registry:url
 ```
@@ -419,8 +375,6 @@ _See code: [src/commands/registry/url.ts](https://github.com/airswap/airswap-cli
 get the best available order
 
 ```
-get the best available order
-
 USAGE
   $ airswap rfq:best
 ```
@@ -432,8 +386,6 @@ _See code: [src/commands/rfq/best.ts](https://github.com/airswap/airswap-cli/blo
 get an order from a peer
 
 ```
-get an order from a peer
-
 USAGE
   $ airswap rfq:get
 ```
@@ -445,8 +397,6 @@ _See code: [src/commands/rfq/get.ts](https://github.com/airswap/airswap-cli/blob
 stream quotes for a swap
 
 ```
-stream quotes for a swap
-
 USAGE
   $ airswap stream:open
 ```
@@ -458,8 +408,6 @@ _See code: [src/commands/stream/open.ts](https://github.com/airswap/airswap-cli/
 approve a token for trading
 
 ```
-approve a token for trading
-
 USAGE
   $ airswap token:approve
 ```
@@ -471,8 +419,6 @@ _See code: [src/commands/token/approve.ts](https://github.com/airswap/airswap-cl
 revoke a token approval
 
 ```
-revoke a token approval
-
 USAGE
   $ airswap token:revoke
 ```
@@ -484,8 +430,6 @@ _See code: [src/commands/token/revoke.ts](https://github.com/airswap/airswap-cli
 transfer tokens to another account
 
 ```
-transfer tokens to another account
-
 USAGE
   $ airswap token:transfer
 ```
@@ -497,8 +441,6 @@ _See code: [src/commands/token/transfer.ts](https://github.com/airswap/airswap-c
 deposit eth to weth
 
 ```
-deposit eth to weth
-
 USAGE
   $ airswap wrapped:deposit
 ```
@@ -510,8 +452,6 @@ _See code: [src/commands/wrapped/deposit.ts](https://github.com/airswap/airswap-
 withdraw eth from weth
 
 ```
-withdraw eth from weth
-
 USAGE
   $ airswap wrapped:withdraw
 ```
