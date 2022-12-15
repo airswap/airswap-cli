@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../lib/utils'
@@ -9,9 +8,6 @@ import { toDecimalString } from '@airswap/utils'
 
 import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.json'
 import balancesDeploys from '@airswap/balances/deploys.js'
-
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
-const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 const balancesInterface = new ethers.utils.Interface(JSON.stringify(BalanceChecker.abi))
 

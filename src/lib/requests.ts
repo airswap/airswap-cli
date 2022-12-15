@@ -30,7 +30,7 @@ export function peerCall(locator: string, method: string, params: any, callback:
   let client
 
   if (/^ws:\/\//.test(locator) || /^wss:\/\//.test(locator)) {
-    callback(`Invalid URL for HTTP RFQ`, null)
+    callback(`URL: Unable to call via HTTP`, null)
   } else {
 
     if (!/^http:\/\//.test(locator) && !/^https:\/\//.test(locator)) {

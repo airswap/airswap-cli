@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
-import { get, confirm, cancelled } from '../../lib/prompt'
+import { confirm, cancelled } from '../../lib/prompt'
 
 const Indexers = require('@airswap/indexer-registry/build/contracts/IndexerRegistry.sol/IndexerRegistry.json')
 const indexersDeploys = require('@airswap/indexer-registry/deploys.js')

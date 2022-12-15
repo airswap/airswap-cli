@@ -56,6 +56,8 @@ export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
   const selectedChain = chainNames[chainId].toLowerCase()
   switch(chainId) {
+    case '1':
+      return `https://mainnet.infura.io/v3/${INFURA_ID}`
     case '56':
       return 'https://bsc-dataseed.binance.org/'
     case '97':
