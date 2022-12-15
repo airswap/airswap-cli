@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "3.0.9",
+  "version": "3.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -31,19 +31,19 @@
     "@airswap/swap-erc20": "3.0.0",
     "@airswap/tokens": "^0.1.4",
     "@airswap/utils": "3.0.5",
-    "@oclif/command": "^1",
-    "@oclif/config": "^1",
-    "@oclif/plugin-help": "^2.2.3",
+    "@oclif/command": "^1.8.20",
+    "@oclif/config": "^1.18.6",
+    "@oclif/plugin-help": "^5.1.20",
     "@types/fs-extra": "^8.0.1",
     "@types/node-emoji": "^1.8.1",
     "@types/table": "^4.0.7",
     "available-versions": "^0.13.7",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.0",
-    "cli-ux": "^5.4.1",
+    "cli-ux": "^6.0.9",
     "compare-versions": "^3.5.1",
     "console.table": "^0.10.0",
-    "ethers": "^5.0.26",
+    "ethers": "^5.7.2",
     "fs-extra": "^8.1.0",
     "jayson": "^3.2.0",
     "keytar": "^7.9.0",
@@ -54,16 +54,17 @@
     "table": "^5.4.6"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.26.0",
-    "@oclif/test": "^1.2.8",
-    "@types/chai": "^4",
-    "@types/mocha": "^5",
-    "@types/node": "^10",
+    "@oclif/dev-cli": "^1.26.10",
+    "@oclif/test": "^2.2.15",
+    "@types/chai": "^4.3.4",
+    "@types/express-serve-static-core": "^4.17.31",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.15",
     "babel-eslint": "^10.0.3",
     "chai": "^4",
     "eslint": "^7.17.0",
-    "eslint-config-oclif": "^3.1",
-    "eslint-config-oclif-typescript": "^0.1",
+    "eslint-config-oclif": "^4.0.0",
+    "eslint-config-oclif-typescript": "^1.0.3",
     "eslint-plugin-prettier": "^3.1.2",
     "globby": "^10",
     "mocha": "^8.2.1",
@@ -71,7 +72,7 @@
     "nyc": "^15.1.0",
     "prettier": "^1.19.1",
     "ts-node": "^8",
-    "typescript": "^3.3"
+    "typescript": "^4.9.4"
   },
   "engines": {
     "node": ">=8.0.0"
