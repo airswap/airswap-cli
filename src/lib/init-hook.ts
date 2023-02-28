@@ -1,7 +1,7 @@
 import chalk from 'chalk'
-import { Hook } from '@oclif/config'
+import { Hook } from '@oclif/core'
 import available from 'available-versions'
-import compare from 'compare-versions'
+import { compareVersions } from 'compare-versions';
 import * as emoji from 'node-emoji'
 import { table } from 'table'
 
@@ -11,7 +11,7 @@ const hook: Hook<'init'> = async function(options) {
     name: 'airswap',
   }
   const result = await available(query)
-  if (compare(options.config.version, result['dist-tags'].latest) === -1) {
+  if (compareVersions(options.config.version, result['dist-tags'].latest) === -1) {
     console.log()
     const data = [
       [
@@ -22,18 +22,6 @@ const hook: Hook<'init'> = async function(options) {
     ]
     console.log(table(data, {}))
   }
-
-  /*
-  const { fastest, safeLow } = await utils.getCurrentGasPrices()
-  const gasPrice = (await utils.getGasPrice(this, true)).toNumber()
-
-  if (gasPrice > fastest) {
-    console.log(chalk.yellow(`Your gas setting is high (${gasPrice}). You can update it with the gas command.`))
-  }
-  if (gasPrice < safeLow) {
-    console.log(chalk.yellow(`Your gas setting is low (${gasPrice}). You can update it with the gas command.`))
-  }
-  */
 }
 
 export default hook

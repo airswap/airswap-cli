@@ -42,10 +42,7 @@ export default class IndexersUnset extends Command {
             chainId,
           )
         ) {
-          indexersContract
-            .setURL('', { gasPrice })
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+          indexersContract.setURL('', { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
         }
       }
     } catch (e) {

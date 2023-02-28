@@ -42,7 +42,7 @@ export default class RegistryEnable extends Command {
           )
         ) {
           stakingTokenContract
-            .approve(registryAddress, constants.APPROVAL_AMOUNT, { gasPrice })
+            .approve(registryAddress, constants.MAX_APPROVAL_AMOUNT, { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

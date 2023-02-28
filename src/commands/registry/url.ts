@@ -50,10 +50,7 @@ export default class RegistryAdd extends Command {
             chainId,
           )
         ) {
-          registryContract
-            .setURL(newURL, { gasPrice })
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+          registryContract.setURL(newURL, { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
         }
       }
     } catch (e) {

@@ -63,8 +63,9 @@ export default class Balances extends Command {
       if (result.length) {
         this.log(getTable(result))
         this.log(
-          `Balances displayed for ${result.length} of ${addresses.length} known tokens. (${Date.now() -
-            startTime}ms)\n`,
+          `Balances displayed for ${result.length} of ${addresses.length} known tokens. (${
+            Date.now() - startTime
+          }ms)\n`,
         )
       } else {
         this.log(`The current account holds no balances in any of ${addresses.length} known tokens.\n`)

@@ -13,7 +13,7 @@ import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_I
 import { printOrder, confirm } from './prompt'
 
 import { toDecimalString, orderERC20ToParams } from '@airswap/utils'
-import { fetchTokens } from '@airswap/metadata'
+import { getKnownTokens } from '@airswap/metadata'
 
 const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
@@ -99,7 +99,7 @@ export async function getMetadata(ctx: any, chainId: number) {
 
 export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
-  const tokens: any = (await fetchTokens(chainId)).tokens
+  const tokens: any = (await getKnownTokens(chainId)).tokens
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
   const bySymbol: any = {}

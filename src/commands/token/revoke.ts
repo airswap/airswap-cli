@@ -51,10 +51,7 @@ export default class TokenRevoke extends Command {
             chainId,
           )
         ) {
-          tokenContract
-            .approve(swapAddress, '0', { gasPrice })
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+          tokenContract.approve(swapAddress, '0', { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
         }
       }
     } catch (e) {

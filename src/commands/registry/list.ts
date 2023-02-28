@@ -29,7 +29,7 @@ export default class RegistryList extends Command {
         const tokens = await registryContract.getSupportedTokens(wallet.address)
 
         const result = []
-        tokens.map(address => {
+        tokens.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
             Symbol: token.symbol,
