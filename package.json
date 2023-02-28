@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -11,8 +11,9 @@
   },
   "bugs": "https://github.com/airswap/airswap-cli/issues",
   "scripts": {
-    "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "build": "shx rm -rf dist && tsc -b",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "prepack": "yarn build && oclif manifest && oclif readme",
     "version": "oclif-dev readme && git add README.md",
     "lint": "yarn eslint \"./**/*.ts\"",
     "pretty:check": "prettier --check \"./**/*.ts\"",
@@ -55,13 +56,17 @@
     "@types/table": "^6.3.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.35.0",
+    "eslint-config-oclif": "^4.0.0",
+    "eslint-config-oclif-typescript": "^1.0.3",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "oclif": "^3.7.0",
     "prettier": "^2.8.4",
+    "shx": "^0.3.4",
     "typescript": "^4.9.5"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=12.0.0"
   },
   "files": [
     "/bin",
