@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
