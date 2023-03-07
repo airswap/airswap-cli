@@ -65,7 +65,7 @@ export default class OrderStream extends Command {
       if (server.supportsProtocol('last-look')) {
         senderWallet = await server.getSenderWallet()
         await server.subscribeAll()
-        server.on('pricing', pricing => {
+        server.on('pricing', (pricing) => {
           let found = false
           for (const i in pricing) {
             let baseToken = signerToken.address
@@ -172,7 +172,7 @@ export default class OrderStream extends Command {
                 ...order,
                 ...signature,
               },
-              function(err: any, error: any, result: any) {
+              function (err: any, error: any, result: any) {
                 if (err || error) {
                   console.log(chalk.yellow(err.message || error.message))
                 } else {

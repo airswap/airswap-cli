@@ -35,7 +35,7 @@ export default class RegistryAdd extends Command {
       if (alreadySupported.length) {
         this.log(`Currently supporting the following tokens...\n`)
         const result = []
-        alreadySupported.map(address => {
+        alreadySupported.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
             Symbol: token.symbol,

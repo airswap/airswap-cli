@@ -1,18 +1,27 @@
 {
-  "parser": "babel-eslint",
+  "root": true,
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "modules": true
+    }
   },
   "env": {
     "es6": true,
-    "node": true,
-    "mocha": true
+    "node": true
   },
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "@typescript-eslint"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
-    "prettier/prettier": "warn",
-    "no-undef": "warn",
-    "no-unused-vars": "warn",
-    "prefer-const": "warn"
+    "@typescript-eslint/explicit-member-accessibility": 1,
+    "@typescript-eslint/member-ordering": 1,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-var-requires": 0
   }
 }

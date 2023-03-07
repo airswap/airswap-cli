@@ -46,7 +46,7 @@ export default class TokenApprove extends Command {
           )
         ) {
           tokenContract
-            .approve(swapAddress, constants.APPROVAL_AMOUNT, { gasPrice })
+            .approve(swapAddress, constants.MAX_APPROVAL_AMOUNT, { gasPrice })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

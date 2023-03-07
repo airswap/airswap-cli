@@ -50,10 +50,7 @@ export default class IndexersSet extends Command {
             chainId,
           )
         ) {
-          indexersContract
-            .setURL(newURL, { gasPrice })
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+          indexersContract.setURL(newURL, { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
         }
       }
     } catch (e) {

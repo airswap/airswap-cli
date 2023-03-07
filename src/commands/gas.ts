@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { get, cancelled } from '../lib/prompt'
 import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
 
 export default class Gas extends Command {
   static description = 'set gas price for transactions'
@@ -9,15 +10,17 @@ export default class Gas extends Command {
     utils.displayDescription(this, Gas.description)
 
     try {
-      const { fastest, fast, average, safeLow } = await utils.getCurrentGasPrices()
+      const wallet = await getWallet(this, true)
 
       const gasPrice = await utils.getGasPrice(this, true)
+      const gasPriceNetwork = await wallet.getGasPrice()
 
-      this.log(`Current gas price: ${gasPrice}\n`)
+      this.log(`\nCurrent network gas price: ${Math.round(gasPriceNetwork.toNumber() / 10 ** 9)}`)
+      this.log(`Configured gas price: ${gasPrice}\n`)
 
       const { newGasPrice }: any = await get({
         newGasPrice: {
-          description: `gas price (fastest=${fastest}, fast=${fast}, average=${average}, safeLow=${safeLow})`,
+          description: `new gas price`,
           default: gasPrice,
           type: 'Number',
         },
@@ -27,7 +30,7 @@ export default class Gas extends Command {
         gasPrice: newGasPrice,
       })
 
-      this.log(chalk.green(`\nSet gas price to ${newGasPrice}.\n`))
+      this.log(chalk.green(`\nSet configured gas price to ${newGasPrice}.\n`))
     } catch (e) {
       cancelled(e)
     }
