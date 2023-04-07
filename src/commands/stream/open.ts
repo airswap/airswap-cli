@@ -62,10 +62,10 @@ export default class OrderStream extends Command {
 
       const server = await Maker.at(url)
 
-      if (server.supportsProtocol('last-look')) {
+      if (server.supportsProtocol('last-look-erc20')) {
         senderWallet = await server.getSenderWallet()
-        await server.subscribeAll()
-        server.on('pricing', (pricing) => {
+        await server.subscribeAllPricingERC20()
+        server.on('pricing-erc20', (pricing) => {
           let found = false
           for (const i in pricing) {
             let baseToken = signerToken.address
@@ -97,7 +97,7 @@ export default class OrderStream extends Command {
           }
         })
       } else {
-        console.log('Server does not support last-look.')
+        console.log('Server does not support last-look-erc20.')
         process.exit(0)
       }
 
@@ -167,7 +167,7 @@ export default class OrderStream extends Command {
               client = jayson.Client.https(options)
             }
             client.request(
-              'consider',
+              'considerOrderERC20',
               {
                 ...order,
                 ...signature,
@@ -183,7 +183,7 @@ export default class OrderStream extends Command {
           } else {
             console.log('Sending order over the socket...')
             try {
-              await server.consider({
+              await server.considerOrderERC20({
                 ...order,
                 ...signature,
               })
@@ -198,7 +198,7 @@ export default class OrderStream extends Command {
         }
       })
     } catch (e) {
-      cancelled(e.error ? e.error : e)
+      cancelled(e.message)
       process.exit(0)
     }
   }

@@ -153,6 +153,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     signerToken: signerToken.address,
     senderToken: senderToken.address,
     swapContract,
+    chainId: String(chainId)
   }
 
   if (kind === 'Order') {
@@ -178,7 +179,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
     side,
     signerToken,
     senderToken,
-    method,
+    method: method + 'ERC20',
     params,
   }
 }
