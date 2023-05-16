@@ -11,7 +11,8 @@ import {
   toAtomicString,
   toDecimalString,
 } from '@airswap/utils'
-import { Maker } from '@airswap/libraries'
+import { Protocols } from '@airswap/constants'
+import { Server } from '@airswap/libraries'
 import readline from 'readline'
 
 const constants = require('../../lib/constants.json')
@@ -60,9 +61,9 @@ export default class OrderStream extends Command {
         signerAmount = amount
       }
 
-      const server = await Maker.at(url)
+      const server = await Server.at(url)
 
-      if (server.supportsProtocol('last-look-erc20')) {
+      if (server.supportsProtocol(Protocols.LastLookERC20)) {
         senderWallet = await server.getSenderWallet()
         await server.subscribeAllPricingERC20()
         server.on('pricing-erc20', (pricing) => {
@@ -97,7 +98,7 @@ export default class OrderStream extends Command {
           }
         })
       } else {
-        console.log('Server does not support last-look-erc20.')
+        console.log('Server does not support LastLookERC20.')
         process.exit(0)
       }
 

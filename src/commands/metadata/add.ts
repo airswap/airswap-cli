@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import { chainNames, etherscanDomains } from '@airswap/constants'
+import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataAdd extends Command {
   static description = 'add token to local metadata'
@@ -52,7 +52,7 @@ export default class MetadataAdd extends Command {
       }
 
       this.log(
-        `\n${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+        `\n${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`,
       )
 
       if (metadata.byAddress[token.address] || metadata.bySymbol[token.symbol]) {

@@ -6,7 +6,7 @@ import { getTable } from 'console.table'
 import { cancelled } from '../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
-import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.json'
+import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.sol/BalanceChecker.json'
 import balancesDeploys from '@airswap/balances/deploys.js'
 
 const balancesInterface = new ethers.utils.Interface(JSON.stringify(BalanceChecker.abi))

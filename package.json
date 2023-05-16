@@ -20,7 +20,7 @@
     "pretty:fix": "prettier --write \"./**/*.ts\""
   },
   "dependencies": {
-    "@airswap/balances": "2.0.2",
+    "@airswap/balances": "4.0.0",
     "@airswap/constants": "^4.0.0",
     "@airswap/libraries": "^4.0.0",
     "@airswap/metadata": "^4.0.0",
@@ -90,9 +90,6 @@
       },
       "registry": {
         "description": "add and remove supported tokens"
-      },
-      "indexers": {
-        "description": "set or unset indexer server url"
       },
       "ip": {
         "description": "display local network addresses"

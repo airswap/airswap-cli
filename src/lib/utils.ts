@@ -8,7 +8,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, etherscanDomains, chainIds } from '@airswap/constants'
+import { chainNames, explorerUrls, ChainIds, apiUrls } from '@airswap/constants'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
@@ -23,7 +23,7 @@ export function displayDescription(ctx: any, title: string, chainId?: number) {
   let chainName = ''
   if (chainId) {
     const selectedChain = chainNames[chainId].toUpperCase()
-    chainName = chainId === chainIds.MAINNET ? chalk.green(selectedChain) : chalk.cyan(selectedChain)
+    chainName = chainId === ChainIds.MAINNET ? chalk.green(selectedChain) : chalk.cyan(selectedChain)
   }
   ctx.log(`\n${chalk.white.bold(title)} ${chainName}\n`)
 }
@@ -32,7 +32,7 @@ export async function getConfig(ctx: any) {
   const config = path.join(ctx.config.configDir, 'config.json')
   if (!(await fs.pathExists(config))) {
     await fs.outputJson(config, {
-      chainId: chainIds.GOERLI,
+      chainId: ChainIds.GOERLI,
     })
   }
   return await fs.readJson(config)
@@ -49,30 +49,16 @@ export async function updateConfig(ctx: any, config: any) {
 
 export async function getChainId(ctx: any): Promise<string> {
   const { chainId } = await getConfig(ctx)
-  return chainId || chainIds.GOERLI
+  return chainId || ChainIds.GOERLI
 }
 
 export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
-  const selectedChain = chainNames[chainId].toLowerCase()
-  switch(chainId) {
-    case '1':
-      return `https://mainnet.infura.io/v3/${INFURA_ID}`
-    case '56':
-      return 'https://bsc-dataseed.binance.org/'
-    case '97':
-      return 'https://data-seed-prebsc-1-s1.binance.org:8545/'
-    case '137':
-      return 'https://polygon-rpc.com/'
-    case '43113':
-      return 'https://api.avax-test.network/ext/bc/C/rpc'
-    case '43114':
-      return 'https://api.avax.network/ext/bc/C/rpc'
-    case '80001':
-      return 'https://rpc-mumbai.maticvigil.com'
-    default:
-      return `https://${selectedChain}.infura.io/v3/${INFURA_ID}`
+  let apiUrl = apiUrls[chainId]
+  if (apiUrl.indexOf('infura.io') !== -1) {
+    apiUrl += `/${INFURA_ID}`
   }
+  return apiUrl
 }
 
 export async function getProvider(ctx: any) {
@@ -135,11 +121,13 @@ export async function getCurrentGasPrices() {
 }
 
 export async function getGasPrice(ctx: any, asGwei?: boolean) {
-  const { gasPrice } = await getConfig(ctx)
+  const provider = new ethers.providers.JsonRpcProvider(await getNodeURL(ctx))
+  await provider.getNetwork()
+  const gasPrice = await provider.getGasPrice()
   if (asGwei) {
-    return ethers.BigNumber.from(gasPrice || DEFAULT_GAS_PRICE)
+    return ethers.utils.formatUnits(gasPrice.toString(), 'gwei')
   }
-  return ethers.utils.parseUnits(String(gasPrice || DEFAULT_GAS_PRICE), 'gwei')
+  return ethers.BigNumber.from(gasPrice || DEFAULT_GAS_PRICE)
 }
 
 export function getAtomicValue(value: string, token: string, metadata: any) {
@@ -257,7 +245,7 @@ export async function handleResponse(
 }
 
 export function handleTransaction(tx: any) {
-  console.log(chalk.underline(`https://${etherscanDomains[tx.chainId]}/tx/${tx.hash}\n`))
+  console.log(chalk.underline(`${explorerUrls[tx.chainId]}/tx/${tx.hash}\n`))
   cli.action.start(`Mining transaction (${chainNames[tx.chainId]})`)
   tx.wait(DEFAULT_CONFIRMATIONS).then(() => {
     cli.action.stop()

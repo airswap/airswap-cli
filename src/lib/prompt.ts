@@ -321,7 +321,7 @@ export async function confirm(
   verb?: string,
   gas = true,
 ): Promise<boolean> {
-  const { gasPrice } = await utils.getConfig(ctx)
+  const gasPrice = await utils.getGasPrice(ctx, true)
   const data = getData(metadata, params)
   const config = {
     columns: {
