@@ -17,7 +17,7 @@ const hook: Hook<'init'> = async function(options) {
       [
         `${emoji.get('package')} ${chalk.bold.green('New version available')} (${
           result['dist-tags'].latest
-        }) Update with ${chalk.bold('yarn global add airswap@latest')}`,
+        }) Update with ${chalk.bold('yarn global upgrade airswap')}`,
       ],
     ]
     console.log(table(data, {}))
