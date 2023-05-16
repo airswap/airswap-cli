@@ -38,7 +38,7 @@ $ airswap account:import
 
 # Explore the Network
 
-Set the active chain ([chainIds](https://github.com/airswap/airswap-protocols/blob/8ddcacf9ab7b9b5778e5003c56564e7ae55afc9c/tools/constants/index.ts#L28))
+Set the active chain ([ChainIds](https://github.com/airswap/airswap-protocols/blob/8ddcacf9ab7b9b5778e5003c56564e7ae55afc9c/tools/constants/index.ts#L28))
 
 ```
 $ airswap chain

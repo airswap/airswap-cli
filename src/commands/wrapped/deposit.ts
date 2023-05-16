@@ -5,8 +5,8 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
-import { wrappedTokenAddresses } from '@airswap/constants'
 
+const wethDeploys = require('@airswap/wrapper/deploys-weth.js')
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
 export default class IntentUnset extends Command {
@@ -19,7 +19,7 @@ export default class IntentUnset extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
-      const WETH = metadata.byAddress[wrappedTokenAddresses[chainId]]
+      const WETH = metadata.byAddress[wethDeploys[chainId]]
       if (!WETH) {
         throw new Error('Wrapped token not found for the selected chain.')
       }

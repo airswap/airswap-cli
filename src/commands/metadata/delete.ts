@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import { chainNames, etherscanDomains } from '@airswap/constants'
+import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataDelete extends Command {
   static description = 'delete token from local metadata'
@@ -48,7 +48,7 @@ export default class MetadataDelete extends Command {
         this.log('Token not found in metadata.\n')
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`,
         )
 
         const { confirm }: any = await get({

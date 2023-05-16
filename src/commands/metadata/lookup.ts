@@ -4,7 +4,7 @@ import * as utils from '../../lib/utils'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import { chainNames, etherscanDomains } from '@airswap/constants'
+import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataLookup extends Command {
   static description = 'lookup token in local metadata'
@@ -49,7 +49,7 @@ export default class MetadataLookup extends Command {
         this.log(`Add a new token with ${chalk.bold('metadata:add')}\n`)
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · https://${etherscanDomains[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
+          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
         )
       }
     } catch (e) {
