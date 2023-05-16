@@ -2,6 +2,7 @@
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
   "version": "4.0.3",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/airswap/airswap-cli"
@@ -78,7 +79,6 @@
   "keywords": [
     "airswap"
   ],
-  "license": "Apache-2.0",
   "main": "lib/index.js",
   "oclif": {
     "topics": {
