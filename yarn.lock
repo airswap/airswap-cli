@@ -22,9 +22,9 @@
     get-parameter-names "^0.3.0"
 
 "@airswap/libraries@^4.0.0":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-4.0.7.tgz#0161de21a75a9930936b00fb96f24c6f0e701ee2"
-  integrity sha512-Br0D22pOuOQFPUgjUH9qio8Df3Kzs0llCqjY0eyEmNf7BNWvC0WBtGtz+5zgLwy3BKnMa/V+NbnRw1A9Eq2CcA==
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-4.0.8.tgz#edd8310e193da4fc3cd9d6629da650c2c6d1e950"
+  integrity sha512-/MndOTYm0IjuKwRzog6XwT3fZsAuGzAU7geTXMzDA+XMprYoTU1F7IDMWUeXlVcvfjVd07n2XzgAz3sEtA9iCQ==
   dependencies:
     "@airswap/balances" "4.0.0"
     "@airswap/constants" "^4.0.0"
@@ -35,7 +35,7 @@
     "@airswap/swap-erc20" "4.0.2"
     "@airswap/types" "^4.0.0"
     "@airswap/utils" "^4.0.0"
-    "@airswap/wrapper" "4.0.3"
+    "@airswap/wrapper" "4.0.4"
     browser-or-node "^2.1.1"
     ethers "^5.6.9"
     jayson "^4.0.0"
@@ -112,10 +112,10 @@
     ethers "^5.6.9"
     lz-string "^1.5.0"
 
-"@airswap/wrapper@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@airswap/wrapper/-/wrapper-4.0.3.tgz#d1de51df6bb8309c6c3654226652efcf69629149"
-  integrity sha512-8Jag3ylL+hSh5yZS4o/PKXxbRVgc4HamtpTdveUhdP+XJoIkfXUVqt2gHoTKNxJmtp13a3YJb1AFsjR1VXaQmw==
+"@airswap/wrapper@4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@airswap/wrapper/-/wrapper-4.0.4.tgz#805819426b3262f342dacd5cf769ace0939fb3b2"
+  integrity sha512-2vWtg4A8TQ11xgP3DLOYvcHISaKRtH9BkRfnhnvyvL90odGtDAuL7hsQbbGWN9xAaUz236y60mEKZB076+HlJw==
   dependencies:
     "@airswap/swap-erc20" "4.0.2"
     "@openzeppelin/contracts" "^4.8.3"
