@@ -10,8 +10,7 @@ export default class MetadataLookup extends Command {
   static description = 'lookup token in local metadata'
   async run() {
     try {
-      const provider = await utils.getProvider(this)
-      const chainId = (await provider.getNetwork()).chainId
+      const { chainId } = await utils.getConfig(this)
 
       this.log()
       utils.displayDescription(this, MetadataLookup.description, chainId)
