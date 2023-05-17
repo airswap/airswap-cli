@@ -85,7 +85,7 @@ export async function getMetadata(ctx: any, chainId: number) {
 
 export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
-  const tokens: any = (await getKnownTokens(chainId)).tokens
+  const tokens: any = (await getKnownTokens(Number(chainId))).tokens
   const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
 
   const bySymbol: any = {}
