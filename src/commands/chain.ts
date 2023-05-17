@@ -24,7 +24,7 @@ export default class Network extends Command {
         this.log(chalk.yellow(`\n${newChainId} is not a supported chain.\n`))
       } else {
         await utils.updateConfig(this, {
-          chainId: newChainId,
+          chainId: Number(newChainId),
         })
 
         this.log(chalk.green(`\nSet active chain to ${chainNames[newChainId]}.\n`))
