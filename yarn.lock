@@ -9,10 +9,10 @@
   dependencies:
     "@openzeppelin/contracts" "^4.8.3"
 
-"@airswap/constants@^4.0.0", "@airswap/constants@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-4.0.3.tgz#be0cd8ca6bd16f1007a83c86cf967b77ab3b9366"
-  integrity sha512-8lFLbrwTzdTaGJz3Fs1PWm02j/4Z5BevYmREkDFiJLxmdErC9HwJ9l2+dPu/4QBLkCRtce3l7LdvUHzTGfZfRw==
+"@airswap/constants@^4.0.0", "@airswap/constants@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@airswap/constants/-/constants-4.0.4.tgz#005866cf69db210aaed844c45463478eee4daaf4"
+  integrity sha512-icV6+UfWhhfxLLm+8nNHxhqZ9gYA+1V+m8Lspaz2CFynvxqyIuc+BRaRafPu+0uk98Q27SHdZSXCcKO6Z+XCOw==
 
 "@airswap/jsonrpc-client-websocket@0.0.1":
   version "0.0.1"
@@ -21,20 +21,20 @@
   dependencies:
     get-parameter-names "^0.3.0"
 
-"@airswap/libraries@^4.0.9":
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-4.0.9.tgz#e2dced656ac61f29f57c9d90a1a2f8ebf7ea8aea"
-  integrity sha512-rOzTvYc8lxCcxNTCh6jfu2tw6fDqeq5PKLcIiicvv1PzNbZPs+zQDTOBBbmg3gwfgn4k6CyfFBMbp9Ndu7XlZQ==
+"@airswap/libraries@^4.0.10":
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-4.0.10.tgz#04681fbaa6ca8e654e4b386005226639f7a10287"
+  integrity sha512-qgZ/bCIA3JY513wdE/h2ZQJ6KrzyZIVTQqrK32KFnuWK6tYDSyrwqNStzDItCRLik7+cMIf5P0XAxg4LU23UqQ==
   dependencies:
     "@airswap/balances" "4.0.1"
-    "@airswap/constants" "^4.0.0"
+    "@airswap/constants" "^4.0.4"
     "@airswap/jsonrpc-client-websocket" "0.0.1"
     "@airswap/maker-registry" "4.0.1"
     "@airswap/registry" "4.0.3"
     "@airswap/swap" "4.0.4"
     "@airswap/swap-erc20" "4.0.3"
-    "@airswap/types" "^4.0.0"
-    "@airswap/utils" "^4.0.0"
+    "@airswap/types" "^4.0.4"
+    "@airswap/utils" "^4.0.6"
     "@airswap/wrapper" "4.0.5"
     browser-or-node "^2.1.1"
     ethers "^5.6.9"
@@ -91,20 +91,20 @@
   dependencies:
     openzeppelin-solidity "2.4"
 
-"@airswap/types@^4.0.0":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-4.0.3.tgz#4cdf1dec72a321da06cc0d189ede9cda3cf1b533"
-  integrity sha512-8vb24InvyA5dnKo9v4LiuMErM1yGFe7n78QDHAbk/adxkmVpQhmuP4sNCt9He2/6zHwru3NMxAR3TixaASYocg==
+"@airswap/types@^4.0.0", "@airswap/types@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@airswap/types/-/types-4.0.4.tgz#09def98ac4254d0c6cb85782a23071f555377612"
+  integrity sha512-JLBgh5NSKL/G3QkrCA7WamZiYRW73kTv0Tyub0nx2pfn32VK6FCkXROopNMaj5ok2D1x6gMHbFffWa6L+NPKKg==
   dependencies:
     "@uniswap/token-lists" "^1.0.0-beta.31"
 
-"@airswap/utils@^4.0.0", "@airswap/utils@^4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@airswap/utils/-/utils-4.0.5.tgz#02f3653b415448d1c48b37619029a0aaa03525b1"
-  integrity sha512-6SLrw2G+hbhcpz8D1Rk7nJz7jx1HvZjHZEsyySLU8QtZ9spLAWxBavs/pMaD1wdSPo5rVpRcAqVe8tsWFTUPAg==
+"@airswap/utils@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@airswap/utils/-/utils-4.0.6.tgz#321d2510da362056f83be7942273a903b546f3e4"
+  integrity sha512-ZAFsS6PtqeDIivmiR3BFjhM0Ub7Xua918H4tYfPlr1WirVaIEg8pd3C61UF/+M2PsC80LGoA+XrYCrBIgKYmNQ==
   dependencies:
-    "@airswap/constants" "^4.0.0"
-    "@airswap/types" "^4.0.0"
+    "@airswap/constants" "^4.0.4"
+    "@airswap/types" "^4.0.4"
     "@metamask/eth-sig-util" "^5.0.2"
     bignumber.js "^9.0.1"
     ethereumjs-util "^7.1.5"
@@ -1581,9 +1581,9 @@
   integrity sha512-PfF1qL/9veo8BSHLV84C9ORNr3lHSlnWJ6yU8OdNufoftajeWHTLVbGHvp2B7e7DPDS9gMs6cfeSsqo5rqSitg==
 
 "@types/node@*":
-  version "20.1.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.1.7.tgz#ce10c802f7731909d0a44ac9888e8b3a9125eb62"
-  integrity sha512-WCuw/o4GSwDGMoonES8rcvwsig77dGCMbZDrZr2x4ZZiNW4P/gcoZXe/0twgtobcTkmg9TuKflxYL/DuwDyJzg==
+  version "20.2.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.2.1.tgz#de559d4b33be9a808fd43372ccee822c70f39704"
+  integrity sha512-DqJociPbZP1lbZ5SQPk4oag6W7AyaGMO6gSfRwq3PWl4PXTwJpRQJhDq4W0kzrg3w6tJ1SwlvGZ5uKFHY13LIg==
 
 "@types/node@^12.12.54":
   version "12.20.55"
