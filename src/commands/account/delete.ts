@@ -7,12 +7,15 @@ import { requireKeytar } from '../../lib/wallet'
 import * as emoji from 'node-emoji'
 
 export default class AccountDelete extends Command {
-  static description = 'delete the current ethereum account'
+  public static description = 'delete the current ethereum account'
 
-  async run() {
+  public async run() {
     try {
       const keytar = requireKeytar()
-      const signerPrivateKey = await keytar.getPassword('airswap-cli', 'private-key')
+      const signerPrivateKey = await keytar.getPassword(
+        'airswap-cli',
+        'private-key'
+      )
       displayDescription(this, AccountDelete.description)
 
       if (signerPrivateKey) {
@@ -21,9 +24,15 @@ export default class AccountDelete extends Command {
         this.log(`Private Key: ${signerPrivateKey}`)
         this.log(`Address:     ${wallet.address}\n`)
 
-        if (await cli.confirm('Are you sure you want to delete this private key? (yes/no)')) {
+        if (
+          await cli.confirm(
+            'Are you sure you want to delete this private key? (yes/no)'
+          )
+        ) {
           await keytar.deletePassword('airswap-cli', 'private-key')
-          this.log(`\n${emoji.get('white_check_mark')} The account has been deleted.\n`)
+          this.log(
+            `\n${emoji.get('white_check_mark')} The account has been deleted.\n`
+          )
         } else {
           this.log(chalk.yellow(`\nThe account was not deleted.\n`))
         }
@@ -35,7 +44,7 @@ export default class AccountDelete extends Command {
         chalk.yellow('Error') +
           ' Cannot delete account because dependencies are missing.\n' +
           'If you are on Linux, try installing libsecret-1-dev (Debian, Ubuntu etc.) or ' +
-          'libsecret-devel (RedHat, Fedora etc.) and then reinstalling AirSwap CLI.\n',
+          'libsecret-devel (RedHat, Fedora etc.) and then reinstalling AirSwap CLI.\n'
       )
     }
   }

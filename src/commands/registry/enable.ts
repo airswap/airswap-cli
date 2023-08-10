@@ -12,8 +12,8 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryEnable extends Command {
-  static description = 'enable staking on the registry'
-  async run() {
+  public static description = 'enable staking on the registry'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -22,12 +22,21 @@ export default class RegistryEnable extends Command {
       utils.displayDescription(this, RegistryEnable.description, chainId)
 
       const registryAddress = registryDeploys[chainId]
-      const stakingTokenContract = new ethers.Contract(stakingTokenAddresses[chainId], IERC20.abi, wallet)
-      const allowance = await stakingTokenContract.allowance(wallet.address, registryAddress)
+      const stakingTokenContract = new ethers.Contract(
+        stakingTokenAddresses[chainId],
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await stakingTokenContract.allowance(
+        wallet.address,
+        registryAddress
+      )
 
       if (!allowance.eq(0)) {
         this.log(chalk.yellow('Registry already enabled'))
-        this.log(`Add tokens to the Registry with ${chalk.bold('registry:add')}\n`)
+        this.log(
+          `Add tokens to the Registry with ${chalk.bold('registry:add')}\n`
+        )
       } else {
         if (
           await confirm(
@@ -38,11 +47,13 @@ export default class RegistryEnable extends Command {
               token: `${stakingTokenAddresses[chainId]} (AST)`,
               spender: `${registryAddress} (Registry)`,
             },
-            chainId,
+            chainId
           )
         ) {
           stakingTokenContract
-            .approve(registryAddress, constants.MAX_APPROVAL_AMOUNT, { gasPrice })
+            .approve(registryAddress, constants.MAX_APPROVAL_AMOUNT, {
+              gasPrice,
+            })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

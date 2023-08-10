@@ -3,9 +3,16 @@ import * as jayson from 'jayson'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
-import { get, getTokens, cancelled, clearLines, printQuote, confirm } from '../../lib/prompt'
 import {
-  calculateCost,
+  get,
+  getTokens,
+  cancelled,
+  clearLines,
+  printQuote,
+  confirm,
+} from '../../lib/prompt'
+import {
+  getCostFromPricing,
   createOrderERC20,
   createOrderERC20Signature,
   toAtomicString,
@@ -19,8 +26,8 @@ const constants = require('../../lib/constants.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class OrderStream extends Command {
-  static description = 'stream quotes for a swap'
-  async run() {
+  public static description = 'stream quotes for a swap'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -39,7 +46,10 @@ export default class OrderStream extends Command {
           type: 'Number',
         },
       })
-      const { first, second }: any = await getTokens({ first: 'of', second: 'for' }, metadata)
+      const { first, second }: any = await getTokens(
+        { first: 'of', second: 'for' },
+        metadata
+      )
       this.log('\n\n\n')
 
       const swapContract = swapDeploys[chainId]
@@ -67,33 +77,42 @@ export default class OrderStream extends Command {
         senderWallet = await server.getSenderWallet()
         await server.subscribeAllPricingERC20()
         server.on('pricing-erc20', (pricing) => {
-          let found = false
-          for (const i in pricing) {
-            let baseToken = signerToken.address
-            let quoteToken = senderToken.address
+          try {
             if (side === 'buy') {
-              baseToken = senderToken.address
-              quoteToken = signerToken.address
+              signerAmount = getCostFromPricing(
+                'buy',
+                senderAmount,
+                senderToken.address,
+                signerToken.address,
+                pricing
+              )
+            } else {
+              senderAmount = getCostFromPricing(
+                'sell',
+                signerAmount,
+                signerToken.address,
+                senderToken.address,
+                pricing
+              )
             }
-            if (pricing[i].baseToken.toLowerCase() === baseToken.toLowerCase()) {
-              if (pricing[i].quoteToken.toLowerCase() === quoteToken.toLowerCase()) {
-                if (side === 'buy') {
-                  signerAmount = calculateCost(senderAmount, pricing[i].ask)
-                } else {
-                  senderAmount = calculateCost(signerAmount, pricing[i].bid)
-                }
-                found = true
+            if (signerAmount === null || senderAmount === null) {
+              console.log('Pricing not available for selected pair.')
+              process.exit(0)
+            } else {
+              if (!taking) {
+                clearLines(3)
+                printQuote(
+                  this,
+                  signerToken,
+                  signerAmount,
+                  senderToken,
+                  senderAmount
+                )
+                console.log(chalk.gray(`ENTER to proceed, CTRL+C to Cancel`))
               }
             }
-          }
-          if (found) {
-            if (!taking) {
-              clearLines(3)
-              printQuote(this, signerToken, signerAmount, senderToken, senderAmount)
-              console.log(chalk.gray(`ENTER to proceed, CTRL+C to Cancel`))
-            }
-          } else {
-            console.log('Pricing not available for selected pair.')
+          } catch (e) {
+            console.log(`${chalk.yellow('Error')} ${e.message}\n`)
             process.exit(0)
           }
         })
@@ -102,7 +121,7 @@ export default class OrderStream extends Command {
         process.exit(0)
       }
 
-      var rl = readline.createInterface({
+      const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
         terminal: false,
@@ -123,7 +142,12 @@ export default class OrderStream extends Command {
           senderToken: senderToken.address,
           senderAmount: toAtomicString(senderAmount, senderToken.decimals),
         })
-        const signature = await createOrderERC20Signature(order, wallet.privateKey, swapContract, chainId)
+        const signature = await createOrderERC20Signature(
+          order,
+          wallet.privateKey,
+          swapContract,
+          chainId
+        )
 
         delete order.protocolFee
         delete order.senderWallet
@@ -137,17 +161,23 @@ export default class OrderStream extends Command {
               signerWallet: `${order.signerWallet} (${chalk.cyan('You')})`,
               signerToken: order.signerToken,
               signerAmount: `${order.signerAmount} (${chalk.cyan(
-                toDecimalString(order.signerAmount, metadata.byAddress[signerToken.address].decimals),
+                toDecimalString(
+                  order.signerAmount,
+                  metadata.byAddress[signerToken.address].decimals
+                )
               )})`,
               senderWallet,
               senderToken: order.senderToken,
               senderAmount: `${order.senderAmount} (${chalk.cyan(
-                toDecimalString(order.senderAmount, metadata.byAddress[senderToken.address].decimals),
+                toDecimalString(
+                  order.senderAmount,
+                  metadata.byAddress[senderToken.address].decimals
+                )
               )})`,
             },
             chainId,
             'make this order',
-            false,
+            false
           )
         ) {
           if (senderServer) {
@@ -179,7 +209,7 @@ export default class OrderStream extends Command {
                 } else {
                   console.log(result, '\n')
                 }
-              },
+              }
             )
           } else {
             console.log('Sending order over the socket...')

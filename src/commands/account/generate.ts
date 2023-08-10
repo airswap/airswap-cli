@@ -3,9 +3,9 @@ import Command from '@oclif/command'
 import { displayDescription } from '../../lib/utils'
 
 export default class AccountGenerate extends Command {
-  static description = 'generate a new ethereum account'
+  public static description = 'generate a new ethereum account'
 
-  async run() {
+  public async run() {
     const newAccount = ethers.Wallet.createRandom()
     displayDescription(this, AccountGenerate.description)
     this.log(`Private Key: ${newAccount.privateKey.slice(2)}`)

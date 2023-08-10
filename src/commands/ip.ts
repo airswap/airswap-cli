@@ -4,9 +4,9 @@ import { displayDescription } from '../lib/utils'
 import { DEFAULT_PORT } from '../lib/constants.json'
 
 export default class Local extends Command {
-  static description = 'display local network addresses'
+  public static description = 'display local network addresses'
 
-  async run() {
+  public async run() {
     const interfaces = os.networkInterfaces()
 
     displayDescription(this, Local.description)
@@ -14,7 +14,10 @@ export default class Local extends Command {
     let count = 0
     for (const id in interfaces) {
       for (let i = 0; i < interfaces[id].length; i++) {
-        if (interfaces[id][i].family === 'IPv4' && interfaces[id][i].address !== '127.0.0.1') {
+        if (
+          interfaces[id][i].family === 'IPv4' &&
+          interfaces[id][i].address !== '127.0.0.1'
+        ) {
           count++
           this.log(`http://${interfaces[id][i].address}:${DEFAULT_PORT}/`)
         }

@@ -10,8 +10,8 @@ const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryList extends Command {
-  static description = 'list supported tokens from registry'
-  async run() {
+  public static description = 'list supported tokens from registry'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -23,7 +23,11 @@ export default class RegistryList extends Command {
       if (!registryAddress) {
         this.log(chalk.yellow('No registry found on the current chain'))
       } else {
-        const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+        const registryContract = new ethers.Contract(
+          registryAddress,
+          Registry.abi,
+          wallet
+        )
         this.log(chalk.white(`Registry ${registryAddress}\n`))
 
         const tokens = await registryContract.getSupportedTokens(wallet.address)
@@ -40,7 +44,9 @@ export default class RegistryList extends Command {
           this.log(getTable(result))
         } else {
           this.log(chalk.yellow('No supported tokens'))
-          this.log(`Add tokens you support with ${chalk.bold('registry:add')}\n`)
+          this.log(
+            `Add tokens you support with ${chalk.bold('registry:add')}\n`
+          )
         }
       }
     } catch (e) {

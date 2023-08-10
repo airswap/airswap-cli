@@ -10,8 +10,8 @@ const wethDeploys = require('@airswap/wrapper/deploys-weth.js')
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
 export default class IntentUnset extends Command {
-  static description = 'deposit eth to weth'
-  async run() {
+  public static description = 'deposit eth to weth'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -25,9 +25,14 @@ export default class IntentUnset extends Command {
       }
 
       const balance = await wallet.provider.getBalance(wallet.address)
-      const balanceDecimal = toDecimalString(balance.toString(), metadata.byAddress[WETH.address].decimals)
+      const balanceDecimal = toDecimalString(
+        balance.toString(),
+        metadata.byAddress[WETH.address].decimals
+      )
       this.log(`ETH available to deposit: ${chalk.bold(balanceDecimal)}`)
-      this.log(chalk.gray('Some ETH must be saved to execute the transaction.\n'))
+      this.log(
+        chalk.gray('Some ETH must be saved to execute the transaction.\n')
+      )
 
       const { amount }: any = await get({
         amount: {
@@ -51,11 +56,14 @@ export default class IntentUnset extends Command {
             {
               '[value]': `${atomicAmount} (${chalk.cyan(amount)})`,
             },
-            chainId,
+            chainId
           )
         ) {
           new ethers.Contract(WETH.address, WETH9.abi, wallet)
-            .deposit({ value: ethers.BigNumber.from(atomicAmount.toFixed()), gasPrice })
+            .deposit({
+              value: ethers.BigNumber.from(atomicAmount.toFixed()),
+              gasPrice,
+            })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

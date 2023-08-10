@@ -9,9 +9,9 @@ const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryGet extends Command {
-  static description = 'get urls from the registry'
+  public static description = 'get urls from the registry'
 
-  async run() {
+  public async run() {
     try {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
@@ -39,7 +39,11 @@ export default class RegistryGet extends Command {
         throw new Error(`${two.toUpperCase()} not found in metadata.`)
       }
 
-      const registryContract = new ethers.Contract(registryAddress, Registry.abi, provider)
+      const registryContract = new ethers.Contract(
+        registryAddress,
+        Registry.abi,
+        provider
+      )
       const signerURLs = await registryContract.getURLsForToken(first.address)
       const senderURLs = await registryContract.getURLsForToken(second.address)
       const urls = signerURLs.filter((value) => senderURLs.includes(value))
@@ -55,7 +59,11 @@ export default class RegistryGet extends Command {
         this.log()
         this.log(getTable(rows))
       } else {
-        this.log(chalk.yellow(`\nNo servers currently support ${pair.toUpperCase()}.\n`))
+        this.log(
+          chalk.yellow(
+            `\nNo servers currently support ${pair.toUpperCase()}.\n`
+          )
+        )
       }
     } catch (e) {
       cancelled(e)

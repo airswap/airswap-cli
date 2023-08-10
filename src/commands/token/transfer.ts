@@ -8,8 +8,8 @@ import { get, confirm, cancelled, getTokens } from '../../lib/prompt'
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
 export default class TokenTransfer extends Command {
-  static description = 'transfer tokens to another account'
-  async run() {
+  public static description = 'transfer tokens to another account'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -30,7 +30,11 @@ export default class TokenTransfer extends Command {
       })
 
       const atomicAmount = utils.getAtomicValue(amount, token.address, metadata)
-      const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
+      const tokenContract = new ethers.Contract(
+        token.address,
+        IERC20.abi,
+        wallet
+      )
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
 
       if (tokenBalance.lt(atomicAmount.toString())) {
@@ -46,7 +50,7 @@ export default class TokenTransfer extends Command {
               to: recipient,
               value: `${atomicAmount} (${chalk.cyan(amount)})`,
             },
-            chainId,
+            chainId
           )
         ) {
           tokenContract

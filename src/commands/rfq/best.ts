@@ -5,8 +5,8 @@ import { cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 
 export default class OrderBest extends Command {
-  static description = 'get the best available order'
-  async run() {
+  public static description = 'get the best available order'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -17,9 +17,23 @@ export default class OrderBest extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.multiPeerCall(wallet, request.method, request.params, (order: any, results: any, errors: any) => {
-        utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order, errors)
-      })
+      requests.multiPeerCall(
+        wallet,
+        request.method,
+        request.params,
+        (order: any, results: any, errors: any) => {
+          utils.handleResponse(
+            request,
+            wallet,
+            metadata,
+            chainId,
+            gasPrice,
+            this,
+            order,
+            errors
+          )
+        }
+      )
     } catch (e) {
       cancelled(e)
     }
