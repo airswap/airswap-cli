@@ -7,8 +7,8 @@ import { get, cancelled } from '../../lib/prompt'
 import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataDelete extends Command {
-  static description = 'delete token from local metadata'
-  async run() {
+  public static description = 'delete token from local metadata'
+  public async run() {
     try {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
@@ -16,7 +16,10 @@ export default class MetadataDelete extends Command {
       this.log()
       utils.displayDescription(this, MetadataDelete.description, chainId)
 
-      const metadataPath = path.join(this.config.configDir, `metadata-${chainNames[chainId]}.json`)
+      const metadataPath = path.join(
+        this.config.configDir,
+        `metadata-${chainNames[chainId]}.json`
+      )
 
       const { needle }: any = await get({
         needle: {
@@ -48,12 +51,14 @@ export default class MetadataDelete extends Command {
         this.log('Token not found in metadata.\n')
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`
         )
 
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nType "yes" to remove this token (${token.symbol}) from local metadata`),
+            description: chalk.white(
+              `\nType "yes" to remove this token (${token.symbol}) from local metadata`
+            ),
           },
         })
         if (confirm === 'yes') {

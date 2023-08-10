@@ -170,7 +170,7 @@ export async function getBalanceChanges(order: any, wallet: any, metadata: any) 
 
 export function getByLowestSenderAmount(results) {
   let lowest = results[0]
-  for (var j = 1; j < results.length; j++) {
+  for (let j = 1; j < results.length; j++) {
     if (new BigNumber(results[j].order.sender.amount).lt(lowest.order.sender.amount)) {
       lowest = results[j]
     }
@@ -180,7 +180,7 @@ export function getByLowestSenderAmount(results) {
 
 export function getByHighestSignerAmount(results) {
   let highest = results[0]
-  for (var j = 1; j < results.length; j++) {
+  for (let j = 1; j < results.length; j++) {
     if (new BigNumber(results[j].order.signer.amount).gt(highest.order.signer.amount)) {
       highest = results[j]
     }

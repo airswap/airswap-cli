@@ -10,8 +10,8 @@ const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryAdd extends Command {
-  static description = 'remove supported tokens from the registry'
-  async run() {
+  public static description = 'remove supported tokens from the registry'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -20,10 +20,16 @@ export default class RegistryAdd extends Command {
       utils.displayDescription(this, RegistryAdd.description, chainId)
 
       const registryAddress = registryDeploys[chainId]
-      const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+      const registryContract = new ethers.Contract(
+        registryAddress,
+        Registry.abi,
+        wallet
+      )
       this.log(chalk.white(`Registry ${registryAddress}`))
 
-      const url = (await registryContract.getURLsForStakers([wallet.address]))[0]
+      const url = (
+        await registryContract.getURLsForStakers([wallet.address])
+      )[0]
       if (!url) {
         this.log(chalk.yellow('\nServer URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
@@ -31,7 +37,9 @@ export default class RegistryAdd extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getSupportedTokens(wallet.address)
+      const alreadySupported = await registryContract.getSupportedTokens(
+        wallet.address
+      )
       if (alreadySupported.length) {
         this.log(`Currently supporting the following tokens...\n`)
         const result = []
@@ -45,7 +53,10 @@ export default class RegistryAdd extends Command {
         this.log(getTable(result))
       }
 
-      const tokens: any = await getTokenList(metadata, 'tokens to remove (comma separated)')
+      const tokens: any = await getTokenList(
+        metadata,
+        'tokens to remove (comma separated)'
+      )
       const tokenAddresses = []
       const tokenLabels = []
 
@@ -55,7 +66,9 @@ export default class RegistryAdd extends Command {
       }
 
       const tokenCost = (await registryContract.tokenCost()).toNumber()
-      const obligationCost = (await registryContract.obligationCost()).toNumber()
+      const obligationCost = (
+        await registryContract.obligationCost()
+      ).toNumber()
 
       let totalCost = 0
       if (alreadySupported.length - tokenAddresses.length === 0) {
@@ -72,7 +85,7 @@ export default class RegistryAdd extends Command {
             tokens: tokenLabels.join('\n'),
             unstake: `${totalCost / 10000} AST`,
           },
-          chainId,
+          chainId
         )
       ) {
         registryContract

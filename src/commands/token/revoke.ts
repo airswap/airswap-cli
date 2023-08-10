@@ -9,8 +9,8 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class TokenRevoke extends Command {
-  static description = 'revoke a token approval'
-  async run() {
+  public static description = 'revoke a token approval'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -33,11 +33,22 @@ export default class TokenRevoke extends Command {
         swapAddress = swapDeploys[chainId]
       }
 
-      const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
-      const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+      const tokenContract = new ethers.Contract(
+        token.address,
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await tokenContract.allowance(
+        wallet.address,
+        swapAddress
+      )
 
       if (allowance.eq(0)) {
-        this.log(chalk.yellow(`${token.symbol} is already revoked (swap contract: ${swapAddress})\n`))
+        this.log(
+          chalk.yellow(
+            `${token.symbol} is already revoked (swap contract: ${swapAddress})\n`
+          )
+        )
       } else {
         if (
           await confirm(
@@ -48,10 +59,13 @@ export default class TokenRevoke extends Command {
               token: `${token.address} (${token.symbol})`,
               spender: `${swapAddress} (Swap)`,
             },
-            chainId,
+            chainId
           )
         ) {
-          tokenContract.approve(swapAddress, '0', { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
+          tokenContract
+            .approve(swapAddress, '0', { gasPrice })
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
         }
       }
     } catch (e) {

@@ -10,8 +10,8 @@ const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class TokenApprove extends Command {
-  static description = 'approve a token for trading'
-  async run() {
+  public static description = 'approve a token for trading'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -27,11 +27,22 @@ export default class TokenApprove extends Command {
       const { token }: any = await getTokens({ token: 'token' }, metadata)
       this.log()
 
-      const tokenContract = new ethers.Contract(token.address, IERC20.abi, wallet)
-      const allowance = await tokenContract.allowance(wallet.address, swapAddress)
+      const tokenContract = new ethers.Contract(
+        token.address,
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await tokenContract.allowance(
+        wallet.address,
+        swapAddress
+      )
 
       if (!allowance.eq(0)) {
-        this.log(chalk.yellow(`${token.symbol} is already approved for trading (swap contract: ${swapAddress})\n`))
+        this.log(
+          chalk.yellow(
+            `${token.symbol} is already approved for trading (swap contract: ${swapAddress})\n`
+          )
+        )
       } else {
         if (
           await confirm(
@@ -42,7 +53,7 @@ export default class TokenApprove extends Command {
               token: `${token.address} (${token.symbol})`,
               spender: `${swapAddress} (Swap)`,
             },
-            chainId,
+            chainId
           )
         ) {
           tokenContract

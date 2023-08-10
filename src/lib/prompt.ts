@@ -315,7 +315,7 @@ export function clearLines(count) {
 export async function confirm(
   ctx: any,
   metadata: any,
-  name: String,
+  name: string,
   params: any,
   chainId: number,
   verb?: string,

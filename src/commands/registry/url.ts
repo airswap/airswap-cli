@@ -9,8 +9,8 @@ const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryAdd extends Command {
-  static description = 'set server url on the registry'
-  async run() {
+  public static description = 'set server url on the registry'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -23,10 +23,16 @@ export default class RegistryAdd extends Command {
       if (!registryAddress) {
         this.log(chalk.yellow('No registry found on the current chain'))
       } else {
-        const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+        const registryContract = new ethers.Contract(
+          registryAddress,
+          Registry.abi,
+          wallet
+        )
         this.log(chalk.white(`Registry ${registryAddress}\n`))
 
-        const url = (await registryContract.getURLsForStakers([wallet.address]))[0]
+        const url = (
+          await registryContract.getURLsForStakers([wallet.address])
+        )[0]
         if (url) {
           this.log(`Current server url: ${url}\n`)
         }
@@ -47,10 +53,13 @@ export default class RegistryAdd extends Command {
             {
               url: newURL,
             },
-            chainId,
+            chainId
           )
         ) {
-          registryContract.setURL(newURL, { gasPrice }).then(utils.handleTransaction).catch(utils.handleError)
+          registryContract
+            .setURL(newURL, { gasPrice })
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
         }
       }
     } catch (e) {

@@ -9,11 +9,13 @@ import { toDecimalString } from '@airswap/utils'
 import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.sol/BalanceChecker.json'
 import balancesDeploys from '@airswap/balances/deploys.js'
 
-const balancesInterface = new ethers.utils.Interface(JSON.stringify(BalanceChecker.abi))
+const balancesInterface = new ethers.utils.Interface(
+  JSON.stringify(BalanceChecker.abi)
+)
 
 export default class Balances extends Command {
-  static description = 'display token balances'
-  async run() {
+  public static description = 'display token balances'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -26,7 +28,11 @@ export default class Balances extends Command {
         throw new Error('Unable to check balances on this chain.')
       }
 
-      const balancesContract = new ethers.Contract(balancesDeploys[chainId], balancesInterface, wallet)
+      const balancesContract = new ethers.Contract(
+        balancesDeploys[chainId],
+        balancesInterface,
+        wallet
+      )
 
       const addresses = Object.keys(metadata.byAddress)
       for (let i = addresses.length; i >= 0; i--) {
@@ -43,7 +49,10 @@ export default class Balances extends Command {
       let index = 0
       while (index < count) {
         balances = balances.concat(
-          await balancesContract.walletBalances(wallet.address, addresses.slice(index, index + chunk)),
+          await balancesContract.walletBalances(
+            wallet.address,
+            addresses.slice(index, index + chunk)
+          )
         )
         index += chunk
       }
@@ -52,7 +61,10 @@ export default class Balances extends Command {
       for (let i = 0; i < addresses.length; i++) {
         const token = metadata.byAddress[addresses[i]]
         if (!balances[i].eq(0)) {
-          const balanceDecimal = toDecimalString(balances[i], metadata.byAddress[token.address].decimals)
+          const balanceDecimal = toDecimalString(
+            balances[i],
+            metadata.byAddress[token.address].decimals
+          )
           result.push({
             Token: token.symbol,
             Balance: balanceDecimal,
@@ -63,12 +75,14 @@ export default class Balances extends Command {
       if (result.length) {
         this.log(getTable(result))
         this.log(
-          `Balances displayed for ${result.length} of ${addresses.length} known tokens. (${
-            Date.now() - startTime
-          }ms)\n`,
+          `Balances displayed for ${result.length} of ${
+            addresses.length
+          } known tokens. (${Date.now() - startTime}ms)\n`
         )
       } else {
-        this.log(`The current account holds no balances in any of ${addresses.length} known tokens.\n`)
+        this.log(
+          `The current account holds no balances in any of ${addresses.length} known tokens.\n`
+        )
       }
     } catch (e) {
       cancelled(e)

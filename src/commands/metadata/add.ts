@@ -7,8 +7,8 @@ import { get, cancelled } from '../../lib/prompt'
 import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataAdd extends Command {
-  static description = 'add token to local metadata'
-  async run() {
+  public static description = 'add token to local metadata'
+  public async run() {
     try {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
@@ -16,7 +16,10 @@ export default class MetadataAdd extends Command {
       this.log()
       utils.displayDescription(this, MetadataAdd.description, chainId)
 
-      const metadataPath = path.join(this.config.configDir, `metadata-${chainNames[chainId]}.json`)
+      const metadataPath = path.join(
+        this.config.configDir,
+        `metadata-${chainNames[chainId]}.json`
+      )
 
       const token: any = await get({
         symbol: {
@@ -52,14 +55,19 @@ export default class MetadataAdd extends Command {
       }
 
       this.log(
-        `\n${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`,
+        `\n${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals`
       )
 
-      if (metadata.byAddress[token.address] || metadata.bySymbol[token.symbol]) {
+      if (
+        metadata.byAddress[token.address] ||
+        metadata.bySymbol[token.symbol]
+      ) {
         const chainName = chainNames[chainId || '4'].toUpperCase()
         const { confirm }: any = await get({
           confirm: {
-            description: chalk.white(`\nToken already exists in metadata. Type "yes" to overwrite it (${chainName})`),
+            description: chalk.white(
+              `\nToken already exists in metadata. Type "yes" to overwrite it (${chainName})`
+            ),
           },
         })
         if (confirm === 'yes') {

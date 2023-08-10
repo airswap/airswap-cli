@@ -7,9 +7,9 @@ import { requireKeytar } from '../../lib/wallet'
 import { get } from '../../lib/prompt'
 
 export default class AccountImport extends Command {
-  static description = 'import an ethereum account'
+  public static description = 'import an ethereum account'
 
-  async run() {
+  public async run() {
     displayDescription(this, AccountImport.description)
     let signerPrivateKey
     let keytar
@@ -30,13 +30,17 @@ export default class AccountImport extends Command {
       keytar = requireKeytar()
       const wallet = new ethers.Wallet(signerPrivateKey)
       await keytar.setPassword('airswap-cli', 'private-key', signerPrivateKey)
-      this.log(`\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(wallet.address)}\n`)
+      this.log(
+        `\n${emoji.get('white_check_mark')} Set account to address ${chalk.bold(
+          wallet.address
+        )}\n`
+      )
     } catch (e) {
       this.log(
         chalk.yellow('Error') +
           ' Cannot import account because dependencies are missing.\n' +
           'If you are on Linux, try installing libsecret-1-dev (Debian, Ubuntu etc.) or ' +
-          'libsecret-devel (RedHat, Fedora etc.) and then reinstalling AirSwap CLI.\n',
+          'libsecret-devel (RedHat, Fedora etc.) and then reinstalling AirSwap CLI.\n'
       )
     }
   }

@@ -16,7 +16,7 @@ const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC2
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
-export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: Function) {
+export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: any) {
   const chainId = (await wallet.provider.getNetwork()).chainId
   const registryAddress = registryDeploys[chainId]
   const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
@@ -26,7 +26,7 @@ export async function getServerURLs(wallet: any, signerToken: string, senderToke
   callback(urls)
 }
 
-export function peerCall(locator: string, method: string, params: any, callback: Function) {
+export function peerCall(locator: string, method: string, params: any, callback: any) {
   let client
 
   if (/^ws:\/\//.test(locator) || /^wss:\/\//.test(locator)) {
@@ -70,7 +70,7 @@ export function multiPeerCall(
   wallet: any,
   method: string,
   params: any,
-  callback: Function,
+  callback: any,
 ) {
   getServerURLs(wallet, params.signerToken, params.senderToken, (locators: any) => {
     if (!locators.length) {

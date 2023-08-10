@@ -10,8 +10,8 @@ const wethDeploys = require('@airswap/wrapper/deploys-weth.js')
 const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
 
 export default class IntentUnset extends Command {
-  static description = 'withdraw eth from weth'
-  async run() {
+  public static description = 'withdraw eth from weth'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -26,7 +26,10 @@ export default class IntentUnset extends Command {
 
       const tokenContract = new ethers.Contract(WETH.address, WETH9.abi, wallet)
       const tokenBalance = await tokenContract.balanceOf(wallet.address)
-      const balanceDecimal = toDecimalString(tokenBalance.toString(), metadata.byAddress[WETH.address].decimals)
+      const balanceDecimal = toDecimalString(
+        tokenBalance.toString(),
+        metadata.byAddress[WETH.address].decimals
+      )
       this.log(`WETH available to withdraw: ${chalk.bold(balanceDecimal)}\n`)
 
       const { amount }: any = await get({
@@ -51,11 +54,13 @@ export default class IntentUnset extends Command {
             {
               amount: `${atomicAmount} (${chalk.cyan(amount)})`,
             },
-            chainId,
+            chainId
           )
         ) {
           new ethers.Contract(WETH.address, WETH9.abi, wallet)
-            .withdraw(ethers.BigNumber.from(atomicAmount.toFixed()), { gasPrice })
+            .withdraw(ethers.BigNumber.from(atomicAmount.toFixed()), {
+              gasPrice,
+            })
             .then(utils.handleTransaction)
             .catch(utils.handleError)
         }

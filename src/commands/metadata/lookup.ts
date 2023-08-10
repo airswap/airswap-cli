@@ -7,15 +7,18 @@ import { get, cancelled } from '../../lib/prompt'
 import { chainNames, explorerUrls } from '@airswap/constants'
 
 export default class MetadataLookup extends Command {
-  static description = 'lookup token in local metadata'
-  async run() {
+  public static description = 'lookup token in local metadata'
+  public async run() {
     try {
       const { chainId } = await utils.getConfig(this)
 
       this.log()
       utils.displayDescription(this, MetadataLookup.description, chainId)
 
-      const metadataPath = path.join(this.config.configDir, `metadata-${chainNames[chainId]}.json`)
+      const metadataPath = path.join(
+        this.config.configDir,
+        `metadata-${chainNames[chainId]}.json`
+      )
 
       const { needle }: any = await get({
         needle: {
@@ -48,7 +51,7 @@ export default class MetadataLookup extends Command {
         this.log(`Add a new token with ${chalk.bold('metadata:add')}\n`)
       } else {
         this.log(
-          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals\n`,
+          `${token.symbol} (${token.name}) · ${explorerUrls[chainId]}/address/${token.address} · ${token.decimals} decimals\n`
         )
       }
     } catch (e) {

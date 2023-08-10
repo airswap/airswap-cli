@@ -5,8 +5,8 @@ import * as utils from '../lib/utils'
 import { getWallet } from '../lib/wallet'
 
 export default class Gas extends Command {
-  static description = 'set gas price for transactions'
-  async run() {
+  public static description = 'set gas price for transactions'
+  public async run() {
     utils.displayDescription(this, Gas.description)
 
     try {
@@ -15,7 +15,11 @@ export default class Gas extends Command {
       const gasPrice = await utils.getGasPrice(this, true)
       const gasPriceNetwork = await wallet.getGasPrice()
 
-      this.log(`\nCurrent network gas price: ${Math.round(gasPriceNetwork.toNumber() / 10 ** 9)}`)
+      this.log(
+        `\nCurrent network gas price: ${Math.round(
+          gasPriceNetwork.toNumber() / 10 ** 9
+        )}`
+      )
       this.log(`Configured gas price: ${gasPrice}\n`)
 
       const { newGasPrice }: any = await get({

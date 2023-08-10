@@ -5,8 +5,8 @@ import * as utils from '../lib/utils'
 import { chainNames } from '@airswap/constants'
 
 export default class Network extends Command {
-  static description = 'set the active ethereum chain'
-  async run() {
+  public static description = 'set the active ethereum chain'
+  public async run() {
     utils.displayDescription(this, Network.description)
 
     try {
@@ -27,7 +27,9 @@ export default class Network extends Command {
           chainId: Number(newChainId),
         })
 
-        this.log(chalk.green(`\nSet active chain to ${chainNames[newChainId]}.\n`))
+        this.log(
+          chalk.green(`\nSet active chain to ${chainNames[newChainId]}.\n`)
+        )
       }
     } catch (e) {
       cancelled(e)

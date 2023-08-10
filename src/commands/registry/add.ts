@@ -12,8 +12,8 @@ const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.
 const registryDeploys = require('@airswap/maker-registry/deploys.js')
 
 export default class RegistryAdd extends Command {
-  static description = 'add supported tokens to the registry'
-  async run() {
+  public static description = 'add supported tokens to the registry'
+  public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -22,10 +22,16 @@ export default class RegistryAdd extends Command {
       utils.displayDescription(this, RegistryAdd.description, chainId)
 
       const registryAddress = registryDeploys[chainId]
-      const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
+      const registryContract = new ethers.Contract(
+        registryAddress,
+        Registry.abi,
+        wallet
+      )
       this.log(chalk.white(`Registry ${registryAddress}`))
 
-      const url = (await registryContract.getURLsForStakers([wallet.address]))[0]
+      const url = (
+        await registryContract.getURLsForStakers([wallet.address])
+      )[0]
       if (!url) {
         this.log(chalk.yellow('\nServer URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
@@ -33,7 +39,9 @@ export default class RegistryAdd extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getSupportedTokens(wallet.address)
+      const alreadySupported = await registryContract.getSupportedTokens(
+        wallet.address
+      )
       if (alreadySupported.length) {
         this.log(`Currently supporting the following tokens...\n`)
         const result = []
@@ -47,14 +55,28 @@ export default class RegistryAdd extends Command {
         this.log(getTable(result))
       }
 
-      const stakingTokenContract = new ethers.Contract(stakingTokenAddresses[chainId], IERC20.abi, wallet)
-      const allowance = await stakingTokenContract.allowance(wallet.address, registryAddress)
+      const stakingTokenContract = new ethers.Contract(
+        stakingTokenAddresses[chainId],
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await stakingTokenContract.allowance(
+        wallet.address,
+        registryAddress
+      )
 
       if (allowance.eq(0)) {
         this.log(chalk.yellow('Registry not enabled'))
-        this.log(`Enable staking on the Registry with ${chalk.bold('registry:enable')}\n`)
+        this.log(
+          `Enable staking on the Registry with ${chalk.bold(
+            'registry:enable'
+          )}\n`
+        )
       } else {
-        const tokens: any = await getTokenList(metadata, 'tokens to add (comma separated)')
+        const tokens: any = await getTokenList(
+          metadata,
+          'tokens to add (comma separated)'
+        )
         const tokenAddresses = []
         const tokenLabels = []
 
@@ -64,7 +86,9 @@ export default class RegistryAdd extends Command {
         }
 
         const tokenCost = (await registryContract.tokenCost()).toNumber()
-        const obligationCost = (await registryContract.obligationCost()).toNumber()
+        const obligationCost = (
+          await registryContract.obligationCost()
+        ).toNumber()
 
         let totalCost = 0
         if ((await registryContract.balanceOf(wallet.address)).eq(0)) {
@@ -81,7 +105,7 @@ export default class RegistryAdd extends Command {
               tokens: tokenLabels.join('\n'),
               stake: `${totalCost / 10000} AST`,
             },
-            chainId,
+            chainId
           )
         ) {
           registryContract

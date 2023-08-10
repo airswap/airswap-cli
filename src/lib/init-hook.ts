@@ -7,7 +7,7 @@ import { table } from 'table'
 
 const hook: Hook<'init'> = async function(options) {
   console.log(chalk.gray.bold(`AirSwap CLI ${options.config.version} — https://www.airswap.io/`))
-  var query = {
+  const query = {
     name: 'airswap',
   }
   const result = await available(query)

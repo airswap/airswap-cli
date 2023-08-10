@@ -6,8 +6,8 @@ import { get, cancelled } from '../../lib/prompt'
 import * as requests from '../../lib/requests'
 
 export default class OrderGet extends Command {
-  static description = 'get an order from a peer'
-  async run() {
+  public static description = 'get an order from a peer'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
@@ -23,23 +23,41 @@ export default class OrderGet extends Command {
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
 
-      requests.peerCall(locator, request.method, request.params, async (err, order) => {
-        if (err) {
-          if (err === 'timeout') {
-            this.log(chalk.yellow('The request timed out.\n'))
+      requests.peerCall(
+        locator,
+        request.method,
+        request.params,
+        async (err, order) => {
+          if (err) {
+            if (err === 'timeout') {
+              this.log(chalk.yellow('The request timed out.\n'))
+            } else {
+              cancelled(err)
+            }
+            process.exit(0)
           } else {
-            cancelled(err)
-          }
-          process.exit(0)
-        } else {
-          try {
-            await requests.validateResponse(order, request.method, request.params, wallet)
-            utils.handleResponse(request, wallet, metadata, chainId, gasPrice, this, order)
-          } catch (e) {
-            cancelled(e)
+            try {
+              await requests.validateResponse(
+                order,
+                request.method,
+                request.params,
+                wallet
+              )
+              utils.handleResponse(
+                request,
+                wallet,
+                metadata,
+                chainId,
+                gasPrice,
+                this,
+                order
+              )
+            } catch (e) {
+              cancelled(e)
+            }
           }
         }
-      })
+      )
     } catch (e) {
       cancelled(e)
     }
