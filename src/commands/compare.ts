@@ -1,18 +1,18 @@
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { getWallet } from '../../lib/wallet'
-import { cancelled } from '../../lib/prompt'
-import * as requests from '../../lib/requests'
+import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
+import { cancelled } from '../lib/prompt'
+import * as requests from '../lib/requests'
 
-export default class OrderBest extends Command {
-  public static description = 'get the best available order'
-  public async run() {
+export default class Compare extends Command {
+  static description = 'compare order pricing from servers'
+  async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, OrderBest.description, chainId)
+      utils.displayDescription(this, Compare.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()

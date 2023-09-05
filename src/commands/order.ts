@@ -1,19 +1,19 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { getWallet } from '../../lib/wallet'
-import { get, cancelled } from '../../lib/prompt'
-import * as requests from '../../lib/requests'
+import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
+import { get, cancelled } from '../lib/prompt'
+import * as requests from '../lib/requests'
 
-export default class OrderGet extends Command {
-  public static description = 'get an order from a peer'
-  public async run() {
+export default class Order extends Command {
+  static description = 'get an order from a server'
+  async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, OrderGet.description, chainId)
+      utils.displayDescription(this, Order.description, chainId)
 
       const { locator }: any = await get({
         locator: {
