@@ -6,8 +6,8 @@ import { get, cancelled } from '../lib/prompt'
 import * as requests from '../lib/requests'
 
 export default class Order extends Command {
-  static description = 'get an order from a server'
-  async run() {
+  public static description = 'get an order from a server'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
