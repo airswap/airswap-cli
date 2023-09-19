@@ -32,7 +32,7 @@ export default class Inspect extends Command {
           }
           process.exit(0)
         } else {
-          this.log(chalk.white.bold('supported protocosl and methods\n'))
+          this.log(chalk.white.bold('supported protocols and methods\n'))
           const unknown = []
           for (const p in protocols) {
             const interfaceId = protocols[p].interfaceId
@@ -45,12 +45,16 @@ export default class Inspect extends Command {
               for (const f in _interface.fragments) {
                 this.log('· ', _interface.fragments[f].name)
               }
+              this.log()
             } else {
               unknown.push(interfaceId)
             }
           }
-          for (const u in unknown) {
-            this.log(chalk.yellow(`Unknown interface: ${unknown[u]}`))
+          if (unknown.length) {
+            this.log(chalk.yellow(`Unknown interfaces`))
+            for (const u in unknown) {
+              this.log('· ', chalk.yellow(unknown[u]))
+            }
           }
         }
         this.log()

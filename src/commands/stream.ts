@@ -1,8 +1,8 @@
 import chalk from 'chalk'
 import * as jayson from 'jayson'
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { getWallet } from '../../lib/wallet'
+import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
 import {
   get,
   getTokens,
@@ -10,7 +10,7 @@ import {
   clearLines,
   printQuote,
   confirm,
-} from '../../lib/prompt'
+} from '../lib/prompt'
 import {
   getCostFromPricing,
   createOrderERC20,
@@ -22,17 +22,17 @@ import { Protocols } from '@airswap/constants'
 import { Server } from '@airswap/libraries'
 import readline from 'readline'
 
-const constants = require('../../lib/constants.json')
+const constants = require('../lib/constants.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
-export default class OrderStream extends Command {
+export default class Stream extends Command {
   public static description = 'stream quotes for a swap'
   public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      utils.displayDescription(this, OrderStream.description, chainId)
+      utils.displayDescription(this, Stream.description, chainId)
 
       const { url, side, amount }: any = await get({
         url: {
