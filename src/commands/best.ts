@@ -4,7 +4,7 @@ import { getWallet } from '../lib/wallet'
 import { cancelled } from '../lib/prompt'
 import * as requests from '../lib/requests'
 
-export default class Compare extends Command {
+export default class Best extends Command {
   public static description = 'compare order pricing from servers'
   public async run() {
     try {
@@ -12,7 +12,7 @@ export default class Compare extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, Compare.description, chainId)
+      utils.displayDescription(this, Best.description, chainId)
 
       const request = await requests.getRequest(wallet, metadata, 'Order')
       this.log()
