@@ -5,8 +5,8 @@ import { cancelled } from '../lib/prompt'
 import * as requests from '../lib/requests'
 
 export default class Compare extends Command {
-  static description = 'compare order pricing from servers'
-  async run() {
+  public static description = 'compare order pricing from servers'
+  public async run() {
     try {
       const wallet = await getWallet(this)
       const chainId = (await wallet.provider.getNetwork()).chainId
