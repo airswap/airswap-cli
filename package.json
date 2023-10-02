@@ -22,11 +22,9 @@
     "pretty:fix": "prettier --write \"./**/*.ts\""
   },
   "dependencies": {
-    "@airswap/constants": "4.0.10",
-    "@airswap/libraries": "4.0.19",
-    "@airswap/metadata": "4.0.12",
+    "@airswap/libraries": "^4.1.3",
+    "@airswap/metadata": "^4.1.1",
     "@airswap/tokens": "0.1.4",
-    "@airswap/utils": "4.0.8",
     "@oclif/command": "^1.8.22",
     "@oclif/config": "^1.18.8",
     "@oclif/plugin-help": "^5.2.6",
