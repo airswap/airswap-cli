@@ -1,9 +1,9 @@
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { getWallet } from '../../lib/wallet'
-import { get, confirm, cancelled, getTokens } from '../../lib/prompt'
+import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
+import { get, confirm, cancelled, getTokens } from '../lib/prompt'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
