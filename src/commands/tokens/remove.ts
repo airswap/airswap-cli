@@ -7,7 +7,7 @@ import { getTable } from 'console.table'
 
 import { Registry } from '@airswap/libraries'
 
-export default class RegistryRemove extends Command {
+export default class TokensRemove extends Command {
   public static description = 'remove supported tokens from the registry'
   public async run() {
     try {
@@ -15,7 +15,7 @@ export default class RegistryRemove extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, RegistryRemove.description, chainId)
+      utils.displayDescription(this, TokensRemove.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 

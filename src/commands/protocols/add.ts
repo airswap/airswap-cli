@@ -15,7 +15,7 @@ import { Registry } from '@airswap/libraries'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
-export default class RegistryAdd extends Command {
+export default class ProtocolsAdd extends Command {
   public static description = 'add supported protocols to the registry'
   public async run() {
     try {
@@ -23,7 +23,7 @@ export default class RegistryAdd extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, RegistryAdd.description, chainId)
+      utils.displayDescription(this, ProtocolsAdd.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 

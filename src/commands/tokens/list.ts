@@ -6,14 +6,14 @@ import { cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 
-export default class RegistryList extends Command {
+export default class TokensList extends Command {
   public static description = 'list supported tokens from registry'
   public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      utils.displayDescription(this, RegistryList.description, chainId)
+      utils.displayDescription(this, TokensList.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 

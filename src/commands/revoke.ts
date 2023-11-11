@@ -8,7 +8,7 @@ import { get, getTokens, confirm, cancelled } from '../lib/prompt'
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
-export default class TokenRevoke extends Command {
+export default class Revoke extends Command {
   public static description = 'revoke a token approval'
   public async run() {
     try {
@@ -16,7 +16,7 @@ export default class TokenRevoke extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, TokenRevoke.description, chainId)
+      utils.displayDescription(this, Revoke.description, chainId)
 
       const { token }: any = await getTokens({ token: 'token' }, metadata)
       const { contract }: any = await get({

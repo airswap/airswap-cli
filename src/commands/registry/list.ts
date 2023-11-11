@@ -7,7 +7,7 @@ import { getTable } from 'console.table'
 import { Protocols } from '@airswap/constants'
 import { Registry } from '@airswap/libraries'
 
-export default class RegistryGet extends Command {
+export default class RegistryList extends Command {
   public static description = 'get urls from the registry'
 
   public async run() {
@@ -15,7 +15,7 @@ export default class RegistryGet extends Command {
       const provider = await utils.getProvider(this)
       const chainId = (await provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      utils.displayDescription(this, RegistryGet.description, chainId)
+      utils.displayDescription(this, RegistryList.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
