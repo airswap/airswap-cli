@@ -18,6 +18,7 @@ const messages = {
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
   TokenList: 'One or more symbols not in metadata',
+  ProtocolList: 'One or more protocols not supported',
 }
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
@@ -115,6 +116,28 @@ export async function getSideAndTokens(metadata, reversed?) {
     signerToken,
     senderToken,
   }
+}
+
+export async function getProtocolList(metadata, label) {
+  let { values }: any = await get({
+    values: {
+      description: label || 'protocols (comma separated)',
+      type: 'ProtocolList',
+      conform: value => {
+        const interfaceIds = value.split(',')
+        for (const i in interfaceIds) {
+          if (!(interfaceIds[i].trim().toLowerCase() in metadata)) return false
+        }
+        return true
+      },
+    },
+  })
+  const protocols = {}
+  values = values.split(',')
+  for (const val in values) {
+    protocols[values[val]] = metadata[values[val].trim().toLowerCase()]
+  }
+  return protocols
 }
 
 export async function getTokenList(metadata, label) {
@@ -336,7 +359,7 @@ export async function confirm(
     },
   }
 
-  printTable(ctx, `Transaction: ${name}`, data, config)
+  if (data.length > 1) printTable(ctx, `Transaction: ${name}`, data, config)
   const chainName = chainNames[chainId].toUpperCase()
 
   return new Promise((resolve, reject) => {

@@ -1,13 +1,13 @@
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
-import * as utils from '../../lib/utils'
-import { getWallet } from '../../lib/wallet'
-import { get, confirm, cancelled, getTokens } from '../../lib/prompt'
+import * as utils from '../lib/utils'
+import { getWallet } from '../lib/wallet'
+import { get, confirm, cancelled, getTokens } from '../lib/prompt'
 
 const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
 
-export default class TokenTransfer extends Command {
+export default class Transfer extends Command {
   public static description = 'transfer tokens to another account'
   public async run() {
     try {
@@ -15,7 +15,7 @@ export default class TokenTransfer extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, TokenTransfer.description, chainId)
+      utils.displayDescription(this, Transfer.description, chainId)
 
       const { token }: any = await getTokens({ token: 'token' }, metadata)
       const { amount, recipient }: any = await get({

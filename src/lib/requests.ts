@@ -9,22 +9,10 @@ import {
 import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
+import { Registry, SwapERC20 } from '@airswap/libraries'
+import { Protocols } from '@airswap/constants'
 
 const constants = require('./constants.json')
-const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
-const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
-const registryDeploys = require('@airswap/maker-registry/deploys.js')
-const swapDeploys = require('@airswap/swap-erc20/deploys.js')
-
-export async function getServerURLs(wallet: any, signerToken: string, senderToken: string, callback: any) {
-  const chainId = (await wallet.provider.getNetwork()).chainId
-  const registryAddress = registryDeploys[chainId]
-  const registryContract = new ethers.Contract(registryAddress, Registry.abi, wallet)
-  const signerURLs = await registryContract.getURLsForToken(signerToken)
-  const senderURLs = await registryContract.getURLsForToken(senderToken)
-  const urls = signerURLs.filter(value => senderURLs.includes(value))
-  callback(urls)
-}
 
 export function peerCall(locator: string, method: string, params: any, callback: any) {
   let client
@@ -66,58 +54,59 @@ export function peerCall(locator: string, method: string, params: any, callback:
   }
 }
 
-export function multiPeerCall(
+export async function multiPeerCall(
   wallet: any,
   method: string,
   params: any,
   callback: any,
 ) {
-  getServerURLs(wallet, params.signerToken, params.senderToken, (locators: any) => {
-    if (!locators.length) {
-      callback()
-      return
-    }
+  const chainId = (await wallet.provider.getNetwork()).chainId
+  const locators = await Registry.getServerURLs(wallet, chainId, Protocols.RequestForQuoteERC20)
 
-    let requested = 0
-    let completed = 0
-    const results: any[] = []
-    const errors: any[] = []
+  if (!locators.length) {
+    callback()
+    return
+  }
 
-    cli.action.start(`Requesting from ${locators.length} peer${locators.length !== 1 ? 's' : ''}`)
+  let requested = 0
+  let completed = 0
+  const results: any[] = []
+  const errors: any[] = []
 
-    for (let i = 0; i < locators.length; i++) {
-      if (locators[i]) {
-        requested++
-        peerCall(locators[i], method, params, async (err: any, result: any) => {
-          if (err) {
-            errors.push({ locator: locators[i], message: err })
+  cli.action.start(`Requesting from ${locators.length} peer${locators.length !== 1 ? 's' : ''}`)
+
+  for (let i = 0; i < locators.length; i++) {
+    if (locators[i]) {
+      requested++
+      peerCall(locators[i], method, params, async (err: any, result: any) => {
+        if (err) {
+          errors.push({ locator: locators[i], message: err })
+        } else {
+          try {
+            results.push(await validateResponse(result, method, params, wallet))
+          } catch (e) {
+            errors.push({ locator: locators[i], message: e })
+          }
+        }
+
+        if (++completed === requested) {
+          cli.action.stop()
+
+          if (!results.length) {
+            callback(null, null, errors)
           } else {
-            try {
-              results.push(await validateResponse(result, method, params, wallet))
-            } catch (e) {
-              errors.push({ locator: locators[i], message: e })
-            }
-          }
-
-          if (++completed === requested) {
-            cli.action.stop()
-
-            if (!results.length) {
-              callback(null, null, errors)
+            let best
+            if (method.indexOf('Signer') !== -1) {
+              best = getHighestSwapSigner(results)
             } else {
-              let best
-              if (method.indexOf('Signer') !== -1) {
-                best = getHighestSwapSigner(results)
-              } else {
-                best = getLowestSwapSender(results)
-              }
-              callback(best, results, errors)
+              best = getLowestSwapSender(results)
             }
+            callback(best, results, errors)
           }
-        })
-      }
+        }
+      })
     }
-  })
+  }
 }
 
 export async function getRequest(wallet: any, metadata: any, kind: string) {
@@ -146,7 +135,7 @@ export async function getRequest(wallet: any, metadata: any, kind: string) {
   }
 
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const swapContract = swapDeploys[chainId]
+  const swapContract = SwapERC20.getAddress(chainId)
 
   let method = 'getSenderSide' + kind
   const params = {
@@ -212,8 +201,7 @@ function getLowestSwapSender(results) {
 
 export async function validateResponse(order: any, method: any, params: any, wallet: any) {
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const errors = await new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-  .check(wallet.address, ...orderERC20ToParams(order))
+  const errors = await SwapERC20.getContract(wallet, chainId).check(wallet.address, ...orderERC20ToParams(order))
 
   if (errors[0].toString() !== '0') {
     throw ethers.utils.parseBytes32String(errors[1][0])

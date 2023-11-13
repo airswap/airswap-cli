@@ -1,15 +1,13 @@
 import chalk from 'chalk'
-import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { getTokenList, confirm, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 
-const Registry = require('@airswap/maker-registry/build/contracts/MakerRegistry.sol/MakerRegistry.json')
-const registryDeploys = require('@airswap/maker-registry/deploys.js')
+import { Registry } from '@airswap/libraries'
 
-export default class RegistryAdd extends Command {
+export default class TokensRemove extends Command {
   public static description = 'remove supported tokens from the registry'
   public async run() {
     try {
@@ -17,18 +15,13 @@ export default class RegistryAdd extends Command {
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       const gasPrice = await utils.getGasPrice(this)
-      utils.displayDescription(this, RegistryAdd.description, chainId)
+      utils.displayDescription(this, TokensRemove.description, chainId)
 
-      const registryAddress = registryDeploys[chainId]
-      const registryContract = new ethers.Contract(
-        registryAddress,
-        Registry.abi,
-        wallet
-      )
-      this.log(chalk.white(`Registry ${registryAddress}`))
+      this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
+      const registryContract = Registry.getContract(wallet, chainId)
       const url = (
-        await registryContract.getURLsForStakers([wallet.address])
+        await registryContract.getServerURLsForStakers([wallet.address])
       )[0]
       if (!url) {
         this.log(chalk.yellow('\nServer URL is not set'))
@@ -37,7 +30,7 @@ export default class RegistryAdd extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getSupportedTokens(
+      const alreadySupported = await registryContract.getTokensForStaker(
         wallet.address
       )
       if (alreadySupported.length) {
@@ -65,16 +58,8 @@ export default class RegistryAdd extends Command {
         tokenLabels.push(`${tokens[i].address} (${tokens[i].symbol})`)
       }
 
-      const tokenCost = (await registryContract.tokenCost()).toNumber()
-      const obligationCost = (
-        await registryContract.obligationCost()
-      ).toNumber()
-
-      let totalCost = 0
-      if (alreadySupported.length - tokenAddresses.length === 0) {
-        totalCost = obligationCost
-      }
-      totalCost += tokenCost * tokenAddresses.length
+      const supportCost = (await registryContract.supportCost()).toNumber()
+      const totalCost = supportCost * tokenAddresses.length
 
       if (
         await confirm(
