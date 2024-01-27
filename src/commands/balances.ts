@@ -27,16 +27,14 @@ export default class Balances extends Command {
 
       this.log(`Checking balances for ${addresses.length} tokens...\n`)
 
+      const batchCallContract = BatchCall.getContract(wallet, chainId)
       const chunk = 750
       const count = addresses.length
       let balances = []
       let index = 0
       while (index < count) {
         balances = balances.concat(
-          await BatchCall.getContract(
-            wallet,
-            chainId
-          ).balancesContract.walletBalances(
+          await batchCallContract.walletBalances(
             wallet.address,
             addresses.slice(index, index + chunk)
           )
