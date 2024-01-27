@@ -49,6 +49,7 @@ export async function updateConfig(ctx: any, config: any) {
 
 export async function getChainId(ctx: any): Promise<string> {
   const { chainId } = await getConfig(ctx)
+  if (!ChainIds[chainId]) throw `Chain ${chainId} not supported. Change with chain command.`
   return chainId || ChainIds.SEPOLIA
 }
 
