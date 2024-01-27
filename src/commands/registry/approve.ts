@@ -9,7 +9,7 @@ import constants from '../../lib/constants.json'
 import { stakingTokenAddresses } from '@airswap/constants'
 import { Registry } from '@airswap/libraries'
 
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class RegistryApprove extends Command {
   public static description = 'enable staking on the registry'

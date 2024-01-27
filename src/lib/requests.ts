@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 import { Registry, SwapERC20 } from '@airswap/libraries'
 import { Protocols } from '@airswap/constants'
+import { parseCheckResult } from '@airswap/utils'
 
 const constants = require('./constants.json')
 
@@ -203,8 +204,8 @@ export async function validateResponse(order: any, method: any, params: any, wal
   const chainId = (await wallet.provider.getNetwork()).chainId
   const errors = await SwapERC20.getContract(wallet, chainId).check(wallet.address, ...orderERC20ToParams(order))
 
-  if (errors[0].toString() !== '0') {
-    throw ethers.utils.parseBytes32String(errors[1][0])
+  if (errors.length) {
+    throw parseCheckResult(errors).join(', ')
   }
 
   if (isValidOrderERC20(order)) {
