@@ -12,8 +12,7 @@ import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airsw
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
-import { toDecimalString, orderERC20ToParams } from '@airswap/utils'
-import { getKnownTokens } from '@airswap/metadata'
+import { getKnownTokens, toDecimalString, orderERC20ToParams } from '@airswap/utils'
 
 const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
