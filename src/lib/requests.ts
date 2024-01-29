@@ -10,7 +10,7 @@ import * as utils from './utils'
 import BigNumber from 'bignumber.js'
 import { get, getTokens } from './prompt'
 import { Registry, SwapERC20 } from '@airswap/libraries'
-import { Protocols } from '@airswap/constants'
+import { ProtocolIds } from '@airswap/utils'
 import { parseCheckResult } from '@airswap/utils'
 
 const constants = require('./constants.json')
@@ -62,7 +62,7 @@ export async function multiPeerCall(
   callback: any,
 ) {
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const locators = await Registry.getServerURLs(wallet, chainId, Protocols.RequestForQuoteERC20)
+  const locators = await Registry.getServerURLs(wallet, chainId, ProtocolIds.RequestForQuoteERC20)
 
   if (!locators.length) {
     callback()

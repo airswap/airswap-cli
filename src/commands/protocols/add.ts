@@ -10,7 +10,7 @@ import {
   Protocols,
   protocolNames,
   stakingTokenAddresses,
-} from '@airswap/constants'
+} from '@airswap/utils'
 import { Registry } from '@airswap/libraries'
 
 const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')

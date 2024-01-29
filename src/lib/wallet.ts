@@ -15,7 +15,7 @@ export function requireKeytar() {
   }
 }
 
-import { chainCurrencies } from '@airswap/constants'
+import { chainCurrencies } from '@airswap/utils'
 
 export async function getWallet(ctx: any, requireBalance?: boolean) {
   const keytar = requireKeytar()

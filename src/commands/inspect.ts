@@ -6,7 +6,7 @@ import { getWallet } from '../lib/wallet'
 import { get, cancelled } from '../lib/prompt'
 import * as requests from '../lib/requests'
 
-import { protocolNames, protocolInterfaces } from '@airswap/constants'
+import { protocolNames, protocolInterfaces } from '@airswap/utils'
 
 export default class Inspect extends Command {
   public static description = 'inspect protocols for a server'

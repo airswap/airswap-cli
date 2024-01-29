@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { get } from '../lib/prompt'
 import * as utils from '../lib/utils'
-import { chainNames } from '@airswap/constants'
+import { chainNames } from '@airswap/utils'
 
 export default class Network extends Command {
   public static description = 'set the active chain'

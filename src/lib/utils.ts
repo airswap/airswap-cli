@@ -8,7 +8,7 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airswap/constants'
+import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airswap/utils'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 

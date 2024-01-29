@@ -4,7 +4,7 @@ import * as utils from '../../lib/utils'
 import { get, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 
-import { Protocols } from '@airswap/constants'
+import { ProtocolIds } from '@airswap/utils'
 import { Registry } from '@airswap/libraries'
 
 export default class RegistryList extends Command {
@@ -40,7 +40,7 @@ export default class RegistryList extends Command {
       const urls = await Registry.getServerURLs(
         provider,
         chainId,
-        Protocols.RequestForQuoteERC20,
+        ProtocolIds.RequestForQuoteERC20,
         first.address,
         second.address
       )
