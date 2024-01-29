@@ -8,16 +8,15 @@ import * as path from 'path'
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { chainNames, explorerUrls, ChainIds, apiUrls } from '@airswap/constants'
+import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airswap/utils'
 import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
-import { toDecimalString, orderERC20ToParams } from '@airswap/utils'
-import { getKnownTokens } from '@airswap/metadata'
+import { getKnownTokens, toDecimalString, orderERC20ToParams } from '@airswap/utils'
 
 const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: number) {
   let chainName = ''
@@ -32,7 +31,7 @@ export async function getConfig(ctx: any) {
   const config = path.join(ctx.config.configDir, 'config.json')
   if (!(await fs.pathExists(config))) {
     await fs.outputJson(config, {
-      chainId: ChainIds.GOERLI,
+      chainId: ChainIds.SEPOLIA,
     })
   }
   return await fs.readJson(config)
@@ -49,16 +48,19 @@ export async function updateConfig(ctx: any, config: any) {
 
 export async function getChainId(ctx: any): Promise<string> {
   const { chainId } = await getConfig(ctx)
-  return chainId || ChainIds.GOERLI
+  if (!ChainIds[chainId]) throw `Chain ${chainId} not supported. Change with chain command.`
+  return chainId || ChainIds.SEPOLIA
 }
 
 export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
-  let apiUrl = apiUrls[chainId]
-  if (apiUrl.indexOf('infura.io') !== -1) {
-    apiUrl += `/${INFURA_ID}`
-  }
-  return apiUrl
+  if (INFURA_ID)
+    return chainLabels[chainId]
+      ? `https://${chainLabels[
+          chainId
+        ].toLowerCase()}.infura.io/v3/${INFURA_ID}`
+      : undefined
+  return apiUrls[chainId]
 }
 
 export async function getProvider(ctx: any) {

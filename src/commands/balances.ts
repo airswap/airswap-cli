@@ -5,13 +5,7 @@ import { getWallet } from '../lib/wallet'
 import { getTable } from 'console.table'
 import { cancelled } from '../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
-
-import BalanceChecker from '@airswap/balances/build/contracts/BalanceChecker.sol/BalanceChecker.json'
-import balancesDeploys from '@airswap/balances/deploys.js'
-
-const balancesInterface = new ethers.utils.Interface(
-  JSON.stringify(BalanceChecker.abi)
-)
+import { BatchCall } from '@airswap/libraries'
 
 export default class Balances extends Command {
   public static description = 'display token balances'
@@ -24,16 +18,6 @@ export default class Balances extends Command {
 
       const startTime = Date.now()
 
-      if (!balancesDeploys[chainId]) {
-        throw new Error('Unable to check balances on this chain.')
-      }
-
-      const balancesContract = new ethers.Contract(
-        balancesDeploys[chainId],
-        balancesInterface,
-        wallet
-      )
-
       const addresses = Object.keys(metadata.byAddress)
       for (let i = addresses.length; i >= 0; i--) {
         if (!ethers.utils.isAddress(addresses[i])) {
@@ -43,13 +27,14 @@ export default class Balances extends Command {
 
       this.log(`Checking balances for ${addresses.length} tokens...\n`)
 
+      const batchCallContract = BatchCall.getContract(wallet, chainId)
       const chunk = 750
       const count = addresses.length
       let balances = []
       let index = 0
       while (index < count) {
         balances = balances.concat(
-          await balancesContract.walletBalances(
+          await batchCallContract.walletBalances(
             wallet.address,
             addresses.slice(index, index + chunk)
           )

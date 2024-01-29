@@ -18,7 +18,7 @@ import {
   toAtomicString,
   toDecimalString,
 } from '@airswap/utils'
-import { Protocols } from '@airswap/constants'
+import { ProtocolIds } from '@airswap/utils'
 import { Server } from '@airswap/libraries'
 import readline from 'readline'
 
@@ -73,7 +73,7 @@ export default class Stream extends Command {
 
       const server = await Server.at(url)
 
-      if (server.supportsProtocol(Protocols.LastLookERC20)) {
+      if (server.supportsProtocol(ProtocolIds.LastLookERC20)) {
         senderWallet = await server.getSenderWallet()
         await server.subscribeAllPricingERC20()
         server.on('pricing-erc20', (pricing) => {

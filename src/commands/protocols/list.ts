@@ -6,7 +6,7 @@ import { cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 
-import { protocolNames } from '@airswap/constants'
+import { protocolNames } from '@airswap/utils'
 
 export default class ProtocolsList extends Command {
   public static description = 'list supported protocols from registry'

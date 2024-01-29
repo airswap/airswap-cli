@@ -5,7 +5,7 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { confirm, cancelled, getProtocolList } from '../../lib/prompt'
 
-import { protocolNames } from '@airswap/constants'
+import { protocolNames } from '@airswap/utils'
 import { Registry } from '@airswap/libraries'
 
 export default class ProtocolsRemove extends Command {

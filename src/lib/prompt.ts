@@ -5,7 +5,7 @@ import { table } from 'table'
 import BigNumber from 'bignumber.js'
 import readline from 'readline'
 import * as utils from './utils'
-import { chainNames } from '@airswap/constants'
+import { chainNames } from '@airswap/utils'
 
 prompt.message = ''
 prompt.start()

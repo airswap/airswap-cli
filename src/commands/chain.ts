@@ -1,38 +1,39 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
-import { get, cancelled } from '../lib/prompt'
+import { get } from '../lib/prompt'
 import * as utils from '../lib/utils'
-import { chainNames } from '@airswap/constants'
+import { chainNames } from '@airswap/utils'
 
 export default class Network extends Command {
-  public static description = 'set the active ethereum chain'
+  public static description = 'set the active chain'
   public async run() {
     utils.displayDescription(this, Network.description)
 
+    let chainId
     try {
-      const chainId = await utils.getChainId(this)
+      chainId = await utils.getChainId(this)
       this.log(`Current chain: ${chainId} (${chainNames[chainId]})\n`)
+    } catch (e) {
+      this.log(`Current chain not supported. Set a new one below.\n`)
+    }
 
-      const { newChainId }: any = await get({
-        newChainId: {
-          description: 'New chain id',
-          default: chainId,
-        },
+    const { newChainId }: any = await get({
+      newChainId: {
+        description: 'New chain id',
+        default: chainId,
+      },
+    })
+
+    if (!(newChainId in chainNames)) {
+      this.log(chalk.yellow(`\n${newChainId} is not a supported chain.\n`))
+    } else {
+      await utils.updateConfig(this, {
+        chainId: Number(newChainId),
       })
 
-      if (!(newChainId in chainNames)) {
-        this.log(chalk.yellow(`\n${newChainId} is not a supported chain.\n`))
-      } else {
-        await utils.updateConfig(this, {
-          chainId: Number(newChainId),
-        })
-
-        this.log(
-          chalk.green(`\nSet active chain to ${chainNames[newChainId]}.\n`)
-        )
-      }
-    } catch (e) {
-      cancelled(e)
+      this.log(
+        chalk.green(`\nSet active chain to ${chainNames[newChainId]}.\n`)
+      )
     }
   }
 }

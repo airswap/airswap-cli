@@ -5,7 +5,7 @@ import * as utils from '../lib/utils'
 import { getWallet } from '../lib/wallet'
 import { get, getTokens, confirm, cancelled } from '../lib/prompt'
 
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class Revoke extends Command {

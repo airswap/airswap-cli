@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { get, cancelled } from '../../lib/prompt'
-import { chainNames, explorerUrls } from '@airswap/constants'
+import { chainNames, explorerUrls } from '@airswap/utils'
 
 export default class MetadataDelete extends Command {
   public static description = 'delete token from local metadata'

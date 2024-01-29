@@ -10,10 +10,10 @@ import {
   Protocols,
   protocolNames,
   stakingTokenAddresses,
-} from '@airswap/constants'
+} from '@airswap/utils'
 import { Registry } from '@airswap/libraries'
 
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class ProtocolsAdd extends Command {
   public static description = 'add supported protocols to the registry'

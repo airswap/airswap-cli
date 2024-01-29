@@ -6,10 +6,10 @@ import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { getTokenList, confirm, cancelled } from '../../lib/prompt'
 
-import { stakingTokenAddresses } from '@airswap/constants'
+import { stakingTokenAddresses } from '@airswap/utils'
 import { Registry } from '@airswap/libraries'
 
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class TokensAdd extends Command {
   public static description = 'add supported tokens to the registry'

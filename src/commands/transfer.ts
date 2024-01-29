@@ -5,7 +5,7 @@ import * as utils from '../lib/utils'
 import { getWallet } from '../lib/wallet'
 import { get, confirm, cancelled, getTokens } from '../lib/prompt'
 
-const IERC20 = require('@airswap/tokens/build/contracts/IERC20.json')
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class Transfer extends Command {
   public static description = 'transfer tokens to another account'

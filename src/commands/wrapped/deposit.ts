@@ -7,7 +7,7 @@ import { get, confirm, cancelled } from '../../lib/prompt'
 import { toDecimalString } from '@airswap/utils'
 
 const wethDeploys = require('@airswap/wrapper/deploys-weth.js')
-const WETH9 = require('@airswap/tokens/build/contracts/WETH9.json')
+const WETH9 = require('@airswap/wrapper/build/contracts/WETH9.sol/WETH9.json')
 
 export default class IntentUnset extends Command {
   public static description = 'deposit eth to weth'
