@@ -5,11 +5,10 @@ import * as emoji from 'node-emoji'
 
 import * as fs from 'fs-extra'
 import * as path from 'path'
-import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
 import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airswap/utils'
-import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
+import { DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
 import { getKnownTokens, toDecimalString, orderERC20ToParams } from '@airswap/utils'
@@ -54,12 +53,6 @@ export async function getChainId(ctx: any): Promise<string> {
 
 export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
-  if (INFURA_ID)
-    return chainLabels[chainId]
-      ? `https://${chainLabels[
-          chainId
-        ].toLowerCase()}.infura.io/v3/${INFURA_ID}`
-      : undefined
   return apiUrls[chainId]
 }
 
@@ -108,18 +101,6 @@ export async function updateMetadata(ctx: any, chainId: number) {
   ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
 
   return metadata
-}
-
-export async function getCurrentGasPrices() {
-  const {
-    data: { fastest, fast, average, safeLow },
-  } = await axios(ETH_GAS_STATION_URL)
-  return {
-    fastest: fastest / 10,
-    fast: fast / 10,
-    average: average / 10,
-    safeLow: safeLow / 10,
-  }
 }
 
 export async function getGasPrice(ctx: any, asGwei?: boolean) {
