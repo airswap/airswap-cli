@@ -4,15 +4,9 @@ import { Command } from '@oclif/command'
 import { getTable } from 'console.table'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
-import { confirm, cancelled, getProtocolList } from '../../lib/prompt'
-
-import {
-  Protocols,
-  protocolNames,
-  stakingTokenAddresses,
-} from '@airswap/utils'
+import { get, confirm, cancelled } from '../../lib/prompt'
 import { Registry } from '@airswap/libraries'
-
+import { ProtocolIds, protocolNames } from '@airswap/utils'
 const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class ProtocolsAdd extends Command {
@@ -22,7 +16,6 @@ export default class ProtocolsAdd extends Command {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, ProtocolsAdd.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
@@ -42,19 +35,24 @@ export default class ProtocolsAdd extends Command {
         wallet.address
       )
       if (alreadySupported.length) {
-        this.log(`Your activated protocols:\n`)
+        this.log(`Protocols currently supported:\n`)
         const result = []
-        alreadySupported.map((interfaceId) => {
+        alreadySupported.map((address) => {
+          const token = metadata.byAddress[address.toLowerCase()]
           result.push({
-            ID: interfaceId,
-            Name: protocolNames[interfaceId],
+            symbol: token.symbol,
+            address: token.address,
           })
         })
         this.log(getTable(result))
+      } else {
+        console.log(
+          `${chalk.yellow('Warning')} Not supporting any protocols yet.\n`
+        )
       }
 
       const stakingTokenContract = new ethers.Contract(
-        stakingTokenAddresses[chainId],
+        await registryContract.stakingToken(),
         IERC20.abi,
         wallet
       )
@@ -71,49 +69,59 @@ export default class ProtocolsAdd extends Command {
           )}\n`
         )
       } else {
-        this.log(`All available protocols:\n`)
+        this.log('Available protocol ids:\n')
 
-        const result = []
-        for (const protocol in Protocols) {
-          result.push({
-            ID: Protocols[protocol],
-            Name: protocol,
-          })
+        for (const i in ProtocolIds) {
+          this.log(`· ${ProtocolIds[i]} (${i})`)
         }
-        this.log(getTable(result))
-
-        const protocols: any = await getProtocolList(
-          protocolNames,
-          'protocols to activate (comma separated)'
-        )
-        const protocolIds = []
-        const protocolLabels = []
-
-        for (const interfaceId in protocols) {
-          protocolIds.push(interfaceId)
-          protocolLabels.push(`${interfaceId} (${protocols[interfaceId]})`)
-        }
-
-        const supportCost = (await registryContract.supportCost()).toNumber()
-        const totalCost = supportCost * protocolIds.length
 
         this.log()
-        if (
-          await confirm(
-            this,
-            metadata,
-            'addProtocols',
-            {
-              protocols: protocolLabels.join('\n'),
-              stake: `${totalCost / 10000} AST`,
-            },
-            chainId
+        const { protocolId }: any = await get({
+          protocolId: {
+            type: 'Protocol',
+            description: 'protocol id to activate',
+          },
+        })
+        this.log()
+
+        const stakingToken =
+          metadata.byAddress[stakingTokenContract.address.toLowerCase()]
+        const supportCost = (await registryContract.supportCost()).toNumber()
+        const balance = await stakingTokenContract.balanceOf(wallet.address)
+        if (balance.lt(supportCost)) {
+          this.log(
+            `Insufficient balance in staking token ${stakingToken.symbol} (${stakingToken.address})\n`
           )
-        ) {
-          registryContract
-            .addProtocols(protocolIds, { gasPrice })
-            .then(utils.handleTransaction)
-            .catch(utils.handleError)
+          this.log(
+            `· Balance: ${ethers.utils
+              .formatUnits(balance.toString(), stakingToken.decimals)
+              .toString()}`
+          )
+          this.log(
+            `· Required: ${ethers.utils
+              .formatUnits(supportCost.toString(), stakingToken.decimals)
+              .toString()}\n`
+          )
+        } else {
+          if (
+            await confirm(
+              this,
+              metadata,
+              'addProtocols',
+              {
+                protocols: `${protocolId} (${protocolNames[protocolId]})`,
+                stake: `${ethers.utils
+                  .formatUnits(supportCost.toString(), stakingToken.decimals)
+                  .toString()} ${stakingToken.symbol}`,
+              },
+              chainId
+            )
+          ) {
+            registryContract
+              .addProtocols([protocolId])
+              .then(utils.handleTransaction)
+              .catch(utils.handleError)
+          }
         }
       }
     } catch (e) {

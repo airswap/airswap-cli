@@ -1,11 +1,12 @@
 import chalk from 'chalk'
+import { ethers } from 'ethers'
 import { Command } from '@oclif/command'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { getTokenList, confirm, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
-
 import { Registry } from '@airswap/libraries'
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class TokensRemove extends Command {
   public static description = 'remove supported tokens from the registry'
@@ -14,7 +15,6 @@ export default class TokensRemove extends Command {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, TokensRemove.description, chainId)
 
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
@@ -34,21 +34,30 @@ export default class TokensRemove extends Command {
         wallet.address
       )
       if (alreadySupported.length) {
-        this.log(`Currently supporting the following tokens...\n`)
+        this.log(`Tokens currently supported:\n`)
         const result = []
         alreadySupported.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
-            Symbol: token.symbol,
-            Address: token.address,
+            symbol: token.symbol,
+            address: token.address,
           })
         })
         this.log(getTable(result))
+      } else {
+        this.log(chalk.yellow('No supported tokens'))
+        this.log(`Add tokens you support with ${chalk.bold('tokens:add')}\n`)
+        process.exit(0)
       }
 
+      const stakingTokenContract = new ethers.Contract(
+        await registryContract.stakingToken(),
+        IERC20.abi,
+        wallet
+      )
       const tokens: any = await getTokenList(
         metadata,
-        'tokens to remove (comma separated)'
+        'tokens to deactivate (comma separated)'
       )
       const tokenAddresses = []
       const tokenLabels = []
@@ -57,7 +66,8 @@ export default class TokensRemove extends Command {
         tokenAddresses.push(tokens[i].address)
         tokenLabels.push(`${tokens[i].address} (${tokens[i].symbol})`)
       }
-
+      const stakingToken =
+        metadata.byAddress[stakingTokenContract.address.toLowerCase()]
       const supportCost = (await registryContract.supportCost()).toNumber()
       const totalCost = supportCost * tokenAddresses.length
 
@@ -68,13 +78,15 @@ export default class TokensRemove extends Command {
           'removeTokens',
           {
             tokens: tokenLabels.join('\n'),
-            unstake: `${totalCost / 10000} AST`,
+            unstake: `${ethers.utils
+              .formatUnits(totalCost.toString(), stakingToken.decimals)
+              .toString()} ${stakingToken.symbol}`,
           },
           chainId
         )
       ) {
         registryContract
-          .removeTokens(tokenAddresses, { gasPrice })
+          .removeTokens(tokenAddresses)
           .then(utils.handleTransaction)
           .catch(utils.handleError)
       }

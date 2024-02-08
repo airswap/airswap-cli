@@ -1,6 +1,5 @@
 import { cli } from 'cli-ux'
 import * as jayson from 'jayson'
-import { ethers } from 'ethers'
 import * as url from 'url'
 import {
   isValidOrderERC20,

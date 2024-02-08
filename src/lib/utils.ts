@@ -63,8 +63,7 @@ export async function getProvider(ctx: any) {
 }
 
 export async function getMetadata(ctx: any, chainId: number) {
-  const selectedChain = chainNames[chainId]
-  const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedChain}.json`)
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainLabels[chainId]}.json`)
   if (!(await fs.pathExists(metadataPath))) {
     ctx.log(chalk.yellow('\nFetching remote metadata'))
     await updateMetadata(ctx, chainId)
@@ -81,11 +80,12 @@ export async function getMetadata(ctx: any, chainId: number) {
 export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
   const tokens: any = (await getKnownTokens(Number(chainId))).tokens
-  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainLabels[chainId]}.json`)
 
   const bySymbol: any = {}
   const byAddress: any = {}
   for (const token of tokens) {
+    token.address = token.address.toLowerCase()
     bySymbol[token.symbol] = token
     byAddress[token.address] = token
   }
@@ -180,16 +180,17 @@ export async function handleResponse(
   gasPrice: any,
   ctx: any,
   order: any,
+  url: string,
   errors = []
 ) {
-  if (!order) {
+  if (errors.length) {
     ctx.log(chalk.yellow('No valid responses received.\n'))
     ctx.log('Errors...')
     for (let i = 0; i < errors.length; i ++) {
       ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
     }
     ctx.log()
-  } else {
+  } else if (order) {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
 
@@ -202,7 +203,7 @@ export async function handleResponse(
       await confirm(
         ctx,
         metadata,
-        'light',
+        'swapLight',
         {
           signerWallet: order.signerWallet,
           signerToken: order.signerToken,
@@ -224,6 +225,8 @@ export async function handleResponse(
         .then(handleTransaction)
         .catch(handleError)
     }
+  } else {
+    ctx.log(chalk.yellow('No servers found for protocol RequestForQuoteERC20.\n'))
   }
 }
 

@@ -12,6 +12,7 @@ prompt.start()
 
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
+  Protocol: 'Must be a 4-byte protocol identifier (0x...)',
   Token: `Token not found. Manage local metadata with the ${chalk.bold('metadata')} command`,
   Locator: 'Must be a URL including scheme (e.g. HTTPS, WSS)',
   Number: 'Must be a number',
@@ -23,6 +24,7 @@ const messages = {
 const patterns = {
   Private: /^[a-fA-F0-9]{64}$/,
   Address: /^0x[a-fA-F0-9]{40}$/,
+  Protocol: /^0x[a-fA-F0-9]{8}$/,
   Locator: /^((http|https|ws|wss):\/\/)+(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?(\/[a-z0-9][a-z0-9\-\/]+)?(\/)?$/,
   Number: /^\d*(\.\d+)?$/,
   Side: /^buy$|^sell$/,

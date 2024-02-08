@@ -5,7 +5,6 @@ import { getWallet } from '../../lib/wallet'
 import { cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
-
 import { protocolNames } from '@airswap/utils'
 
 export default class ProtocolsList extends Command {
@@ -24,10 +23,10 @@ export default class ProtocolsList extends Command {
       )
 
       const result = []
-      protocols.map((interfaceId) => {
+      protocols.map((id) => {
         result.push({
-          ID: interfaceId,
-          name: protocolNames[interfaceId],
+          id,
+          label: protocolNames[id],
         })
       })
       if (result.length) {

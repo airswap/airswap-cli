@@ -24,8 +24,8 @@ export default class TokensList extends Command {
       tokens.map((address) => {
         const token = metadata.byAddress[address.toLowerCase()]
         result.push({
-          Symbol: token.symbol,
-          Address: token.address,
+          symbol: token.symbol,
+          address: token.address,
         })
       })
       if (result.length) {
