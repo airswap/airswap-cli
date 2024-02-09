@@ -1,11 +1,14 @@
 import chalk from 'chalk'
 import { Command } from '@oclif/command'
+import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
 import { cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 import { protocolNames } from '@airswap/utils'
+
+const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
 
 export default class RegistryStatus extends Command {
   public static description =
@@ -20,6 +23,24 @@ export default class RegistryStatus extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
+      const stakingTokenContract = new ethers.Contract(
+        await registryContract.stakingToken(),
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await stakingTokenContract.allowance(
+        wallet.address,
+        Registry.getAddress(chainId)
+      )
+      if (allowance.gt(0)) {
+        this.log('✅ Registry is enabled')
+      } else {
+        this.log(chalk.yellow('Registry not approved'))
+        this.log(
+          `Enable usage of the registry with ${chalk.bold('registry:approve')}`
+        )
+      }
+
       const url = (
         await registryContract.getServerURLsForStakers([wallet.address])
       )[0]
@@ -48,7 +69,6 @@ export default class RegistryStatus extends Command {
         this.log(
           `Add protocols you support with ${chalk.bold('protocols:add')}\n`
         )
-        process.exit(0)
       }
 
       const supportedTokens = await registryContract.getTokensForStaker(
@@ -68,7 +88,6 @@ export default class RegistryStatus extends Command {
       } else {
         this.log(chalk.yellow('No activated tokens'))
         this.log(`Add tokens you support with ${chalk.bold('tokens:add')}\n`)
-        process.exit(0)
       }
     } catch (e) {
       cancelled(e)
