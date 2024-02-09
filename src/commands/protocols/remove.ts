@@ -21,16 +21,6 @@ export default class ProtocolsRemove extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
-      const url = (
-        await registryContract.getServerURLsForStakers([wallet.address])
-      )[0]
-      if (!url) {
-        this.log(chalk.yellow('\nServer URL is not set'))
-        this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
-      } else {
-        this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
-      }
-
       const activatedProtocols = await registryContract.getProtocolsForStaker(
         wallet.address
       )

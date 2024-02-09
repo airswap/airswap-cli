@@ -32,7 +32,7 @@ export default class ProtocolsList extends Command {
       if (result.length) {
         this.log(getTable(result))
       } else {
-        this.log(chalk.yellow('No supported protocols'))
+        this.log(chalk.yellow('No activated protocols'))
         this.log(
           `Add protocols you support with ${chalk.bold('protocols:add')}\n`
         )

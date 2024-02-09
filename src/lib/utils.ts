@@ -183,14 +183,7 @@ export async function handleResponse(
   url: string,
   errors = []
 ) {
-  if (errors.length) {
-    ctx.log(chalk.yellow('No valid responses received.\n'))
-    ctx.log('Errors...')
-    for (let i = 0; i < errors.length; i ++) {
-      ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
-    }
-    ctx.log()
-  } else if (order) {
+  if (order) {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
 
@@ -221,12 +214,21 @@ export async function handleResponse(
       )
     ) {
       new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-        .swapLight(...orderERC20ToParams(order), { gasPrice })
+        .swapLight(...orderERC20ToParams(order))
         .then(handleTransaction)
         .catch(handleError)
     }
   } else {
-    ctx.log(chalk.yellow('No servers found for protocol RequestForQuoteERC20.\n'))
+    if (errors.length) {
+      ctx.log(chalk.yellow('No valid responses received.\n'))
+      ctx.log('Errors...')
+      for (let i = 0; i < errors.length; i ++) {
+        ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
+      }
+      ctx.log()
+    } else {
+      ctx.log(`${chalk.yellow('No servers found.')} Protocol: RequestForQuoteERC20\n`)
+    }
   }
 }
 

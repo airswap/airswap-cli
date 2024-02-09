@@ -20,27 +20,46 @@ export default class TokensAdd extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
+      const stakingTokenContract = new ethers.Contract(
+        await registryContract.stakingToken(),
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await stakingTokenContract.allowance(
+        wallet.address,
+        Registry.getAddress(chainId)
+      )
+
+      if (allowance.eq(0)) {
+        this.log(chalk.yellow('Registry is not approved'))
+        this.log(
+          `Enable usage of the registry with ${chalk.bold(
+            'registry:approve'
+          )}\n`
+        )
+        process.exit(0)
+      }
+
       const url = (
         await registryContract.getServerURLsForStakers([wallet.address])
       )[0]
       if (!url) {
-        this.log(chalk.yellow('\nServer URL is not set'))
+        this.log(chalk.yellow('Server URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
+        process.exit(0)
       } else {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const supportedProtocols = await registryContract.getProtocolsForStaker(
+      const activatedProtocols = await registryContract.getProtocolsForStaker(
         wallet.address
       )
-      if (!supportedProtocols.length) {
-        console.log(
-          `${chalk.yellow(
-            'Warning'
-          )} Not supporting any protocols yet. Add one with ${chalk.bold(
-            'protocols:add'
-          )}\n`
+      if (!activatedProtocols.length) {
+        this.log(chalk.yellow('No activated protocols'))
+        this.log(
+          `Add protocols you support with ${chalk.bold('protocols:add')}\n`
         )
+        process.exit(0)
       }
 
       const activatedTokens = await registryContract.getTokensForStaker(
@@ -58,75 +77,55 @@ export default class TokensAdd extends Command {
         })
         this.log(getTable(result))
       }
-
-      const stakingTokenContract = new ethers.Contract(
-        await registryContract.stakingToken(),
-        IERC20.abi,
-        wallet
+      const tokens: any = await getTokenList(
+        metadata,
+        'token symbols to activate (comma separated)'
       )
-      const allowance = await stakingTokenContract.allowance(
-        wallet.address,
-        Registry.getAddress(chainId)
-      )
+      const tokenAddresses = []
+      const tokenLabels = []
 
-      if (allowance.eq(0)) {
-        this.log(chalk.yellow('Registry not enabled'))
+      for (const i in tokens) {
+        tokenAddresses.push(tokens[i].address)
+        tokenLabels.push(`${tokens[i].address} (${tokens[i].symbol})`)
+      }
+      const stakingToken =
+        metadata.byAddress[stakingTokenContract.address.toLowerCase()]
+      const supportCost = (await registryContract.supportCost()).toNumber()
+      const totalCost = supportCost * tokenAddresses.length
+      const balance = await stakingTokenContract.balanceOf(wallet.address)
+      if (balance.lt(totalCost)) {
         this.log(
-          `Enable staking on the Registry with ${chalk.bold(
-            'registry:approve'
-          )}\n`
+          `\nInsufficient balance in staking token ${stakingToken.symbol} (${stakingToken.address})\n`
+        )
+        this.log(
+          `· Balance: ${ethers.utils
+            .formatUnits(balance.toString(), stakingToken.decimals)
+            .toString()}`
+        )
+        this.log(
+          `· Required: ${ethers.utils
+            .formatUnits(totalCost.toString(), stakingToken.decimals)
+            .toString()}\n`
         )
       } else {
-        const tokens: any = await getTokenList(
-          metadata,
-          'token symbols to activate (comma separated)'
-        )
-        const tokenAddresses = []
-        const tokenLabels = []
-
-        for (const i in tokens) {
-          tokenAddresses.push(tokens[i].address)
-          tokenLabels.push(`${tokens[i].address} (${tokens[i].symbol})`)
-        }
-        const stakingToken =
-          metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-        const supportCost = (await registryContract.supportCost()).toNumber()
-        const totalCost = supportCost * tokenAddresses.length
-        const balance = await stakingTokenContract.balanceOf(wallet.address)
-        if (balance.lt(totalCost)) {
-          this.log(
-            `\nInsufficient balance in staking token ${stakingToken.symbol} (${stakingToken.address})\n`
+        if (
+          await confirm(
+            this,
+            metadata,
+            'addTokens',
+            {
+              tokens: tokenLabels.join('\n'),
+              stake: `${ethers.utils
+                .formatUnits(totalCost.toString(), stakingToken.decimals)
+                .toString()} ${stakingToken.symbol}`,
+            },
+            chainId
           )
-          this.log(
-            `· Balance: ${ethers.utils
-              .formatUnits(balance.toString(), stakingToken.decimals)
-              .toString()}`
-          )
-          this.log(
-            `· Required: ${ethers.utils
-              .formatUnits(totalCost.toString(), stakingToken.decimals)
-              .toString()}\n`
-          )
-        } else {
-          if (
-            await confirm(
-              this,
-              metadata,
-              'addTokens',
-              {
-                tokens: tokenLabels.join('\n'),
-                stake: `${ethers.utils
-                  .formatUnits(totalCost.toString(), stakingToken.decimals)
-                  .toString()} ${stakingToken.symbol}`,
-              },
-              chainId
-            )
-          ) {
-            registryContract
-              .addTokens(tokenAddresses)
-              .then(utils.handleTransaction)
-              .catch(utils.handleError)
-          }
+        ) {
+          registryContract
+            .addTokens(tokenAddresses)
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
         }
       }
     } catch (e) {

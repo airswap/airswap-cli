@@ -33,11 +33,13 @@ export default class RegistryStatus extends Command {
         Registry.getAddress(chainId)
       )
       if (allowance.gt(0)) {
-        this.log('✅ Registry is enabled')
+        this.log('✅ Registry is approved for staking\n')
       } else {
-        this.log(chalk.yellow('Registry not approved'))
+        this.log(chalk.yellow('Registry is not approved'))
         this.log(
-          `Enable usage of the registry with ${chalk.bold('registry:approve')}`
+          `Enable usage of the registry with ${chalk.bold(
+            'registry:approve'
+          )}\n`
         )
       }
 
@@ -45,19 +47,19 @@ export default class RegistryStatus extends Command {
         await registryContract.getServerURLsForStakers([wallet.address])
       )[0]
       if (!url) {
-        this.log(chalk.yellow('\nServer URL is not set'))
+        this.log(chalk.yellow('Server URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
       } else {
-        this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
+        this.log(chalk.white(`${chalk.bold('Server URL')}: ${url}\n`))
       }
 
-      const supportedProtocols = await registryContract.getProtocolsForStaker(
+      const activatedProtocols = await registryContract.getProtocolsForStaker(
         wallet.address
       )
-      if (supportedProtocols.length) {
-        this.log(`${chalk.bold('Protocols')} currently activated:\n`)
+      if (activatedProtocols.length) {
+        this.log(`${chalk.bold('Protocols')} activated:\n`)
         const result = []
-        supportedProtocols.map((id) => {
+        activatedProtocols.map((id) => {
           result.push({
             id,
             label: protocolNames[id],
@@ -75,7 +77,7 @@ export default class RegistryStatus extends Command {
         wallet.address
       )
       if (supportedTokens.length) {
-        this.log(`${chalk.bold('Tokens')} currently activated:\n`)
+        this.log(`${chalk.bold('Tokens')} activated:\n`)
         const result = []
         supportedTokens.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]

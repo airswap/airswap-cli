@@ -31,9 +31,9 @@ export default class RegistryURL extends Command {
       )
 
       if (allowance.eq(0)) {
-        this.log(chalk.yellow('Registry not enabled'))
+        this.log(chalk.yellow('Registry is not approved'))
         this.log(
-          `Enable staking on the Registry with ${chalk.bold(
+          `Enable usage of the registry with ${chalk.bold(
             'registry:approve'
           )}\n`
         )

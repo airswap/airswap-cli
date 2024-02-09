@@ -31,7 +31,7 @@ export default class TokensList extends Command {
       if (result.length) {
         this.log(getTable(result))
       } else {
-        this.log(chalk.yellow('No supported tokens'))
+        this.log(chalk.yellow('No activated tokens'))
         this.log(`Add tokens you support with ${chalk.bold('tokens:add')}\n`)
       }
     } catch (e) {

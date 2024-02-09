@@ -21,12 +21,33 @@ export default class ProtocolsAdd extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
+      const stakingTokenContract = new ethers.Contract(
+        await registryContract.stakingToken(),
+        IERC20.abi,
+        wallet
+      )
+      const allowance = await stakingTokenContract.allowance(
+        wallet.address,
+        Registry.getAddress(chainId)
+      )
+
+      if (allowance.eq(0)) {
+        this.log(chalk.yellow('Registry is not approved'))
+        this.log(
+          `Enable usage of the registry with ${chalk.bold(
+            'registry:approve'
+          )}\n`
+        )
+        process.exit(0)
+      }
+
       const url = (
         await registryContract.getServerURLsForStakers([wallet.address])
       )[0]
       if (!url) {
-        this.log(chalk.yellow('\nServer URL is not set'))
+        this.log(chalk.yellow('Server URL is not set'))
         this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
+        process.exit(0)
       } else {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
@@ -45,82 +66,65 @@ export default class ProtocolsAdd extends Command {
         })
         this.log(getTable(result))
       } else {
-        console.log(
-          `${chalk.yellow('Warning')} Not supporting any protocols yet.\n`
-        )
+        this.log(`No protocols are currently activated.\n`)
       }
 
-      const stakingTokenContract = new ethers.Contract(
-        await registryContract.stakingToken(),
-        IERC20.abi,
-        wallet
-      )
-      const allowance = await stakingTokenContract.allowance(
-        wallet.address,
-        Registry.getAddress(chainId)
+      this.log(
+        `${chalk.bold(
+          'Available protocols'
+        )} (More info: https://about.airswap.io/technology/protocols)\n`
       )
 
-      if (allowance.eq(0)) {
-        this.log(chalk.yellow('Registry not enabled'))
+      for (const i in ProtocolIds) {
+        this.log(`· ${ProtocolIds[i]} (${i})`)
+      }
+
+      this.log()
+      const { protocolId }: any = await get({
+        protocolId: {
+          type: 'Protocol',
+          description: 'protocol id to activate',
+        },
+      })
+      this.log()
+
+      const stakingToken =
+        metadata.byAddress[stakingTokenContract.address.toLowerCase()]
+      const supportCost = (await registryContract.supportCost()).toNumber()
+      const balance = await stakingTokenContract.balanceOf(wallet.address)
+      if (balance.lt(supportCost)) {
         this.log(
-          `Enable staking on the Registry with ${chalk.bold(
-            'registry:approve'
-          )}\n`
+          `Insufficient balance in staking token ${stakingToken.symbol} (${stakingToken.address})\n`
+        )
+        this.log(
+          `· Balance: ${ethers.utils
+            .formatUnits(balance.toString(), stakingToken.decimals)
+            .toString()}`
+        )
+        this.log(
+          `· Required: ${ethers.utils
+            .formatUnits(supportCost.toString(), stakingToken.decimals)
+            .toString()}\n`
         )
       } else {
-        this.log('Available protocol ids:\n')
-
-        for (const i in ProtocolIds) {
-          this.log(`· ${ProtocolIds[i]} (${i})`)
-        }
-
-        this.log()
-        const { protocolId }: any = await get({
-          protocolId: {
-            type: 'Protocol',
-            description: 'protocol id to activate',
-          },
-        })
-        this.log()
-
-        const stakingToken =
-          metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-        const supportCost = (await registryContract.supportCost()).toNumber()
-        const balance = await stakingTokenContract.balanceOf(wallet.address)
-        if (balance.lt(supportCost)) {
-          this.log(
-            `Insufficient balance in staking token ${stakingToken.symbol} (${stakingToken.address})\n`
+        if (
+          await confirm(
+            this,
+            metadata,
+            'addProtocols',
+            {
+              protocols: `${protocolId} (${protocolNames[protocolId]})`,
+              stake: `${ethers.utils
+                .formatUnits(supportCost.toString(), stakingToken.decimals)
+                .toString()} ${stakingToken.symbol}`,
+            },
+            chainId
           )
-          this.log(
-            `· Balance: ${ethers.utils
-              .formatUnits(balance.toString(), stakingToken.decimals)
-              .toString()}`
-          )
-          this.log(
-            `· Required: ${ethers.utils
-              .formatUnits(supportCost.toString(), stakingToken.decimals)
-              .toString()}\n`
-          )
-        } else {
-          if (
-            await confirm(
-              this,
-              metadata,
-              'addProtocols',
-              {
-                protocols: `${protocolId} (${protocolNames[protocolId]})`,
-                stake: `${ethers.utils
-                  .formatUnits(supportCost.toString(), stakingToken.decimals)
-                  .toString()} ${stakingToken.symbol}`,
-              },
-              chainId
-            )
-          ) {
-            registryContract
-              .addProtocols([protocolId])
-              .then(utils.handleTransaction)
-              .catch(utils.handleError)
-          }
+        ) {
+          registryContract
+            .addProtocols([protocolId])
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
         }
       }
     } catch (e) {

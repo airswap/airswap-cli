@@ -20,15 +20,6 @@ export default class TokensRemove extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
-      const url = (
-        await registryContract.getServerURLsForStakers([wallet.address])
-      )[0]
-      if (!url) {
-        this.log(chalk.yellow('\nServer URL is not set'))
-        this.log(`Set your server URL with ${chalk.bold('registry:url')}\n`)
-      } else {
-        this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
-      }
 
       const activatedTokens = await registryContract.getTokensForStaker(
         wallet.address
@@ -45,7 +36,7 @@ export default class TokensRemove extends Command {
         })
         this.log(getTable(result))
       } else {
-        this.log(chalk.yellow('No supported tokens'))
+        this.log(chalk.yellow('No activated tokens'))
         this.log(`Add tokens you support with ${chalk.bold('tokens:add')}\n`)
         process.exit(0)
       }
