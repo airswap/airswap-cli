@@ -180,7 +180,6 @@ export async function handleResponse(
   gasPrice: any,
   ctx: any,
   order: any,
-  url: string,
   errors = []
 ) {
   if (order) {

@@ -12,7 +12,7 @@ import {
   confirm,
 } from '../lib/prompt'
 import {
-  getCostFromPricing,
+  getPriceForAmount,
   createOrderERC20,
   createOrderERC20Signature,
   toAtomicString,
@@ -79,7 +79,7 @@ export default class Stream extends Command {
         server.on('pricing-erc20', (pricing) => {
           try {
             if (side === 'buy') {
-              signerAmount = getCostFromPricing(
+              signerAmount = getPriceForAmount(
                 'buy',
                 senderAmount,
                 senderToken.address,
@@ -87,7 +87,7 @@ export default class Stream extends Command {
                 pricing
               )
             } else {
-              senderAmount = getCostFromPricing(
+              senderAmount = getPriceForAmount(
                 'sell',
                 signerAmount,
                 signerToken.address,
