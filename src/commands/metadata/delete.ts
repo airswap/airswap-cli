@@ -18,7 +18,7 @@ export default class MetadataDelete extends Command {
 
       const metadataPath = path.join(
         this.config.configDir,
-        `metadata-${chainNames[chainId]}.json`
+        `metadata-${chainLabels[chainId]}.json`
       )
 
       const { needle }: any = await get({

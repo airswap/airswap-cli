@@ -7,7 +7,7 @@ import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 
 export default class TokensList extends Command {
-  public static description = 'list supported tokens from registry'
+  public static description = 'list activated tokens'
   public async run() {
     try {
       const wallet = await getWallet(this, true)
@@ -24,14 +24,14 @@ export default class TokensList extends Command {
       tokens.map((address) => {
         const token = metadata.byAddress[address.toLowerCase()]
         result.push({
-          Symbol: token.symbol,
-          Address: token.address,
+          symbol: token.symbol,
+          address: token.address,
         })
       })
       if (result.length) {
         this.log(getTable(result))
       } else {
-        this.log(chalk.yellow('No supported tokens'))
+        this.log(chalk.yellow('No activated tokens'))
         this.log(`Add tokens you support with ${chalk.bold('tokens:add')}\n`)
       }
     } catch (e) {

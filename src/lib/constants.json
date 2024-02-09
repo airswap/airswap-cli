@@ -5,6 +5,5 @@
   "DEFAULT_GAS_PRICE": "5",
   "DEFAULT_PORT": 3000,
   "ETH_GAS_STATION_URL": "https://ethgasstation.info/json/ethgasAPI.json",
-  "INFURA_ID": "bfed78c822b04995b30ea4ef5f6e18c7",
   "REQUEST_TIMEOUT": 4000
 }

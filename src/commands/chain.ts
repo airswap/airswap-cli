@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { Command } from '@oclif/command'
 import { get } from '../lib/prompt'
 import * as utils from '../lib/utils'
-import { chainNames } from '@airswap/utils'
+import { ChainIds, chainNames } from '@airswap/utils'
 
 export default class Network extends Command {
   public static description = 'set the active chain'
@@ -17,6 +17,13 @@ export default class Network extends Command {
       this.log(`Current chain not supported. Set a new one below.\n`)
     }
 
+    this.log('Available chains ids:\n')
+
+    for (const chainId in ChainIds) {
+      if (!isNaN(+chainId)) this.log(`· ${chainId} (${chainNames[chainId]})`)
+    }
+
+    this.log()
     const { newChainId }: any = await get({
       newChainId: {
         description: 'New chain id',

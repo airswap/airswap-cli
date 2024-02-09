@@ -5,11 +5,10 @@ import * as emoji from 'node-emoji'
 
 import * as fs from 'fs-extra'
 import * as path from 'path'
-import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
 import { chainNames, explorerUrls, ChainIds, apiUrls, chainLabels } from '@airswap/utils'
-import { ETH_GAS_STATION_URL, DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE, INFURA_ID } from './constants.json'
+import { DEFAULT_CONFIRMATIONS, DEFAULT_GAS_PRICE } from './constants.json'
 import { printOrder, confirm } from './prompt'
 
 import { getKnownTokens, toDecimalString, orderERC20ToParams } from '@airswap/utils'
@@ -54,12 +53,6 @@ export async function getChainId(ctx: any): Promise<string> {
 
 export async function getNodeURL(ctx): Promise<string> {
   const chainId = await getChainId(ctx)
-  if (INFURA_ID)
-    return chainLabels[chainId]
-      ? `https://${chainLabels[
-          chainId
-        ].toLowerCase()}.infura.io/v3/${INFURA_ID}`
-      : undefined
   return apiUrls[chainId]
 }
 
@@ -70,8 +63,7 @@ export async function getProvider(ctx: any) {
 }
 
 export async function getMetadata(ctx: any, chainId: number) {
-  const selectedChain = chainNames[chainId]
-  const metadataPath = path.join(ctx.config.configDir, `metadata-${selectedChain}.json`)
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainLabels[chainId]}.json`)
   if (!(await fs.pathExists(metadataPath))) {
     ctx.log(chalk.yellow('\nFetching remote metadata'))
     await updateMetadata(ctx, chainId)
@@ -88,11 +80,12 @@ export async function getMetadata(ctx: any, chainId: number) {
 export async function updateMetadata(ctx: any, chainId: number) {
   const startTime = Date.now()
   const tokens: any = (await getKnownTokens(Number(chainId))).tokens
-  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainNames[chainId]}.json`)
+  const metadataPath = path.join(ctx.config.configDir, `metadata-${chainLabels[chainId]}.json`)
 
   const bySymbol: any = {}
   const byAddress: any = {}
   for (const token of tokens) {
+    token.address = token.address.toLowerCase()
     bySymbol[token.symbol] = token
     byAddress[token.address] = token
   }
@@ -108,18 +101,6 @@ export async function updateMetadata(ctx: any, chainId: number) {
   ctx.log(chalk.green(`\nLocal metadata updated. (${Date.now() - startTime}ms)\n`))
 
   return metadata
-}
-
-export async function getCurrentGasPrices() {
-  const {
-    data: { fastest, fast, average, safeLow },
-  } = await axios(ETH_GAS_STATION_URL)
-  return {
-    fastest: fastest / 10,
-    fast: fast / 10,
-    average: average / 10,
-    safeLow: safeLow / 10,
-  }
 }
 
 export async function getGasPrice(ctx: any, asGwei?: boolean) {
@@ -199,16 +180,10 @@ export async function handleResponse(
   gasPrice: any,
   ctx: any,
   order: any,
+  url: string,
   errors = []
 ) {
-  if (!order) {
-    ctx.log(chalk.yellow('No valid responses received.\n'))
-    ctx.log('Errors...')
-    for (let i = 0; i < errors.length; i ++) {
-      ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
-    }
-    ctx.log()
-  } else {
+  if (order) {
     ctx.log()
     ctx.log(chalk.underline.bold(`Signer: ${order.signerWallet}\n`))
 
@@ -221,7 +196,7 @@ export async function handleResponse(
       await confirm(
         ctx,
         metadata,
-        'light',
+        'swapLight',
         {
           signerWallet: order.signerWallet,
           signerToken: order.signerToken,
@@ -239,9 +214,20 @@ export async function handleResponse(
       )
     ) {
       new ethers.Contract(swapDeploys[chainId], Swap.abi, wallet)
-        .swapLight(...orderERC20ToParams(order), { gasPrice })
+        .swapLight(...orderERC20ToParams(order))
         .then(handleTransaction)
         .catch(handleError)
+    }
+  } else {
+    if (errors.length) {
+      ctx.log(chalk.yellow('No valid responses received.\n'))
+      ctx.log('Errors...')
+      for (let i = 0; i < errors.length; i ++) {
+        ctx.log(`· ${chalk.bold(errors[i].message)}`, `(${errors[i].locator})`)
+      }
+      ctx.log()
+    } else {
+      ctx.log(`${chalk.yellow('No servers found.')} Protocol: RequestForQuoteERC20\n`)
     }
   }
 }

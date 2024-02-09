@@ -19,7 +19,7 @@ export default class IntentUnset extends Command {
       const gasPrice = await utils.getGasPrice(this)
       utils.displayDescription(this, IntentUnset.description, chainId)
 
-      const WETH = metadata.byAddress[wethDeploys[chainId]]
+      const WETH = metadata.byAddress[wethDeploys[chainId].toLowerCase()]
       if (!WETH) {
         throw new Error('Wrapped token not found for the selected chain.')
       }
