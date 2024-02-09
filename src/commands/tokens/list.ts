@@ -7,7 +7,7 @@ import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 
 export default class TokensList extends Command {
-  public static description = 'list supported tokens from registry'
+  public static description = 'list activated tokens'
   public async run() {
     try {
       const wallet = await getWallet(this, true)

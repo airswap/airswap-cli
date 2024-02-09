@@ -8,7 +8,7 @@ import { Registry } from '@airswap/libraries'
 import { protocolNames } from '@airswap/utils'
 
 export default class ProtocolsList extends Command {
-  public static description = 'list supported protocols from registry'
+  public static description = 'list activated protocols'
   public async run() {
     try {
       const wallet = await getWallet(this, true)

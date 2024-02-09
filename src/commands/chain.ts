@@ -19,8 +19,8 @@ export default class Network extends Command {
 
     this.log('Available chains ids:\n')
 
-    for (const i in ChainIds) {
-      if (!isNaN(+i)) this.log(`· ${i} (${chainNames[i]})`)
+    for (const chainId in ChainIds) {
+      if (!isNaN(+chainId)) this.log(`· ${chainId} (${chainNames[chainId]})`)
     }
 
     this.log()

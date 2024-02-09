@@ -30,13 +30,13 @@ export default class TokensRemove extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getTokensForStaker(
+      const activatedTokens = await registryContract.getTokensForStaker(
         wallet.address
       )
-      if (alreadySupported.length) {
-        this.log(`Tokens currently supported:\n`)
+      if (activatedTokens.length) {
+        this.log(`Tokens currently activated:\n`)
         const result = []
-        alreadySupported.map((address) => {
+        activatedTokens.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
             symbol: token.symbol,

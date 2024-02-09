@@ -31,13 +31,13 @@ export default class ProtocolsRemove extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getProtocolsForStaker(
+      const activatedProtocols = await registryContract.getProtocolsForStaker(
         wallet.address
       )
-      if (alreadySupported.length) {
+      if (activatedProtocols.length) {
         this.log(`Protocols currently activated:\n`)
         const result = []
-        alreadySupported.map((id) => {
+        activatedProtocols.map((id) => {
           result.push({
             id,
             label: protocolNames[id],

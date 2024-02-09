@@ -31,17 +31,16 @@ export default class ProtocolsAdd extends Command {
         this.log(chalk.white(`Server URL ${chalk.bold(url)}\n`))
       }
 
-      const alreadySupported = await registryContract.getProtocolsForStaker(
+      const activatedProtocols = await registryContract.getProtocolsForStaker(
         wallet.address
       )
-      if (alreadySupported.length) {
-        this.log(`Protocols currently supported:\n`)
+      if (activatedProtocols.length) {
+        this.log(`Protocols currently activated:\n`)
         const result = []
-        alreadySupported.map((address) => {
-          const token = metadata.byAddress[address.toLowerCase()]
+        activatedProtocols.map((id) => {
           result.push({
-            symbol: token.symbol,
-            address: token.address,
+            id,
+            label: protocolNames[id],
           })
         })
         this.log(getTable(result))
