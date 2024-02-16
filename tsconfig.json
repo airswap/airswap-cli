@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "importHelpers": true,
-    "module": "commonjs",
     "outDir": "lib",
-    "rootDir": "src",
-    "target": "es2017",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "sourceMap": true,
+    "declaration": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
