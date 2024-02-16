@@ -19,11 +19,10 @@ import {
   toDecimalString,
 } from '@airswap/utils'
 import { ProtocolIds } from '@airswap/utils'
-import { Server } from '@airswap/libraries'
+import { Server, SwapERC20 } from '@airswap/libraries'
 import readline from 'readline'
 
 const constants = require('../lib/constants.json')
-const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class Stream extends Command {
   public static description = 'stream quotes for a swap'
@@ -52,7 +51,7 @@ export default class Stream extends Command {
       )
       this.log('\n\n\n')
 
-      const swapContract = swapDeploys[chainId]
+      const swapContract = SwapERC20.getAddress(chainId)
       let signerToken
       let senderToken
       let signerAmount
@@ -131,10 +130,15 @@ export default class Stream extends Command {
         taking = true
         rl.close()
 
+        const protocolFee = await SwapERC20.getContract(
+          wallet.provider,
+          chainId
+        ).protocolFee()
+
         const order = createOrderERC20({
           nonce: String(Date.now()),
           expiry: String(Math.round(Date.now() / 1000) + 120),
-          protocolFee: '7',
+          protocolFee: protocolFee.toNumber(),
           signerWallet: wallet.address,
           signerToken: signerToken.address,
           signerAmount: toAtomicString(signerAmount, signerToken.decimals),
