@@ -13,12 +13,12 @@ prompt.start()
 const messages = {
   Address: 'Must be an Ethereum address (0x...)',
   Protocol: 'Must be a 4-byte protocol identifier (0x...)',
-  Token: `Token not found. Manage local metadata with the ${chalk.bold('metadata')} command`,
+  Token: `Token not found. Add with ${chalk.bold('metadata:add')}`,
   Locator: 'Must be a URL including scheme (e.g. HTTPS, WSS)',
   Number: 'Must be a number',
   Private: 'Private key must be 64 characters long',
   Side: 'Must be buy or sell',
-  TokenList: 'One or more symbols not in metadata',
+  TokenList: `One or more symbols not found. Add with ${chalk.bold('metadata:add')}`,
   ProtocolList: 'One or more protocols not supported',
 }
 const patterns = {

@@ -18,14 +18,16 @@ export default class TokensList extends Command {
       this.log(chalk.white(`Registry ${Registry.getAddress(chainId)}\n`))
 
       const registryContract = Registry.getContract(wallet, chainId)
-      const tokens = await registryContract.getTokensForStaker(wallet.address)
+      const activatedTokens = await registryContract.getTokensForStaker(
+        wallet.address
+      )
 
       const result = []
-      tokens.map((address) => {
+      activatedTokens.map((address) => {
         const token = metadata.byAddress[address.toLowerCase()]
         result.push({
-          symbol: token.symbol,
-          address: token.address,
+          address: token ? token.address : address,
+          symbol: token ? token.symbol : '?',
         })
       })
       if (result.length) {

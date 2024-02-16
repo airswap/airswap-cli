@@ -71,8 +71,8 @@ export default class TokensAdd extends Command {
         activatedTokens.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
-            symbol: token.symbol,
-            address: token.address,
+            address: token ? token.address : address,
+            symbol: token ? token.symbol : '?',
           })
         })
         this.log(getTable(result))

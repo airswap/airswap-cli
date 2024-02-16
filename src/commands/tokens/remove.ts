@@ -30,8 +30,8 @@ export default class TokensRemove extends Command {
         activatedTokens.map((address) => {
           const token = metadata.byAddress[address.toLowerCase()]
           result.push({
-            symbol: token.symbol,
-            address: token.address,
+            address: token ? token.address : address,
+            symbol: token ? token.symbol : '[Unknown]',
           })
         })
         this.log(getTable(result))
