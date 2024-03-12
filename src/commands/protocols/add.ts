@@ -90,7 +90,7 @@ export default class ProtocolsAdd extends Command {
 
       const stakingToken =
         metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-      const supportCost = (await registryContract.supportCost()).toNumber()
+      const supportCost = await registryContract.supportCost()
       const balance = await stakingTokenContract.balanceOf(wallet.address)
       if (balance.lt(supportCost)) {
         this.log(

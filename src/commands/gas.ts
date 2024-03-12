@@ -15,11 +15,7 @@ export default class Gas extends Command {
       const gasPrice = await utils.getGasPrice(this, true)
       const gasPriceNetwork = await wallet.getGasPrice()
 
-      this.log(
-        `\nCurrent network gas price: ${Math.round(
-          gasPriceNetwork.toNumber() / 10 ** 9
-        )}`
-      )
+      this.log(`\nCurrent network gas price: ${gasPriceNetwork.div(10 ** 9)}`)
       this.log(`Configured gas price: ${gasPrice}\n`)
 
       const { newGasPrice }: any = await get({

@@ -90,8 +90,8 @@ export default class TokensAdd extends Command {
       }
       const stakingToken =
         metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-      const supportCost = (await registryContract.supportCost()).toNumber()
-      const totalCost = supportCost * tokenAddresses.length
+      const supportCost = await registryContract.supportCost()
+      const totalCost = supportCost.mul(tokenAddresses.length)
       const balance = await stakingTokenContract.balanceOf(wallet.address)
       if (balance.lt(totalCost)) {
         this.log(

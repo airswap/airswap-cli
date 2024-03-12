@@ -58,7 +58,7 @@ export default class ProtocolsRemove extends Command {
 
       const stakingToken =
         metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-      const supportCost = (await registryContract.supportCost()).toNumber()
+      const supportCost = await registryContract.supportCost()
 
       if (
         await confirm(

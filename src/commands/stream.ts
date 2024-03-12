@@ -138,7 +138,7 @@ export default class Stream extends Command {
         const order = createOrderERC20({
           nonce: String(Date.now()),
           expiry: String(Math.round(Date.now() / 1000) + 120),
-          protocolFee: protocolFee.toNumber(),
+          protocolFee: protocolFee.toString(),
           signerWallet: wallet.address,
           signerToken: signerToken.address,
           signerAmount: toAtomicString(signerAmount, signerToken.decimals),

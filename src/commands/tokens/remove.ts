@@ -59,8 +59,8 @@ export default class TokensRemove extends Command {
       }
       const stakingToken =
         metadata.byAddress[stakingTokenContract.address.toLowerCase()]
-      const supportCost = (await registryContract.supportCost()).toNumber()
-      const totalCost = supportCost * tokenAddresses.length
+      const supportCost = await registryContract.supportCost()
+      const totalCost = supportCost.mul(tokenAddresses.length)
 
       if (
         await confirm(
