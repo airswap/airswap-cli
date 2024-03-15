@@ -19,7 +19,7 @@
   dependencies:
     get-parameter-names "^0.3.0"
 
-"@airswap/libraries@^4.3.4":
+"@airswap/libraries@4.3.4":
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/@airswap/libraries/-/libraries-4.3.4.tgz#3f56e7ef01842934be44b9f97f93e248c8b159b2"
   integrity sha512-MCEBn7yZa1vSALSABUWsPUOcNH+fSc1uRQKK3CGBH29y1ZaaMVdrekeYZXckjjEpJvIaUx3tX/bHE2hrQR89Iw==
