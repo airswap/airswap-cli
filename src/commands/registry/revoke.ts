@@ -8,7 +8,7 @@ import { REVOKE_AMOUNT } from '../../lib/constants.json'
 
 import { Registry } from '@airswap/libraries'
 
-const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
+const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 
 export default class RegistryRevoke extends Command {
   public static description = 'disable staking on the registry'

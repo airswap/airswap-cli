@@ -7,7 +7,7 @@ import { get, confirm, cancelled } from '../../lib/prompt'
 import { getTable } from 'console.table'
 import { Registry } from '@airswap/libraries'
 import { protocolNames } from '@airswap/utils'
-const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
+const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 
 export default class ProtocolsRemove extends Command {
   public static description = 'remove supported protocols from the registry'

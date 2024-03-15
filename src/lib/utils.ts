@@ -15,7 +15,7 @@ import { getKnownTokens, toDecimalString, orderERC20ToParams } from '@airswap/ut
 
 const Swap = require('@airswap/swap-erc20/build/contracts/SwapERC20.sol/SwapERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
-const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
+const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 
 export function displayDescription(ctx: any, title: string, chainId?: number) {
   let chainName = ''

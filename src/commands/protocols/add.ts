@@ -7,7 +7,7 @@ import { getWallet } from '../../lib/wallet'
 import { get, confirm, cancelled } from '../../lib/prompt'
 import { Registry } from '@airswap/libraries'
 import { ProtocolIds, protocolNames } from '@airswap/utils'
-const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
+const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 
 export default class ProtocolsAdd extends Command {
   public static description = 'add supported protocols to the registry'

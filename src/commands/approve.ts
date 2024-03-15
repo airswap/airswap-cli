@@ -6,7 +6,7 @@ import { getWallet } from '../lib/wallet'
 import { getTokens, confirm, cancelled } from '../lib/prompt'
 import constants from '../lib/constants.json'
 
-const IERC20 = require('@openzeppelin/contracts/build/contracts/IERC20.json')
+const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 const swapDeploys = require('@airswap/swap-erc20/deploys.js')
 
 export default class Approve extends Command {
