@@ -31,36 +31,27 @@ export default class DelegateUnsetRule extends Command {
           type: 'Address',
         },
       })
-      await this.validateSenderWallet(senderWallet, wallet, delegateContract)
 
       const { senderToken }: any = await get({
         senderToken: {
           description: 'Sender token',
-          type: 'Address',
+          type: 'Token',
         },
       })
-      const senderTokenSymbol = await this.validateERC20Address(
-        senderToken,
-        wallet
-      )
 
       const { signerToken }: any = await get({
         signerToken: {
-          description: 'Sender token',
-          type: 'Address',
+          description: 'Signer token',
+          type: 'Token',
         },
       })
-      const signerTokenSymbol = await this.validateERC20Address(
-        signerToken,
-        wallet
-      )
 
       this.log(
         chalk.white(
           `Unsetting delegate rule: \n
           senderWallet: ${senderWallet}\n
-          senderToken: ${senderTokenSymbol}\n
-          signerToken: ${signerTokenSymbol}\n`
+          senderToken: ${senderToken}\n
+          signerToken: ${signerToken}\n`
         )
       )
       const { confirmation }: any = await get({
@@ -69,7 +60,6 @@ export default class DelegateUnsetRule extends Command {
           type: 'String',
         },
       })
-      console.log(confirmation)
       if (confirmation !== 'y') {
         this.log(chalk.yellow('Rule unsetting failed'))
         process.exit(0)
@@ -80,36 +70,6 @@ export default class DelegateUnsetRule extends Command {
         .catch(utils.handleError)
     } catch (e) {
       cancelled(e)
-    }
-  }
-
-  public async validateERC20Address(address: string, wallet: any) {
-    const senderTokenContract = new ethers.Contract(address, IERC20.abi, wallet)
-    if (!senderTokenContract) {
-      throw new Error(`Address ${address}: Invalid ERC20 token.`)
-    } else {
-      try {
-        const senderTokenSymbol: string = await senderTokenContract.symbol()
-        if (!senderTokenSymbol) {
-          throw new Error(`Address ${address}: Invalid ERC20 token.`)
-        }
-        return senderTokenSymbol
-      } catch (e) {
-        throw new Error(`Address ${address}: Invalid ERC20 token.`)
-      }
-    }
-  }
-
-  public async validateSenderWallet(
-    address: string,
-    wallet: any,
-    delegateContract: any
-  ) {
-    if (address !== wallet.address) {
-      const { authorizedWallet } = await delegateContract.authorized(address)
-      if (!authorizedWallet || authorizedWallet !== wallet.address) {
-        throw new Error(`Address ${address}: Unauthorized wallet.`)
-      }
     }
   }
 }

@@ -54,7 +54,7 @@ export default class DelegateSetRule extends Command {
 
       const { signerToken }: any = await get({
         signerToken: {
-          description: 'Sender token',
+          description: 'Signer token',
           type: 'Address',
         },
       })
@@ -102,6 +102,28 @@ export default class DelegateSetRule extends Command {
         )
         .then(utils.handleTransaction)
         .catch(utils.handleError)
+
+      if (senderWallet === wallet.address) {
+        const senderTokenContract = new ethers.Contract(
+          senderToken,
+          IERC20.abi,
+          wallet
+        )
+        const { setApproval }: any = await get({
+          setApproval: {
+            description: `Approve ${
+              delegateContract.address
+            } to spend ${senderAmount} ${await senderTokenContract.symbol()} (y/n)?`,
+            type: 'String',
+          },
+        })
+        if (setApproval) {
+          await senderTokenContract
+            .approve(delegateContract.address, senderAmount)
+            .then(utils.handleTransaction)
+            .catch(utils.handleError)
+        }
+      }
     } catch (e) {
       cancelled(e)
     }
