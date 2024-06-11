@@ -95,7 +95,7 @@ export default class DelegateSetRule extends Command {
       await delegateContract
         .setRule(
           senderWallet,
-          signerToken,
+          senderToken,
           senderAmount,
           signerToken,
           signerAmount

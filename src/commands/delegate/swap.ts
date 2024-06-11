@@ -57,7 +57,7 @@ export default class DelegateSetRule extends Command {
 
       const { signerToken }: any = await get({
         signerToken: {
-          description: 'Sender token',
+          description: 'Signer token',
           type: 'Token',
         },
       })
