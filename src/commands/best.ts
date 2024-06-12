@@ -21,6 +21,8 @@ export default class Best extends Command {
         wallet,
         request.method,
         request.params,
+        request.senderToken.address,
+        request.signerToken.address,
         (order: any, results: any, errors: any) => {
           utils.handleResponse(
             request,

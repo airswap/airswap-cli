@@ -58,10 +58,12 @@ export async function multiPeerCall(
   wallet: any,
   method: string,
   params: any,
+  senderToken: string,
+  signerToken: string,
   callback: any,
 ) {
   const chainId = (await wallet.provider.getNetwork()).chainId
-  const locators = await Registry.getServerURLs(wallet, chainId, ProtocolIds.RequestForQuoteERC20)
+  const locators = await Registry.getServerURLs(wallet, chainId, ProtocolIds.RequestForQuoteERC20, senderToken, signerToken)
 
   if (!locators.length) {
     callback()
