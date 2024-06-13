@@ -22,6 +22,7 @@
     "pretty:fix": "prettier --write \"./**/*.ts\""
   },
   "dependencies": {
+    "@airswap/delegate": "4.3.0-beta.0",
     "@airswap/libraries": "4.3.4",
     "@oclif/command": "^1.8.22",
     "@oclif/config": "^1.18.8",
