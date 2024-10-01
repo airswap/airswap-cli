@@ -1,7 +1,7 @@
 {
   "name": "airswap",
   "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "4.3.2",
+  "version": "5.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "pretty:fix": "prettier --write \"./**/*.ts\""
   },
   "dependencies": {
-    "@airswap/libraries": "4.3.4",
+    "@airswap/libraries": "5.0.1",
     "@oclif/command": "^1.8.22",
     "@oclif/config": "^1.18.8",
     "@oclif/plugin-help": "^5.2.6",
