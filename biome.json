@@ -1,0 +1,12 @@
+{
+	"files": {
+		"ignore": ["bin", "lib", "node_modules"]
+	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	}
+}

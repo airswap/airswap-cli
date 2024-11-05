@@ -1,9 +1,9 @@
 {
-  "APPROVAL_AMOUNT": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-  "REVOKE_AMOUNT": "0",
-  "DEFAULT_CONFIRMATIONS": 2,
-  "DEFAULT_GAS_PRICE": "5",
-  "DEFAULT_PORT": 3000,
-  "ETH_GAS_STATION_URL": "https://ethgasstation.info/json/ethgasAPI.json",
-  "REQUEST_TIMEOUT": 4000
+	"APPROVAL_AMOUNT": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+	"REVOKE_AMOUNT": "0",
+	"DEFAULT_CONFIRMATIONS": 2,
+	"DEFAULT_GAS_PRICE": "5",
+	"DEFAULT_PORT": 3000,
+	"ETH_GAS_STATION_URL": "https://ethgasstation.info/json/ethgasAPI.json",
+	"REQUEST_TIMEOUT": 4000
 }
