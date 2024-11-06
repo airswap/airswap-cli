@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import chalk from "chalk";
 import { ethers } from "ethers";
-import { getChainId, getProvider } from "./utils";
+import { getChainId, getConfig, getProvider } from "./utils";
 
 export function requireKeytar() {
 	try {
@@ -18,17 +18,21 @@ export function requireKeytar() {
 import { chainCurrencies } from "@airswap/utils";
 
 export async function getWallet(ctx: any, requireBalance?: boolean) {
-	const keytar = requireKeytar();
-	const account = await keytar.getPassword("airswap-cli", "private-key");
-
-	if (!account) {
+	let key;
+	if (process.env.AIRSWAP_CLI_PRIVATE_KEY) {
+		key = process.env.AIRSWAP_CLI_PRIVATE_KEY;
+	} else {
+		const config = await getConfig(ctx);
+		key = config.key;
+	}
+	if (!key) {
 		throw new Error(
 			`No account set. Set one with ${chalk.bold("account:import")}`,
 		);
 	} else {
 		const chainId = await getChainId(ctx);
 		const selectedCurrency = chainCurrencies[chainId];
-		const signerPrivateKey = Buffer.from(account, "hex");
+		const signerPrivateKey = Buffer.from(key, "hex");
 		const provider = await getProvider(ctx);
 		const wallet = new ethers.Wallet(signerPrivateKey, provider);
 
