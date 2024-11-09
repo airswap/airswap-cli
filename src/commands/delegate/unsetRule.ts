@@ -3,7 +3,7 @@ import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
-import { get, cancelled, confirm } from '../../lib/prompt'
+import { get, cancelled, confirm, getTokens } from '../../lib/prompt'
 const Delegate = require('@airswap/delegate/build/contracts/Delegate.sol/Delegate.json')
 const delegateDeploys = require('@airswap/delegate/deploys.js')
 
@@ -32,19 +32,15 @@ export default class DelegateUnsetRule extends Command {
         },
       })
 
-      const { senderToken }: any = await get({
-        senderToken: {
-          description: 'Sender token',
-          type: 'Token',
-        },
-      })
+      const { senderToken }: any = await getTokens(
+        { token: 'senderToken' },
+        metadata
+      )
 
-      const { signerToken }: any = await get({
-        signerToken: {
-          description: 'Signer token',
-          type: 'Token',
-        },
-      })
+      const { signerToken }: any = await getTokens(
+        { token: 'signerToken' },
+        metadata
+      )
 
       this.log(
         chalk.white(
