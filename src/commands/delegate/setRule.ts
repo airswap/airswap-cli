@@ -50,6 +50,7 @@ export default class DelegateSetRule extends Command {
           type: 'Amount',
         },
       })
+
       await this.validateAmount(senderAmount)
 
       const { signerToken }: any = await getTokens(

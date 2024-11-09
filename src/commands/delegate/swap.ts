@@ -3,7 +3,13 @@ import { Command } from '@oclif/command'
 import { ethers } from 'ethers'
 import * as utils from '../../lib/utils'
 import { getWallet } from '../../lib/wallet'
-import { get, cancelled, confirm, getTokens } from '../../lib/prompt'
+import { get, cancelled, confirm } from '../../lib/prompt'
+import {
+  createOrderERC20,
+  toAtomicString,
+  createOrderERC20Signature,
+} from '@airswap/utils'
+import { SwapERC20 } from '@airswap/libraries'
 const Delegate = require('@airswap/delegate/build/contracts/Delegate.sol/Delegate.json')
 const delegateDeploys = require('@airswap/delegate/deploys.js')
 const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
@@ -27,97 +33,59 @@ export default class DelegateSetRule extends Command {
 
       this.log(chalk.white(`Delegate contract: ${delegateContract.address}\n`))
 
-      const { senderWallet }: any = await get({
+      const {
+        senderWallet,
+        senderAmount,
+        senderToken,
+        signerToken,
+        signerAmount,
+      }: any = await get({
         senderWallet: {
-          description: 'Sender wallet',
+          description: 'from',
           type: 'Address',
         },
-      })
-      await this.validateSenderWallet(senderWallet, wallet, delegateContract)
-
-      const { nonce }: any = await get({
-        nonce: {
-          description: 'Nonce',
-          type: 'Number',
-        },
-      })
-
-      const { expiry }: any = await get({
-        expiry: {
-          description: 'Expiry',
-          type: 'Number',
-        },
-      })
-
-      const { signerWallet }: any = await get({
-        signerWallet: {
-          description: 'Signer wallet',
+        senderToken: {
+          description: 'of',
           type: 'Address',
         },
-      })
-
-      const { signerToken }: any = await getTokens(
-        { token: 'signerToken' },
-        metadata
-      )
-
-      const { signerAmount }: any = await get({
-        signerAmount: {
-          description: 'Signer Amount',
-          type: 'Number',
-        },
-      })
-      await this.validateAmount(signerAmount)
-
-      const { senderToken }: any = await getTokens(
-        { token: 'senderToken' },
-        metadata
-      )
-
-      const { senderAmount }: any = await get({
         senderAmount: {
-          description: 'Sender amount',
+          description: 'amount',
+          type: 'Number',
+        },
+        signerToken: {
+          description: 'for',
+          type: 'Address',
+        },
+        signerAmount: {
+          description: 'amount',
           type: 'Number',
         },
       })
-      await this.validateAmount(senderAmount)
 
-      const { v }: any = await get({
-        v: {
-          description: 'v',
-          type: 'Number',
-        },
+      const swapContract = SwapERC20.getAddress(chainId)
+
+      const protocolFee = await SwapERC20.getContract(
+        wallet.provider,
+        chainId
+      ).protocolFee()
+
+      const order = createOrderERC20({
+        nonce: String(Date.now()),
+        expiry: String(Math.round(Date.now() / 1000) + 120),
+        protocolFee: protocolFee.toString(),
+        signerWallet: wallet.address,
+        signerToken: signerToken.address,
+        signerAmount: toAtomicString(signerAmount, signerToken.decimals),
+        senderWallet,
+        senderToken: senderToken.address,
+        senderAmount: toAtomicString(senderAmount, senderToken.decimals),
       })
 
-      const { r }: any = await get({
-        r: {
-          description: 'r',
-          type: 'bytes32',
-        },
-      })
-
-      const { s }: any = await get({
-        s: {
-          description: 's',
-          type: 'bytes32',
-        },
-      })
-
-      this.log(
-        chalk.white(
-          `Swapping: \n
-          senderWallet: ${senderWallet}\n,
-          nonce: ${nonce}\n,
-          expiry: ${expiry}\n,
-          signerWallet: ${signerWallet}\n,
-          signerToken: ${signerToken}\n,
-          signerAmount: ${signerAmount}\n,
-          senderToken: ${senderToken}\n,
-          senderAmount: ${senderAmount}\n,
-          v: ${v}\n,
-          r: ${r}\n,
-          s:${s}\n`
-        )
+      const signature = await createOrderERC20Signature(
+        order,
+        wallet.privateKey,
+        swapContract,
+        chainId
       )
 
       if (
@@ -126,17 +94,7 @@ export default class DelegateSetRule extends Command {
           metadata,
           'swap',
           {
-            senderWallet,
-            nonce,
-            expiry,
-            signerWallet,
-            signerToken,
-            signerAmount,
-            senderToken,
-            senderAmount,
-            v,
-            r,
-            s,
+            ...order,
           },
           chainId
         ))
@@ -147,17 +105,17 @@ export default class DelegateSetRule extends Command {
 
       await delegateContract
         .swap(
-          senderWallet,
-          nonce,
-          expiry,
-          signerWallet,
-          signerToken,
-          signerAmount,
-          senderToken,
-          senderAmount,
-          v,
-          r,
-          s
+          order.senderWallet,
+          order.nonce,
+          order.expiry,
+          order.signerWallet,
+          order.signerToken,
+          order.signerAmount,
+          order.senderToken,
+          order.senderAmount,
+          signature.v,
+          signature.r,
+          signature.s
         )
         .then(utils.handleTransaction)
         .catch(utils.handleError)
