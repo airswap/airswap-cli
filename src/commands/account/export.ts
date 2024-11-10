@@ -1,37 +1,23 @@
 import { Command } from "@oclif/command";
 import chalk from "chalk";
 import { ethers } from "ethers";
-import { displayDescription } from "../../lib/utils";
-import { requireKeytar } from "../../lib/wallet";
+import { displayDescription, getConfig } from "../../lib/utils";
 
 export default class AccountExport extends Command {
 	public static description = "export the current ethereum account";
 
 	public async run() {
-		let keytar: any;
-		try {
-			keytar = requireKeytar();
-			const signerPrivateKey = await keytar.getPassword(
-				"airswap-cli",
-				"private-key",
-			);
-			displayDescription(this, AccountExport.description);
+		displayDescription(this, AccountExport.description);
+		const { key } = await getConfig(this);
 
-			if (!signerPrivateKey) {
-				this.log(
-					chalk.yellow(
-						`\nNo account set. Set one with ${chalk.bold("account:import")}\n`,
-					),
-				);
-			} else {
-				const wallet = new ethers.Wallet(String(signerPrivateKey));
-				this.log(`Private key: ${signerPrivateKey}`);
-				this.log(`Address:     ${wallet.address}\n`);
-			}
-		} catch (e) {
+		if (!key) {
 			this.log(
-				`${chalk.yellow("Error")} Cannot export account because dependencies are missing.\nIf you are on Linux, try installing libsecret-1-0 (Debian, Ubuntu etc.) or libsecret (RedHat, Fedora etc.) and then reinstalling AirSwap CLI.\n`,
+				`\nNo account set. Set one with ${chalk.bold("account:import")}\n`,
 			);
+		} else {
+			const wallet = new ethers.Wallet(String(key));
+			this.log(`Private key: ${key}`);
+			this.log(`Address:     ${wallet.address}\n`);
 		}
 	}
 }

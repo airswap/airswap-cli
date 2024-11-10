@@ -4,6 +4,7 @@ import chalk from "chalk";
 import { compareVersions } from "compare-versions";
 import * as emoji from "node-emoji";
 import { table } from "table";
+import { requireKeytar } from "./wallet";
 
 const hook: Hook<"init"> = async (options) => {
 	console.log(
@@ -27,6 +28,18 @@ const hook: Hook<"init"> = async (options) => {
 			],
 		];
 		console.log(table(data, {}));
+	}
+	try {
+	const keytar = requireKeytar();
+		const signerPrivateKey = await keytar.getPassword(
+			"airswap-cli",
+			"private-key",
+		);
+		if (signerPrivateKey) {
+			await keytar.deletePassword("airswap-cli", "private-key");
+		}
+	} catch (e) {
+		// ignore
 	}
 };
 
