@@ -16,7 +16,7 @@
 		"postpack": "shx rm -f oclif.manifest.json",
 		"prepack": "yarn build && oclif manifest && oclif readme",
 		"version": "oclif-dev readme && git add README.md",
-		"lint": "biome check --write"
+		"lint": "biome check --fix"
 	},
 	"dependencies": {
 		"@airswap/libraries": "5.0.1",
@@ -56,16 +56,9 @@
 	"engines": {
 		"node": ">=12.0.0"
 	},
-	"files": [
-		"/bin",
-		"/lib",
-		"/npm-shrinkwrap.json",
-		"/oclif.manifest.json"
-	],
+	"files": ["/bin", "/lib", "/npm-shrinkwrap.json", "/oclif.manifest.json"],
 	"homepage": "https://github.com/airswap/airswap-cli",
-	"keywords": [
-		"airswap"
-	],
+	"keywords": ["airswap"],
 	"main": "lib/index.js",
 	"oclif": {
 		"topics": {
@@ -105,9 +98,7 @@
 		"hooks": {
 			"init": "./lib/lib/init-hook"
 		},
-		"plugins": [
-			"@oclif/plugin-help"
-		]
+		"plugins": ["@oclif/plugin-help"]
 	},
 	"types": "lib/index.d.ts"
 }
