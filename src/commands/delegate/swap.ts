@@ -20,7 +20,6 @@ export default class DelegateSetRule extends Command {
   public async run() {
     try {
       const wallet = await getWallet(this, true)
-      console.log(wallet.address)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
       utils.displayDescription(this, DelegateSetRule.description, chainId)
