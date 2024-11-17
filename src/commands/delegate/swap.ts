@@ -32,7 +32,7 @@ export default class DelegateSetRule extends Command {
       )
 
       this.log(chalk.white(`Delegate contract: ${delegateContract.address}\n`))
-
+      this.log(metadata)
       const {
         signerWallet,
         senderAmount,
@@ -74,10 +74,10 @@ export default class DelegateSetRule extends Command {
         expiry: String(Math.round(Date.now() / 1000) + 120),
         protocolFee: protocolFee.toString(),
         signerWallet: signerWallet,
-        signerToken: signerToken.address,
+        signerToken: signerToken,
         signerAmount: toAtomicString(signerAmount, signerToken.decimals),
         senderWallet: delegateContract.address,
-        senderToken: senderToken.address,
+        senderToken: senderToken,
         senderAmount: toAtomicString(senderAmount, senderToken.decimals),
       })
 
