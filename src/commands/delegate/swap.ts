@@ -34,13 +34,13 @@ export default class DelegateSetRule extends Command {
       this.log(chalk.white(`Delegate contract: ${delegateContract.address}\n`))
 
       const {
-        senderWallet,
+        signerWallet,
         senderAmount,
         senderToken,
         signerToken,
         signerAmount,
       }: any = await get({
-        senderWallet: {
+        signerWallet: {
           description: 'from',
           type: 'Address',
         },
@@ -73,10 +73,10 @@ export default class DelegateSetRule extends Command {
         nonce: String(Date.now()),
         expiry: String(Math.round(Date.now() / 1000) + 120),
         protocolFee: protocolFee.toString(),
-        signerWallet: wallet.address,
+        signerWallet: signerWallet,
         signerToken: signerToken.address,
         signerAmount: toAtomicString(signerAmount, signerToken.decimals),
-        senderWallet,
+        senderWallet: delegateContract.address,
         senderToken: senderToken.address,
         senderAmount: toAtomicString(senderAmount, senderToken.decimals),
       })
