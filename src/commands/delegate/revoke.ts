@@ -8,7 +8,7 @@ const Delegate = require('@airswap/delegate/build/contracts/Delegate.sol/Delegat
 const delegateDeploys = require('@airswap/delegate/deploys.js')
 
 export default class DelegateRevoke extends Command {
-  public static description = 'set a delegate rule'
+  public static description = 'revoke a rule manager'
 
   public async run() {
     try {
@@ -22,25 +22,21 @@ export default class DelegateRevoke extends Command {
         Delegate.abi,
         wallet
       )
-
-      this.log(chalk.white(`Delegate contract: ${delegateContract.address}\n`))
-
-      this.log(
-        chalk.white(
-          `Revoking ${await delegateContract.authorized(
-            wallet.address
-          )} to set and unset Rules for ${wallet.address}`
-        )
-      )
-      if (!(await confirm(this, metadata, 'revoke', {}, chainId))) {
-        this.log(chalk.red('Manager not revoked'))
-        process.exit(0)
+      const currentManager = await delegateContract.authorized(wallet.address)
+      if (!currentManager) {
+        throw new Error('No manager currently authorized')
       }
+      this.log(chalk.white(`Delegate contract: ${delegateContract.address}`))
+      this.log(chalk.white(`Current manager: ${currentManager}\n`))
 
-      await delegateContract
-        .revoke()
-        .then(utils.handleTransaction)
-        .catch(utils.handleError)
+      if (
+        await confirm(this, metadata, "revoke", {}, chainId)
+      ) {
+        await delegateContract
+          .revoke()
+          .then(utils.handleTransaction)
+          .catch(utils.handleError)
+      }
     } catch (e) {
       cancelled(e)
     }

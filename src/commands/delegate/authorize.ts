@@ -8,7 +8,7 @@ const Delegate = require('@airswap/delegate/build/contracts/Delegate.sol/Delegat
 const delegateDeploys = require('@airswap/delegate/deploys.js')
 
 export default class DelegateAuthorize extends Command {
-  public static description = 'set a delegate rule'
+  public static description = 'authorize a rule manager'
 
   public async run() {
     try {
@@ -23,29 +23,26 @@ export default class DelegateAuthorize extends Command {
         wallet
       )
 
-      this.log(chalk.white(`Delegate contract: ${delegateContract.address}\n`))
+      this.log(chalk.white(`Delegate contract: ${delegateContract.address}`))
+      const currentManager = await delegateContract.authorized(wallet.address)
+      this.log(chalk.white(`Current manager: ${currentManager === ethers.constants.AddressZero ? 'None' : currentManager}\n`))
 
       const { manager }: any = await get({
         manager: {
-          description: 'Manager address',
+          description: 'Manager address to authorize',
           type: 'Address',
         },
       })
+      console.log()
 
-      this.log(
-        chalk.white(
-          `Authorizing ${manager} to set and unset Rules for ${wallet.address}`
-        )
-      )
-      if (!(await confirm(this, metadata, 'authorize', { manager }, chainId))) {
-        this.log(chalk.red('Manager not authorized'))
-        process.exit(0)
+      if (
+        await confirm(this, metadata, 'authorize', { manager }, chainId)
+      ) {
+        await delegateContract
+          .authorize(manager)
+          .then(utils.handleTransaction)
+          .catch(utils.handleError)
       }
-
-      await delegateContract
-        .authorize(manager)
-        .then(utils.handleTransaction)
-        .catch(utils.handleError)
     } catch (e) {
       cancelled(e)
     }

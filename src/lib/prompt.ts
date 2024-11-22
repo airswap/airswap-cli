@@ -401,6 +401,8 @@ export async function confirm(
 	};
 
 	if (data.length > 1) printTable(ctx, `Transaction: ${name}`, data, config);
+	else ctx.log(chalk.underline.bold(`Transaction: ${name}\n`));
+
 	const chainName = chainNames[chainId].toUpperCase();
 
 	return new Promise((resolve, reject) => {

@@ -14,15 +14,15 @@ const Delegate = require('@airswap/delegate/build/contracts/Delegate.sol/Delegat
 const delegateDeploys = require('@airswap/delegate/deploys.js')
 const IERC20 = require('@airswap/utils/build/src/abis/ERC20.json')
 
-export default class DelegateSetRule extends Command {
-  public static description = 'set a delegate rule'
+export default class DelegateSwap extends Command {
+  public static description = 'swap with the delegate'
 
   public async run() {
     try {
       const wallet = await getWallet(this, true)
       const chainId = (await wallet.provider.getNetwork()).chainId
       const metadata = await utils.getMetadata(this, chainId)
-      utils.displayDescription(this, DelegateSetRule.description, chainId)
+      utils.displayDescription(this, DelegateSwap.description, chainId)
 
       const delegateContract = new ethers.Contract(
         delegateDeploys[chainId],
