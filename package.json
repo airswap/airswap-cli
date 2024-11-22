@@ -1,125 +1,113 @@
 {
-  "name": "airswap",
-  "description": "Command Line Interface (CLI) for the AirSwap Network",
-  "version": "4.3.1",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/airswap/airswap-cli"
-  },
-  "bin": {
-    "airswap": "./bin/run"
-  },
-  "bugs": "https://github.com/airswap/airswap-cli/issues",
-  "scripts": {
-    "build": "shx rm -rf lib && tsc -b",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "prepack": "yarn build && oclif manifest && oclif readme",
-    "version": "oclif-dev readme && git add README.md",
-    "lint:check": "yarn eslint . --ext .js,.ts",
-    "lint:fix": "yarn eslint . --ext .js,.ts --fix",
-    "pretty:check": "prettier --check \"./**/*.ts\"",
-    "pretty:fix": "prettier --write \"./**/*.ts\""
-  },
-  "dependencies": {
-    "@airswap/delegate": "4.3.0-beta.0",
-    "@airswap/libraries": "4.3.4",
-    "@oclif/command": "^1.8.22",
-    "@oclif/config": "^1.18.8",
-    "@oclif/plugin-help": "^5.2.6",
-    "available-versions": "^0.13.7",
-    "axios": "^1.3.4",
-    "bignumber.js": "^9.1.1",
-    "cli-ux": "^6.0.9",
-    "compare-versions": "^6.0.0-rc.1",
-    "console.table": "^0.10.0",
-    "ethers": "^5.7.2",
-    "fs-extra": "^11.1.0",
-    "jayson": "^4.0.0",
-    "keytar": "^7.9.0",
-    "mathjs": "^11.6.0",
-    "node-emoji": "^1.11.0",
-    "ora": "^6.1.2",
-    "prompt": "^1.3.0",
-    "table": "^6.8.1"
-  },
-  "devDependencies": {
-    "@oclif/dev-cli": "^1.26.10",
-    "@oclif/test": "^2.3.8",
-    "@types/chai": "^4.3.4",
-    "@types/express-serve-static-core": "^4.17.33",
-    "@types/fs-extra": "^11.0.1",
-    "@types/node": "^18.14.2",
-    "@types/node-emoji": "^1.8.2",
-    "@types/table": "^6.3.2",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
-    "@typescript-eslint/parser": "^6.3.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^8.46.0",
-    "eslint-config-oclif": "^4.0.0",
-    "eslint-config-oclif-typescript": "^1.0.3",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "5.0.0",
-    "oclif": "^3.7.0",
-    "prettier": "^3.0.1",
-    "shx": "^0.3.4",
-    "typescript": "^4.9.5"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "files": [
-    "/bin",
-    "/lib",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
-  ],
-  "homepage": "https://github.com/airswap/airswap-cli",
-  "keywords": [
-    "airswap"
-  ],
-  "main": "lib/index.js",
-  "oclif": {
-    "topics": {
-      "account": {
-        "description": "set, show, and unset the current ethereum account"
-      },
-      "balances": {
-        "description": "display balances for the current ethereum account"
-      },
-      "registry": {
-        "description": "add and remove supported tokens"
-      },
-      "ip": {
-        "description": "display local network addresses"
-      },
-      "metadata": {
-        "description": "manage local token metadata"
-      },
-      "chain": {
-        "description": "set the active ethereum chain"
-      },
-      "rfq": {
-        "description": "get and take orders from a single peer or all peers"
-      },
-      "stream": {
-        "description": "stream pricing from a peer and send orders to swap "
-      },
-      "token": {
-        "description": "approve and transfer tokens between accounts"
-      },
-      "wrapped": {
-        "description": "deposit and withdraw wrapped native tokens (e.g. WETH)"
-      }
-    },
-    "commands": "./lib/commands",
-    "bin": "airswap",
-    "hooks": {
-      "init": "./lib/lib/init-hook"
-    },
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
-  },
-  "types": "lib/index.d.ts"
+	"name": "airswap",
+	"description": "Command Line Interface (CLI) for the AirSwap Network",
+	"version": "5.0.2",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/airswap/airswap-cli"
+	},
+	"bin": {
+		"airswap": "./bin/run"
+	},
+	"bugs": "https://github.com/airswap/airswap-cli/issues",
+	"scripts": {
+		"build": "shx rm -rf lib && tsc -b",
+		"postpack": "shx rm -f oclif.manifest.json",
+		"prepack": "yarn build && oclif manifest && oclif readme",
+		"version": "oclif-dev readme && git add README.md",
+		"lint": "biome check --fix"
+	},
+	"dependencies": {
+		"@airswap/libraries": "5.0.3",
+		"@oclif/command": "^1.8.22",
+		"@oclif/config": "^1.18.8",
+		"@oclif/plugin-help": "^5.2.6",
+		"available-versions": "^0.13.7",
+		"axios": "^1.3.4",
+		"bignumber.js": "^9.1.1",
+		"cli-ux": "^6.0.9",
+		"compare-versions": "^6.0.0-rc.1",
+		"console.table": "^0.10.0",
+		"ethers": "^5.7.2",
+		"fs-extra": "^11.1.0",
+		"jayson": "^4.0.0",
+		"keytar": "^7.9.0",
+		"mathjs": "^11.6.0",
+		"node-emoji": "^1.11.0",
+		"ora": "^6.1.2",
+		"prompt": "^1.3.0",
+		"table": "^6.8.1"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@oclif/dev-cli": "^1.26.10",
+		"@oclif/test": "^2.3.8",
+		"@types/chai": "^4.3.4",
+		"@types/express-serve-static-core": "^4.17.33",
+		"@types/fs-extra": "^11.0.1",
+		"@types/node": "^18.14.2",
+		"@types/node-emoji": "^1.8.2",
+		"@types/table": "^6.3.2",
+		"oclif": "^3.7.0",
+		"shx": "^0.3.4",
+		"typescript": "^4.9.5"
+	},
+	"engines": {
+		"node": ">=12.0.0"
+	},
+	"files": [
+		"/bin",
+		"/lib",
+		"/npm-shrinkwrap.json",
+		"/oclif.manifest.json"
+	],
+	"homepage": "https://github.com/airswap/airswap-cli",
+	"keywords": [
+		"airswap"
+	],
+	"main": "lib/index.js",
+	"oclif": {
+		"topics": {
+			"account": {
+				"description": "set, show, and unset the current ethereum account"
+			},
+			"balances": {
+				"description": "display balances for the current ethereum account"
+			},
+			"registry": {
+				"description": "add and remove supported tokens"
+			},
+			"ip": {
+				"description": "display local network addresses"
+			},
+			"metadata": {
+				"description": "manage local token metadata"
+			},
+			"chain": {
+				"description": "set the active ethereum chain"
+			},
+			"rfq": {
+				"description": "get and take orders from a single peer or all peers"
+			},
+			"stream": {
+				"description": "stream pricing from a peer and send orders to swap "
+			},
+			"token": {
+				"description": "approve and transfer tokens between accounts"
+			},
+			"wrapped": {
+				"description": "deposit and withdraw wrapped native tokens (e.g. WETH)"
+			}
+		},
+		"commands": "./lib/commands",
+		"bin": "airswap",
+		"hooks": {
+			"init": "./lib/lib/init-hook"
+		},
+		"plugins": [
+			"@oclif/plugin-help"
+		]
+	},
+	"types": "lib/index.d.ts"
 }
