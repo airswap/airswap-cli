@@ -311,15 +311,14 @@ export async function handleResponse(
 	}
 }
 
-export function handleTransaction(tx: any) {
+export async function handleTransaction(tx: any) {
 	console.log(chalk.underline(`${explorerUrls[tx.chainId]}/tx/${tx.hash}\n`));
 	cli.action.start(`Mining transaction (${chainNames[tx.chainId]})`);
-	tx.wait(DEFAULT_CONFIRMATIONS).then(() => {
-		cli.action.stop();
-		console.log(
-			`${emoji.get("white_check_mark")} Transaction complete (${DEFAULT_CONFIRMATIONS} confirmations)\n\n`,
-		);
-	});
+	await tx.wait(DEFAULT_CONFIRMATIONS)
+	cli.action.stop();
+	console.log(
+		`${emoji.get("white_check_mark")} Transaction complete (${DEFAULT_CONFIRMATIONS} confirmations)\n\n`,
+	);
 }
 
 export function handleError(error: any) {

@@ -113,7 +113,8 @@ export default class DelegateSet extends Command {
 						delegateContract.address,
 						senderAmountAtomic.toFixed(),
 					);
-					utils.handleTransaction(tx);
+					await utils.handleTransaction(tx);
+					this.log(chalk.yellow("You may now set the rule."));
 				} else {
 					throw new Error("Cancelled");
 				}
