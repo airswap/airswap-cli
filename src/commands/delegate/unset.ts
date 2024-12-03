@@ -27,7 +27,7 @@ export default class DelegateUnsetRule extends Command {
 
 			const { senderWallet }: any = await get({
 				senderWallet: {
-					description: "from wallet",
+					description: "delegator wallet",
 					type: "Address",
 				},
 			});

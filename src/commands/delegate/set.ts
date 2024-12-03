@@ -28,7 +28,7 @@ export default class DelegateSet extends Command {
 
 			const { senderWallet }: any = await get({
 				senderWallet: {
-					description: "from wallet",
+					description: "delegator wallet",
 					type: "Address",
 				},
 			});
@@ -114,7 +114,7 @@ export default class DelegateSet extends Command {
 						senderAmountAtomic.toFixed(),
 					);
 					await utils.handleTransaction(tx);
-					this.log(chalk.yellow("You may now set the rule."));
+					this.log(chalk.yellow("You can now set the rule."));
 				} else {
 					throw new Error("Cancelled");
 				}

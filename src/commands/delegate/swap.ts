@@ -35,7 +35,7 @@ export default class DelegateSwap extends Command {
 
 			const { senderWallet }: any = await get({
 				senderWallet: {
-					description: "from wallet",
+					description: "delegator wallet",
 					type: "Address",
 				},
 			});
@@ -110,6 +110,8 @@ export default class DelegateSwap extends Command {
 				...unsignedOrder,
 				...signature,
 			};
+
+			this.log();
 
 			if (
 				await confirm(
