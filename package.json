@@ -1,7 +1,7 @@
 {
 	"name": "airswap",
 	"description": "Command Line Interface (CLI) for the AirSwap Network",
-	"version": "5.0.2",
+	"version": "5.0.3",
 	"license": "MIT",
 	"repository": {
 		"type": "git",

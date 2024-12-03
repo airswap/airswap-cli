@@ -55,9 +55,9 @@ $ airswap chain
 * [`airswap chain`](#airswap-chain)
 * [`airswap delegate:authorize`](#airswap-delegateauthorize)
 * [`airswap delegate:revoke`](#airswap-delegaterevoke)
-* [`airswap delegate:setRule`](#airswap-delegatesetrule)
+* [`airswap delegate:set`](#airswap-delegateset)
 * [`airswap delegate:swap`](#airswap-delegateswap)
-* [`airswap delegate:unsetRule`](#airswap-delegateunsetrule)
+* [`airswap delegate:unset`](#airswap-delegateunset)
 * [`airswap gas`](#airswap-gas)
 * [`airswap help [COMMANDS]`](#airswap-help-commands)
 * [`airswap inspect`](#airswap-inspect)
@@ -97,7 +97,7 @@ DESCRIPTION
   delete the current ethereum account
 ```
 
-_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/account/delete.ts)_
+_See code: [src/commands/account/delete.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/account/delete.ts)_
 
 ## `airswap account:export`
 
@@ -111,7 +111,7 @@ DESCRIPTION
   export the current ethereum account
 ```
 
-_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/account/export.ts)_
+_See code: [src/commands/account/export.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/account/export.ts)_
 
 ## `airswap account:generate`
 
@@ -125,7 +125,7 @@ DESCRIPTION
   generate a new ethereum account
 ```
 
-_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/account/generate.ts)_
+_See code: [src/commands/account/generate.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/account/generate.ts)_
 
 ## `airswap account:import`
 
@@ -139,7 +139,7 @@ DESCRIPTION
   import an ethereum account
 ```
 
-_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/account/import.ts)_
+_See code: [src/commands/account/import.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/account/import.ts)_
 
 ## `airswap approve`
 
@@ -153,7 +153,7 @@ DESCRIPTION
   approve a token for trading
 ```
 
-_See code: [src/commands/approve.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/approve.ts)_
+_See code: [src/commands/approve.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/approve.ts)_
 
 ## `airswap balances`
 
@@ -167,7 +167,7 @@ DESCRIPTION
   display token balances
 ```
 
-_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/balances.ts)_
+_See code: [src/commands/balances.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/balances.ts)_
 
 ## `airswap best`
 
@@ -181,7 +181,7 @@ DESCRIPTION
   compare order pricing from servers
 ```
 
-_See code: [src/commands/best.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/best.ts)_
+_See code: [src/commands/best.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/best.ts)_
 
 ## `airswap chain`
 
@@ -195,77 +195,77 @@ DESCRIPTION
   set the active chain
 ```
 
-_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/chain.ts)_
+_See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/chain.ts)_
 
 ## `airswap delegate:authorize`
 
-set a delegate rule
+authorize a rule manager
 
 ```
 USAGE
   $ airswap delegate:authorize
 
 DESCRIPTION
-  set a delegate rule
+  authorize a rule manager
 ```
 
-_See code: [src/commands/delegate/authorize.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/authorize.ts)_
+_See code: [src/commands/delegate/authorize.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/delegate/authorize.ts)_
 
 ## `airswap delegate:revoke`
 
-set a delegate rule
+revoke a rule manager
 
 ```
 USAGE
   $ airswap delegate:revoke
 
 DESCRIPTION
-  set a delegate rule
+  revoke a rule manager
 ```
 
-_See code: [src/commands/delegate/revoke.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/revoke.ts)_
+_See code: [src/commands/delegate/revoke.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/delegate/revoke.ts)_
 
-## `airswap delegate:setRule`
+## `airswap delegate:set`
 
 set a delegate rule
 
 ```
 USAGE
-  $ airswap delegate:setRule
+  $ airswap delegate:set
 
 DESCRIPTION
   set a delegate rule
 ```
 
-_See code: [src/commands/delegate/setRule.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/setRule.ts)_
+_See code: [src/commands/delegate/set.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/delegate/set.ts)_
 
 ## `airswap delegate:swap`
 
-set a delegate rule
+swap with the delegate
 
 ```
 USAGE
   $ airswap delegate:swap
 
 DESCRIPTION
-  set a delegate rule
+  swap with the delegate
 ```
 
-_See code: [src/commands/delegate/swap.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/swap.ts)_
+_See code: [src/commands/delegate/swap.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/delegate/swap.ts)_
 
-## `airswap delegate:unsetRule`
+## `airswap delegate:unset`
 
 unset a delegate rule
 
 ```
 USAGE
-  $ airswap delegate:unsetRule
+  $ airswap delegate:unset
 
 DESCRIPTION
   unset a delegate rule
 ```
 
-_See code: [src/commands/delegate/unsetRule.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/unsetRule.ts)_
+_See code: [src/commands/delegate/unset.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/delegate/unset.ts)_
 
 ## `airswap gas`
 
@@ -279,7 +279,7 @@ DESCRIPTION
   set gas price for transactions
 ```
 
-_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/gas.ts)_
+_See code: [src/commands/gas.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/gas.ts)_
 
 ## `airswap help [COMMANDS]`
 
@@ -313,7 +313,7 @@ DESCRIPTION
   inspect protocols for a server
 ```
 
-_See code: [src/commands/inspect.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/inspect.ts)_
+_See code: [src/commands/inspect.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/inspect.ts)_
 
 ## `airswap ip`
 
@@ -327,7 +327,7 @@ DESCRIPTION
   display local network addresses
 ```
 
-_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/ip.ts)_
+_See code: [src/commands/ip.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/ip.ts)_
 
 ## `airswap metadata:add`
 
@@ -341,7 +341,7 @@ DESCRIPTION
   add token to local metadata
 ```
 
-_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/metadata/add.ts)_
+_See code: [src/commands/metadata/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/metadata/add.ts)_
 
 ## `airswap metadata:delete`
 
@@ -355,7 +355,7 @@ DESCRIPTION
   delete token from local metadata
 ```
 
-_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/metadata/delete.ts)_
+_See code: [src/commands/metadata/delete.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/metadata/delete.ts)_
 
 ## `airswap metadata:lookup`
 
@@ -369,7 +369,7 @@ DESCRIPTION
   lookup token in local metadata
 ```
 
-_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/metadata/lookup.ts)_
+_See code: [src/commands/metadata/lookup.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/metadata/lookup.ts)_
 
 ## `airswap metadata:update`
 
@@ -383,7 +383,7 @@ DESCRIPTION
   update local metadata from remote sources
 ```
 
-_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/metadata/update.ts)_
+_See code: [src/commands/metadata/update.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/metadata/update.ts)_
 
 ## `airswap order`
 
@@ -397,7 +397,7 @@ DESCRIPTION
   get an order from a server
 ```
 
-_See code: [src/commands/order.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/order.ts)_
+_See code: [src/commands/order.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/order.ts)_
 
 ## `airswap protocols:add`
 
@@ -411,7 +411,7 @@ DESCRIPTION
   add supported protocols to the registry
 ```
 
-_See code: [src/commands/protocols/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/protocols/add.ts)_
+_See code: [src/commands/protocols/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/protocols/add.ts)_
 
 ## `airswap protocols:list`
 
@@ -425,7 +425,7 @@ DESCRIPTION
   list activated protocols
 ```
 
-_See code: [src/commands/protocols/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/protocols/list.ts)_
+_See code: [src/commands/protocols/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/protocols/list.ts)_
 
 ## `airswap protocols:remove`
 
@@ -439,7 +439,7 @@ DESCRIPTION
   remove supported protocols from the registry
 ```
 
-_See code: [src/commands/protocols/remove.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/protocols/remove.ts)_
+_See code: [src/commands/protocols/remove.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/protocols/remove.ts)_
 
 ## `airswap registry:approve`
 
@@ -453,7 +453,7 @@ DESCRIPTION
   enable staking on the registry
 ```
 
-_See code: [src/commands/registry/approve.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/approve.ts)_
+_See code: [src/commands/registry/approve.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/approve.ts)_
 
 ## `airswap registry:eject`
 
@@ -467,7 +467,7 @@ DESCRIPTION
   remove url, protocols, and tokens from registry
 ```
 
-_See code: [src/commands/registry/eject.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/eject.ts)_
+_See code: [src/commands/registry/eject.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/eject.ts)_
 
 ## `airswap registry:list`
 
@@ -481,7 +481,7 @@ DESCRIPTION
   get urls from the registry
 ```
 
-_See code: [src/commands/registry/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/list.ts)_
+_See code: [src/commands/registry/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/list.ts)_
 
 ## `airswap registry:revoke`
 
@@ -495,7 +495,7 @@ DESCRIPTION
   disable staking on the registry
 ```
 
-_See code: [src/commands/registry/revoke.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/revoke.ts)_
+_See code: [src/commands/registry/revoke.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/revoke.ts)_
 
 ## `airswap registry:status`
 
@@ -509,7 +509,7 @@ DESCRIPTION
   check status of url, protocols, and tokens on registry
 ```
 
-_See code: [src/commands/registry/status.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/status.ts)_
+_See code: [src/commands/registry/status.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/status.ts)_
 
 ## `airswap registry:url`
 
@@ -523,7 +523,7 @@ DESCRIPTION
   set server url on the registry
 ```
 
-_See code: [src/commands/registry/url.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/registry/url.ts)_
+_See code: [src/commands/registry/url.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/registry/url.ts)_
 
 ## `airswap revoke`
 
@@ -537,7 +537,7 @@ DESCRIPTION
   revoke a token approval
 ```
 
-_See code: [src/commands/revoke.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/revoke.ts)_
+_See code: [src/commands/revoke.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/revoke.ts)_
 
 ## `airswap stream`
 
@@ -551,7 +551,7 @@ DESCRIPTION
   stream quotes for a swap
 ```
 
-_See code: [src/commands/stream.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/stream.ts)_
+_See code: [src/commands/stream.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/stream.ts)_
 
 ## `airswap tokens:add`
 
@@ -565,7 +565,7 @@ DESCRIPTION
   add supported tokens to the registry
 ```
 
-_See code: [src/commands/tokens/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/tokens/add.ts)_
+_See code: [src/commands/tokens/add.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/tokens/add.ts)_
 
 ## `airswap tokens:list`
 
@@ -579,7 +579,7 @@ DESCRIPTION
   list activated tokens
 ```
 
-_See code: [src/commands/tokens/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/tokens/list.ts)_
+_See code: [src/commands/tokens/list.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/tokens/list.ts)_
 
 ## `airswap tokens:remove`
 
@@ -593,7 +593,7 @@ DESCRIPTION
   remove supported tokens from the registry
 ```
 
-_See code: [src/commands/tokens/remove.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/tokens/remove.ts)_
+_See code: [src/commands/tokens/remove.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/tokens/remove.ts)_
 
 ## `airswap transfer`
 
@@ -607,7 +607,7 @@ DESCRIPTION
   transfer tokens to another account
 ```
 
-_See code: [src/commands/transfer.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/transfer.ts)_
+_See code: [src/commands/transfer.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/transfer.ts)_
 
 ## `airswap wrapped:deposit`
 
@@ -621,7 +621,7 @@ DESCRIPTION
   deposit eth to weth
 ```
 
-_See code: [src/commands/wrapped/deposit.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/wrapped/deposit.ts)_
+_See code: [src/commands/wrapped/deposit.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/wrapped/deposit.ts)_
 
 ## `airswap wrapped:withdraw`
 
@@ -635,5 +635,5 @@ DESCRIPTION
   withdraw eth from weth
 ```
 
-_See code: [src/commands/wrapped/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/wrapped/withdraw.ts)_
+_See code: [src/commands/wrapped/withdraw.ts](https://github.com/airswap/airswap-cli/blob/v5.0.3/src/commands/wrapped/withdraw.ts)_
 <!-- commandsstop -->
