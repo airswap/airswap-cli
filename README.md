@@ -53,6 +53,11 @@ $ airswap chain
 * [`airswap balances`](#airswap-balances)
 * [`airswap best`](#airswap-best)
 * [`airswap chain`](#airswap-chain)
+* [`airswap delegate:authorize`](#airswap-delegateauthorize)
+* [`airswap delegate:revoke`](#airswap-delegaterevoke)
+* [`airswap delegate:setRule`](#airswap-delegatesetrule)
+* [`airswap delegate:swap`](#airswap-delegateswap)
+* [`airswap delegate:unsetRule`](#airswap-delegateunsetrule)
 * [`airswap gas`](#airswap-gas)
 * [`airswap help [COMMANDS]`](#airswap-help-commands)
 * [`airswap inspect`](#airswap-inspect)
@@ -192,6 +197,76 @@ DESCRIPTION
 
 _See code: [src/commands/chain.ts](https://github.com/airswap/airswap-cli/blob/v5.0.2/src/commands/chain.ts)_
 
+## `airswap delegate:authorize`
+
+set a delegate rule
+
+```
+USAGE
+  $ airswap delegate:authorize
+
+DESCRIPTION
+  set a delegate rule
+```
+
+_See code: [src/commands/delegate/authorize.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/authorize.ts)_
+
+## `airswap delegate:revoke`
+
+set a delegate rule
+
+```
+USAGE
+  $ airswap delegate:revoke
+
+DESCRIPTION
+  set a delegate rule
+```
+
+_See code: [src/commands/delegate/revoke.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/revoke.ts)_
+
+## `airswap delegate:setRule`
+
+set a delegate rule
+
+```
+USAGE
+  $ airswap delegate:setRule
+
+DESCRIPTION
+  set a delegate rule
+```
+
+_See code: [src/commands/delegate/setRule.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/setRule.ts)_
+
+## `airswap delegate:swap`
+
+set a delegate rule
+
+```
+USAGE
+  $ airswap delegate:swap
+
+DESCRIPTION
+  set a delegate rule
+```
+
+_See code: [src/commands/delegate/swap.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/swap.ts)_
+
+## `airswap delegate:unsetRule`
+
+unset a delegate rule
+
+```
+USAGE
+  $ airswap delegate:unsetRule
+
+DESCRIPTION
+  unset a delegate rule
+```
+
+_See code: [src/commands/delegate/unsetRule.ts](https://github.com/airswap/airswap-cli/blob/v4.3.1/src/commands/delegate/unsetRule.ts)_
+
 ## `airswap gas`
 
 set gas price for transactions
@@ -224,7 +299,7 @@ DESCRIPTION
   Display help for airswap.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_
 
 ## `airswap inspect`
 

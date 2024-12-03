@@ -34,7 +34,14 @@ export async function getWallet(ctx: any, requireBalance?: boolean) {
 		const selectedCurrency = chainCurrencies[chainId];
 		const signerPrivateKey = Buffer.from(key, "hex");
 		const provider = await getProvider(ctx);
-		const wallet = new ethers.Wallet(signerPrivateKey, provider);
+		let wallet;
+		try {
+			wallet = new ethers.Wallet(signerPrivateKey, provider);
+		} catch (e) {
+			throw new Error(
+				`Invalid private key. Use ${chalk.bold("account:import")} to import a valid key or set the AIRSWAP_CLI_PRIVATE_KEY environment variable.`,
+			);
+		}
 
 		const balance = await provider.getBalance(wallet.address);
 		if (requireBalance && balance.eq(0)) {

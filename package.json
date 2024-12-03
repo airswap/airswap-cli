@@ -19,7 +19,7 @@
 		"lint": "biome check --fix"
 	},
 	"dependencies": {
-		"@airswap/libraries": "5.0.1",
+		"@airswap/libraries": "5.0.3",
 		"@oclif/command": "^1.8.22",
 		"@oclif/config": "^1.18.8",
 		"@oclif/plugin-help": "^5.2.6",
@@ -56,16 +56,9 @@
 	"engines": {
 		"node": ">=12.0.0"
 	},
-	"files": [
-		"/bin",
-		"/lib",
-		"/npm-shrinkwrap.json",
-		"/oclif.manifest.json"
-	],
+	"files": ["/bin", "/lib", "/npm-shrinkwrap.json", "/oclif.manifest.json"],
 	"homepage": "https://github.com/airswap/airswap-cli",
-	"keywords": [
-		"airswap"
-	],
+	"keywords": ["airswap"],
 	"main": "lib/index.js",
 	"oclif": {
 		"topics": {
@@ -105,9 +98,7 @@
 		"hooks": {
 			"init": "./lib/lib/init-hook"
 		},
-		"plugins": [
-			"@oclif/plugin-help"
-		]
+		"plugins": ["@oclif/plugin-help"]
 	},
 	"types": "lib/index.d.ts"
 }
