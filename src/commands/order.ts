@@ -20,7 +20,7 @@ export default class Order extends Command {
 					type: "Locator",
 				},
 			});
-			const request = await requests.getRequest(wallet, metadata, "Order");
+			const request = await requests.getRequest(wallet, metadata, "OrderERC20");
 			this.log();
 
 			requests.peerCall(

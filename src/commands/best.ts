@@ -14,7 +14,7 @@ export default class Best extends Command {
 			const gasPrice = await utils.getGasPrice(this);
 			utils.displayDescription(this, Best.description, chainId);
 
-			const request = await requests.getRequest(wallet, metadata, "Order");
+			const request = await requests.getRequest(wallet, metadata, "OrderERC20");
 			this.log();
 
 			requests.multiPeerCall(
