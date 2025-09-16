@@ -1,7 +1,7 @@
 {
 	"name": "airswap",
 	"description": "Command Line Interface (CLI) for the AirSwap Network",
-	"version": "5.0.3",
+	"version": "5.0.4",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -56,9 +56,16 @@
 	"engines": {
 		"node": ">=12.0.0"
 	},
-	"files": ["/bin", "/lib", "/npm-shrinkwrap.json", "/oclif.manifest.json"],
+	"files": [
+		"/bin",
+		"/lib",
+		"/npm-shrinkwrap.json",
+		"/oclif.manifest.json"
+	],
 	"homepage": "https://github.com/airswap/airswap-cli",
-	"keywords": ["airswap"],
+	"keywords": [
+		"airswap"
+	],
 	"main": "lib/index.js",
 	"oclif": {
 		"topics": {
@@ -98,7 +105,10 @@
 		"hooks": {
 			"init": "./lib/lib/init-hook"
 		},
-		"plugins": ["@oclif/plugin-help"]
+		"plugins": [
+			"@oclif/plugin-help"
+		]
 	},
-	"types": "lib/index.d.ts"
+	"types": "lib/index.d.ts",
+	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
